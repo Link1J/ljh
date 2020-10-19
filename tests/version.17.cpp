@@ -1,0 +1,133 @@
+
+//          Copyright Jared Irwin 2020
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          https://www.boost.org/LICENSE_1_0.txt)
+
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_templated.hpp>
+#include "ljh/version.hpp"
+
+using namespace std::literals;
+
+namespace Catch
+{
+	template<>
+	struct StringMaker<ljh::version>
+	{
+		static std::string convert(ljh::version const& value)
+		{
+			return static_cast<std::string>(value);
+		}
+	};
+}
+
+struct EqualsVersionMatcher : Catch::Matchers::MatcherGenericBase {
+	EqualsVersionMatcher(ljh::version const& range)
+		: range(range)
+	{}
+
+	bool match(ljh::version const& other) const {
+		return range == other;
+	}
+
+	std::string describe() const override {
+		return "is same as " + (std::string)range;
+	}
+
+private:
+	ljh::version const& range;
+};
+
+auto EqualsVersion(const ljh::version& range) -> EqualsVersionMatcher {
+	return EqualsVersionMatcher{range};
+}
+
+TEST_CASE("version constructors", "[version]")
+{
+	SECTION("string_view")
+	{
+		CHECK_THAT(ljh::version{"1.2.3.4"sv}, EqualsVersion({1,2,3,4}));
+		CHECK_THAT(ljh::version{"1.2.3"sv  }, EqualsVersion({1,2,3,0}));
+		CHECK_THAT(ljh::version{"1.2"sv    }, EqualsVersion({1,2,0,0}));
+		CHECK_THAT(ljh::version{"1"sv      }, EqualsVersion({1,0,0,0}));
+		CHECK_THAT(ljh::version{"...4"sv   }, EqualsVersion({0,0,0,4}));
+		CHECK_THAT(ljh::version{"..3"sv    }, EqualsVersion({0,0,3,0}));
+		CHECK_THAT(ljh::version{".2"sv     }, EqualsVersion({0,2,0,0}));
+	}
+	SECTION("string")
+	{
+		CHECK_THAT(ljh::version{"1.2.3.4"s}, EqualsVersion({1,2,3,4}));
+		CHECK_THAT(ljh::version{"1.2.3"s  }, EqualsVersion({1,2,3,0}));
+		CHECK_THAT(ljh::version{"1.2"s    }, EqualsVersion({1,2,0,0}));
+		CHECK_THAT(ljh::version{"1"s      }, EqualsVersion({1,0,0,0}));
+	}
+	SECTION("const char*")
+	{
+		CHECK_THAT(ljh::version{"1.2.3.4"}, EqualsVersion({1,2,3,4}));
+		CHECK_THAT(ljh::version{"1.2.3"  }, EqualsVersion({1,2,3,0}));
+		CHECK_THAT(ljh::version{"1.2"    }, EqualsVersion({1,2,0,0}));
+		CHECK_THAT(ljh::version{"1"      }, EqualsVersion({1,0,0,0}));
+	}
+	SECTION("ljh::limit::max")
+	{
+		CHECK_THAT(ljh::version(ljh::limit::max        ), EqualsVersion({ljh::version::max_value,ljh::version::max_value,ljh::version::max_value,ljh::version::max_value}));
+		CHECK_THAT(ljh::version(ljh::limit::max,1      ), EqualsVersion({                      1,ljh::version::max_value,ljh::version::max_value,ljh::version::max_value}));
+		CHECK_THAT(ljh::version(ljh::limit::max,1,2    ), EqualsVersion({                      1,                      2,ljh::version::max_value,ljh::version::max_value}));
+		CHECK_THAT(ljh::version(ljh::limit::max,1,2,3  ), EqualsVersion({                      1,                      2,                      3,ljh::version::max_value}));
+		CHECK_THAT(ljh::version(ljh::limit::max,1,2,3,4), EqualsVersion({                      1,                      2,                      3,                      4}));
+	}
+	SECTION("ljh::limit::min")
+	{
+		CHECK_THAT(ljh::version(ljh::limit::min        ), EqualsVersion({ljh::version::min_value,ljh::version::min_value,ljh::version::min_value,ljh::version::min_value}));
+		CHECK_THAT(ljh::version(ljh::limit::min,1      ), EqualsVersion({                      1,ljh::version::min_value,ljh::version::min_value,ljh::version::min_value}));
+		CHECK_THAT(ljh::version(ljh::limit::min,1,2    ), EqualsVersion({                      1,                      2,ljh::version::min_value,ljh::version::min_value}));
+		CHECK_THAT(ljh::version(ljh::limit::min,1,2,3  ), EqualsVersion({                      1,                      2,                      3,ljh::version::min_value}));
+		CHECK_THAT(ljh::version(ljh::limit::min,1,2,3,4), EqualsVersion({                      1,                      2,                      3,                      4}));
+	}
+}
+
+TEST_CASE("version compare", "[version]")
+{
+	SECTION("greater then")
+	{
+		CHECK(ljh::version{1,2,3,5} > ljh::version{1,2,3,4});
+		CHECK(ljh::version{1,2,4,4} > ljh::version{1,2,3,4});
+		CHECK(ljh::version{1,3,3,4} > ljh::version{1,2,3,4});
+		CHECK(ljh::version{2,2,3,4} > ljh::version{1,2,3,4});
+	}
+	SECTION("less then")
+	{
+		CHECK(ljh::version{1,2,3,3} < ljh::version{1,2,3,4});
+		CHECK(ljh::version{1,2,2,4} < ljh::version{1,2,3,4});
+		CHECK(ljh::version{1,1,3,4} < ljh::version{1,2,3,4});
+		CHECK(ljh::version{0,2,3,4} < ljh::version{1,2,3,4});
+	}
+	SECTION("equal to")
+	{
+		CHECK(ljh::version{1,2,3,4} == ljh::version{1,2,3,4});
+	}
+	SECTION("not equal to")
+	{
+		CHECK(ljh::version{1,2,3,3} != ljh::version{1,2,3,4});
+		CHECK(ljh::version{1,2,2,4} != ljh::version{1,2,3,4});
+		CHECK(ljh::version{1,1,3,4} != ljh::version{1,2,3,4});
+		CHECK(ljh::version{0,2,3,4} != ljh::version{1,2,3,4});
+	}
+	SECTION("greater then equal to")
+	{
+		CHECK(ljh::version{1,2,3,4} >= ljh::version{1,2,3,4});
+		CHECK(ljh::version{1,2,3,5} >= ljh::version{1,2,3,4});
+		CHECK(ljh::version{1,2,4,4} >= ljh::version{1,2,3,4});
+		CHECK(ljh::version{1,3,3,4} >= ljh::version{1,2,3,4});
+		CHECK(ljh::version{2,2,3,4} >= ljh::version{1,2,3,4});
+	}
+	SECTION("less then equal to")
+	{
+		CHECK(ljh::version{1,2,3,4} <= ljh::version{1,2,3,4});
+		CHECK(ljh::version{1,2,3,3} <= ljh::version{1,2,3,4});
+		CHECK(ljh::version{1,2,2,4} <= ljh::version{1,2,3,4});
+		CHECK(ljh::version{1,1,3,4} <= ljh::version{1,2,3,4});
+		CHECK(ljh::version{0,2,3,4} <= ljh::version{1,2,3,4});
+	}
+}
