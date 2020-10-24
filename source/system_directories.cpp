@@ -4,19 +4,6 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-// system_directories.hpp - v1.0
-// SPDX-License-Identifier: BSL-1.0
-// 
-// Requires C++11
-// 
-// ABOUT
-//     Functions for getting system directories.
-//
-// USAGE
-//
-// Version History
-//     1.0 Inital Version
-
 #include "system_directories.hpp"
 
 #ifdef _WIN32
