@@ -4,18 +4,19 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-// static_cast_underlying.hpp - v1.0
+// casting.hpp - v1.1
 // SPDX-License-Identifier: BSL-1.0
 // 
 // Requires C++11
 // 
 // ABOUT
-//     A type-safe function for casting scoped enums to underlying type
+//     Casting functions
 //
 // USAGE
 //
 // Version History
 //     1.0 Inital Version
+//     1.0 Rename casting.hpp and add reinterpret
 
 #pragma once
 
@@ -28,4 +29,10 @@ namespace ljh
 	{
 		return static_cast<typename std::underlying_type<T>::type>(a); 
 	};
+
+	template<typename out, typename in>
+	out reinterpret(in&& value)
+	{
+		return *(out*)(&value);
+	}
 }

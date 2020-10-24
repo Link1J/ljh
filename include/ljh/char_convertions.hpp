@@ -4,7 +4,7 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-// char_convertions.hpp - v1.0
+// char_convertions.hpp - v1.1
 // SPDX-License-Identifier: BSL-1.0
 // 
 // Requires C++14
@@ -16,6 +16,7 @@
 //
 // Version History
 //     1.0 Inital Version
+//     1.1 Fix build error on linux
 
 #pragma once
 
@@ -23,6 +24,7 @@
 #include "type_traits.hpp"
 #include <type_traits>
 #include <string>
+#include <cmath>
 #if LJH_CPP_VERSION >= LJH_CPP17_VERSION
 #include <string_view>
 #endif
