@@ -10,9 +10,8 @@
 #    define WIN32_LEAN_AND_MEAN
 #    define NOMINMAX
 #    include <windows.h>
+#    include <stringapiset.h>
 #    include <shlobj.h>
-#    include <codecvt>
-#    include <locale>
 #    include <type_traits>
 #elif defined(__linux__)
 #    include <cstdlib>
@@ -31,20 +30,21 @@ namespace ljh
 		template<typename T>
 		class co_task_free
 		{
+		public:
 			T as() { return data; }
 			T* operator&() { return &data; }
 			~co_task_free() { CoTaskMemFree(data); }
 		private:
 			T data;
-		}
+		};
 
 		std::string to_utf8(wchar_t* string)
 		{
 			std::string output;
 			int size = WideCharToMultiByte(CP_UTF8, 0, string, -1, NULL, 0, NULL, NULL);
 			output.resize(size);
-			WideCharToMultiByte(CP_UTF8, 0, string, -1, output.data(), output.size(), NULL, NULL);
-			return size;
+			WideCharToMultiByte(CP_UTF8, 0, string, -1, (char*)output.data(), output.size(), NULL, NULL);
+			return output;
 		}
 
 		std::string _get_windows_dir(REFKNOWNFOLDERID folder_id, int folder_csidl)
@@ -64,7 +64,7 @@ namespace ljh
 				wchar_t path[MAX_PATH];
 				if (SHGetFolderPathW(NULL, folder_csidl, NULL, 0, path) == S_OK)
 				{
-					return to_utf8(string) + "\\";
+					return to_utf8(path) + "\\";
 				}
 			}
 			return "";
