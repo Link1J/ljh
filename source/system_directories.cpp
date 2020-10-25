@@ -44,6 +44,7 @@ namespace ljh
 			int size = WideCharToMultiByte(CP_UTF8, 0, string, -1, NULL, 0, NULL, NULL);
 			output.resize(size);
 			WideCharToMultiByte(CP_UTF8, 0, string, -1, (char*)output.data(), output.size(), NULL, NULL);
+			output.resize(size - 1);
 			return output;
 		}
 
