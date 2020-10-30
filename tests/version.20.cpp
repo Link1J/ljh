@@ -32,67 +32,64 @@ namespace Catch
 	};
 }
 
-TEST_CASE("version using three way operator", "[version]") 
+TEST_CASE("version using three way operator - greater then", "[version]") 
 {
-	SECTION("greater then")
-	{
-		CHECK(std::strong_ordering::greater == ljh::version{1,2,3,4} <=> ljh::version{1,2,3,3});
-		CHECK(std::strong_ordering::greater == ljh::version{1,2,3,4} <=> ljh::version{1,2,2,4});
-		CHECK(std::strong_ordering::greater == ljh::version{1,2,3,4} <=> ljh::version{1,1,3,4});
-		CHECK(std::strong_ordering::greater == ljh::version{1,2,3,4} <=> ljh::version{0,2,3,4});
+	CHECK(std::strong_ordering::greater == ljh::version{1,2,3,4} <=> ljh::version{1,2,3,3});
+	CHECK(std::strong_ordering::greater == ljh::version{1,2,3,4} <=> ljh::version{1,2,2,4});
+	CHECK(std::strong_ordering::greater == ljh::version{1,2,3,4} <=> ljh::version{1,1,3,4});
+	CHECK(std::strong_ordering::greater == ljh::version{1,2,3,4} <=> ljh::version{0,2,3,4});
 
-		CHECK(ljh::version{1,2,3,5} > ljh::version{1,2,3,4});
-		CHECK(ljh::version{1,2,4,4} > ljh::version{1,2,3,4});
-		CHECK(ljh::version{1,3,3,4} > ljh::version{1,2,3,4});
-		CHECK(ljh::version{2,2,3,4} > ljh::version{1,2,3,4});
-	}
-	SECTION("less then")
-	{
-		CHECK(std::strong_ordering::less == ljh::version{1,2,3,4} <=> ljh::version{1,2,3,5});
-		CHECK(std::strong_ordering::less == ljh::version{1,2,3,4} <=> ljh::version{1,2,4,4});
-		CHECK(std::strong_ordering::less == ljh::version{1,2,3,4} <=> ljh::version{1,3,3,4});
-		CHECK(std::strong_ordering::less == ljh::version{1,2,3,4} <=> ljh::version{2,2,3,4});
+	CHECK(ljh::version{1,2,3,5} > ljh::version{1,2,3,4});
+	CHECK(ljh::version{1,2,4,4} > ljh::version{1,2,3,4});
+	CHECK(ljh::version{1,3,3,4} > ljh::version{1,2,3,4});
+	CHECK(ljh::version{2,2,3,4} > ljh::version{1,2,3,4});
+}
+TEST_CASE("version using three way operator - less then", "[version]")
+{
+	CHECK(std::strong_ordering::less == ljh::version{1,2,3,4} <=> ljh::version{1,2,3,5});
+	CHECK(std::strong_ordering::less == ljh::version{1,2,3,4} <=> ljh::version{1,2,4,4});
+	CHECK(std::strong_ordering::less == ljh::version{1,2,3,4} <=> ljh::version{1,3,3,4});
+	CHECK(std::strong_ordering::less == ljh::version{1,2,3,4} <=> ljh::version{2,2,3,4});
 
-		CHECK(ljh::version{1,2,3,3} < ljh::version{1,2,3,4});
-		CHECK(ljh::version{1,2,2,4} < ljh::version{1,2,3,4});
-		CHECK(ljh::version{1,1,3,4} < ljh::version{1,2,3,4});
-		CHECK(ljh::version{0,2,3,4} < ljh::version{1,2,3,4});
-	}
-	SECTION("equal to")
-	{
-		CHECK(std::strong_ordering::equal == ljh::version{1,2,3,4} <=> ljh::version{1,2,3,4});
+	CHECK(ljh::version{1,2,3,3} < ljh::version{1,2,3,4});
+	CHECK(ljh::version{1,2,2,4} < ljh::version{1,2,3,4});
+	CHECK(ljh::version{1,1,3,4} < ljh::version{1,2,3,4});
+	CHECK(ljh::version{0,2,3,4} < ljh::version{1,2,3,4});
+}
+TEST_CASE("version using three way operator - equal to", "[version]")
+{
+	CHECK(std::strong_ordering::equal == ljh::version{1,2,3,4} <=> ljh::version{1,2,3,4});
 
-		CHECK(ljh::version{1,2,3,4} == ljh::version{1,2,3,4});
-	}
-	SECTION("not equal to")
-	{
-		CHECK(std::strong_ordering::equal != ljh::version{1,2,3,4} <=> ljh::version{4,3,2,1});
-		CHECK(std::strong_ordering::equal != ljh::version{1,2,3,4} <=> ljh::version{1,2,3,3});
-		CHECK(std::strong_ordering::equal != ljh::version{1,2,3,4} <=> ljh::version{1,2,2,4});
-		CHECK(std::strong_ordering::equal != ljh::version{1,2,3,4} <=> ljh::version{1,1,3,4});
-		CHECK(std::strong_ordering::equal != ljh::version{1,2,3,4} <=> ljh::version{0,2,3,4});
+	CHECK(ljh::version{1,2,3,4} == ljh::version{1,2,3,4});
+}
+TEST_CASE("version using three way operator - not equal to", "[version]")
+{
+	CHECK(std::strong_ordering::equal != ljh::version{1,2,3,4} <=> ljh::version{4,3,2,1});
+	CHECK(std::strong_ordering::equal != ljh::version{1,2,3,4} <=> ljh::version{1,2,3,3});
+	CHECK(std::strong_ordering::equal != ljh::version{1,2,3,4} <=> ljh::version{1,2,2,4});
+	CHECK(std::strong_ordering::equal != ljh::version{1,2,3,4} <=> ljh::version{1,1,3,4});
+	CHECK(std::strong_ordering::equal != ljh::version{1,2,3,4} <=> ljh::version{0,2,3,4});
 
-		CHECK(ljh::version{1,2,3,3} != ljh::version{1,2,3,4});
-		CHECK(ljh::version{1,2,2,4} != ljh::version{1,2,3,4});
-		CHECK(ljh::version{1,1,3,4} != ljh::version{1,2,3,4});
-		CHECK(ljh::version{0,2,3,4} != ljh::version{1,2,3,4});
-	}
-	SECTION("greater then equal to")
-	{
-		CHECK(ljh::version{1,2,3,4} >= ljh::version{1,2,3,4});
-		CHECK(ljh::version{1,2,3,5} >= ljh::version{1,2,3,4});
-		CHECK(ljh::version{1,2,4,4} >= ljh::version{1,2,3,4});
-		CHECK(ljh::version{1,3,3,4} >= ljh::version{1,2,3,4});
-		CHECK(ljh::version{2,2,3,4} >= ljh::version{1,2,3,4});
-	}
-	SECTION("less then equal to")
-	{
-		CHECK(ljh::version{1,2,3,4} <= ljh::version{1,2,3,4});
-		CHECK(ljh::version{1,2,3,3} <= ljh::version{1,2,3,4});
-		CHECK(ljh::version{1,2,2,4} <= ljh::version{1,2,3,4});
-		CHECK(ljh::version{1,1,3,4} <= ljh::version{1,2,3,4});
-		CHECK(ljh::version{0,2,3,4} <= ljh::version{1,2,3,4});
-	}
+	CHECK(ljh::version{1,2,3,3} != ljh::version{1,2,3,4});
+	CHECK(ljh::version{1,2,2,4} != ljh::version{1,2,3,4});
+	CHECK(ljh::version{1,1,3,4} != ljh::version{1,2,3,4});
+	CHECK(ljh::version{0,2,3,4} != ljh::version{1,2,3,4});
+}
+TEST_CASE("version using three way operator - greater then equal to", "[version]")
+{
+	CHECK(ljh::version{1,2,3,4} >= ljh::version{1,2,3,4});
+	CHECK(ljh::version{1,2,3,5} >= ljh::version{1,2,3,4});
+	CHECK(ljh::version{1,2,4,4} >= ljh::version{1,2,3,4});
+	CHECK(ljh::version{1,3,3,4} >= ljh::version{1,2,3,4});
+	CHECK(ljh::version{2,2,3,4} >= ljh::version{1,2,3,4});
+}
+TEST_CASE("version using three way operator - less then equal to", "[version]")
+{
+	CHECK(ljh::version{1,2,3,4} <= ljh::version{1,2,3,4});
+	CHECK(ljh::version{1,2,3,3} <= ljh::version{1,2,3,4});
+	CHECK(ljh::version{1,2,2,4} <= ljh::version{1,2,3,4});
+	CHECK(ljh::version{1,1,3,4} <= ljh::version{1,2,3,4});
+	CHECK(ljh::version{0,2,3,4} <= ljh::version{1,2,3,4});
 }
 
 #endif
