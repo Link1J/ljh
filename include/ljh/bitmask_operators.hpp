@@ -25,8 +25,8 @@
 //     1.2 Using more C++17 stuff
 
 #pragma once
-#include "is_scoped_enum.hpp"
-#include "static_cast_underlying.hpp"
+#include "type_traits.hpp"
+#include "casting.hpp"
 
 namespace ljh::bitmask_operators
 {

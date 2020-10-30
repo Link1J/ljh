@@ -4,7 +4,7 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-#include "system_directories.hpp"
+#include "ljh/system_directories.hpp"
 
 #ifdef _WIN32
 #    define WIN32_LEAN_AND_MEAN
@@ -43,7 +43,7 @@ namespace ljh
 			std::string output;
 			int size = WideCharToMultiByte(CP_UTF8, 0, string, -1, NULL, 0, NULL, NULL);
 			output.resize(size);
-			WideCharToMultiByte(CP_UTF8, 0, string, -1, (char*)output.data(), output.size(), NULL, NULL);
+			WideCharToMultiByte(CP_UTF8, 0, string, -1, (char*)output.data(), size, NULL, NULL);
 			output.resize(size - 1);
 			return output;
 		}

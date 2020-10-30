@@ -12,21 +12,19 @@ FetchContent_GetProperties(Catch2 SOURCE_DIR CATCH2_SOURCE)
 set(CMAKE_MODULE_PATH ${CATCH2_SOURCE}/extras ${CMAKE_MODULE_PATH})
 
 add_executable(tests_11
-	catch.cpp
 	system_directories.98.cpp
 )
 set_target_properties(tests_11 PROPERTIES CXX_STANDARD 11 CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)
 target_link_libraries(tests_11 Catch2::Catch2WithMain ljh system_directories)
 
 add_executable(tests_17
-	catch.cpp
 	version.17.cpp
+	memory_mapped_file.17.cpp
 )
 set_target_properties(tests_17 PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)
 target_link_libraries(tests_17 Catch2::Catch2WithMain ljh)
 
 add_executable(tests_20
-	catch.cpp
 	expected.20.cpp
 	version.20.cpp
 )
