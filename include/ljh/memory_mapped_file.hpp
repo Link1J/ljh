@@ -79,7 +79,7 @@ namespace ljh::memory_mapped
 	public:
 		view() = default;
 		view(file& fd, permissions permissions, size_t start, size_t length);
-		~view() noexcept(false);
+		~view();
 		view(const view&) = delete;
 		view& operator=(const view&) = delete;
 		view(view&&);
@@ -107,30 +107,31 @@ namespace ljh::memory_mapped
 		size_t length = 0      ;
 	};
 
-	class io_error : std::exception
+	class io_error : public std::exception
 	{
 		uint32_t _error_code;
 	public:
 		explicit io_error();
 		virtual const char* what() const noexcept override;
 		const uint32_t error_code() const noexcept;
+		const char* error_string() const noexcept;
 	};
 
-	class invalid_position : io_error
+	class invalid_position : public io_error
 	{
 	public:
 		explicit invalid_position() = default;
 		virtual const char* what() const noexcept override;
 	};
 
-	class invalid_file : io_error
+	class invalid_file : public io_error
 	{
 	public:
 		explicit invalid_file() = default;
 		virtual const char* what() const noexcept override;
 	};
 
-	class invalid_permissions : io_error
+	class invalid_permissions : public io_error
 	{
 	public:
 		explicit invalid_permissions() = default;

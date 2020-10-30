@@ -15,7 +15,7 @@ add_executable(tests_11
 	system_directories.98.cpp
 )
 set_target_properties(tests_11 PROPERTIES CXX_STANDARD 11 CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)
-target_link_libraries(tests_11 Catch2::Catch2WithMain ljh system_directories)
+target_link_libraries(tests_11 Catch2::Catch2WithMain ljh)
 
 add_executable(tests_17
 	version.17.cpp

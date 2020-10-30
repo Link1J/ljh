@@ -54,14 +54,15 @@ namespace _ljh
 
 		for (auto max = a; a > -1; a--)
 		{
-			if (std::is_signed<_conv>::value && text[a] == '-')
+			LJH_IF_CONSTEXPR (std::is_signed<_conv>::value)
 			{
-				value = -value;
+				if (text[a] == '-')
+				{
+					value = -value;
+					continue;
+				}
 			}
-			else
-			{
-				value += (text[a] - '0') * pow(10,max-a);
-			}
+			value += static_cast<_conv>((text[a] - '0') * pow(10,max-a));
 		}
 	}
 }

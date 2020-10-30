@@ -5,8 +5,9 @@
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include <catch2/catch_test_macros.hpp>
-#include <catch2/matchers/catch_matchers_templated.hpp>
+#include <catch2/catch_translate_exception.hpp>
 #include "ljh/memory_mapped_file.hpp"
+#include <cstring>
 
 using namespace std::literals;
 
@@ -98,8 +99,29 @@ const char LICENSE[] = {
 	0x4E,0x20,0x54,0x48,0x45,0x20,0x53,0x4F,0x46,0x54,0x57,0x41,0x52,0x45,0x2E
 };
 
+CATCH_TRANSLATE_EXCEPTION(const ljh::memory_mapped::io_error& ex)
+{
+	return std::string{ex.what()} + " - " + ex.error_string() + " (" + std::to_string(ex.error_code()) + ")";
+}
+
+CATCH_TRANSLATE_EXCEPTION(const ljh::memory_mapped::invalid_position& ex)
+{
+	return std::string{ex.what()} + " - " + ex.error_string() + " (" + std::to_string(ex.error_code()) + ")";
+}
+
+CATCH_TRANSLATE_EXCEPTION(const ljh::memory_mapped::invalid_file& ex)
+{
+	return std::string{ex.what()} + " - " + ex.error_string() + " (" + std::to_string(ex.error_code()) + ")";
+}
+
+CATCH_TRANSLATE_EXCEPTION(const ljh::memory_mapped::invalid_permissions& ex)
+{
+	return std::string{ex.what()} + " - " + ex.error_string() + " (" + std::to_string(ex.error_code()) + ")";
+}
+
 TEST_CASE("file","[memory_mapped_file]")
 {
+	REQUIRE_NOTHROW(ljh::memory_mapped::file{"../../LICENSE_1_0.txt", ljh::memory_mapped::permissions::r});
 	ljh::memory_mapped::file file{"../../LICENSE_1_0.txt", ljh::memory_mapped::permissions::r};
 	REQUIRE(file.is_open());
 	REQUIRE(file.size() == sizeof(LICENSE));
@@ -113,4 +135,38 @@ TEST_CASE("file","[memory_mapped_file]")
 		REQUIRE(view.valid());
 		REQUIRE(memcmp(view.as<char>(), LICENSE, sizeof(LICENSE)) == 0);
 	}
+}
+
+TEST_CASE("exec","[memory_mapped_file]")
+{
+	REQUIRE_NOTHROW(ljh::memory_mapped::file{"../../LICENSE_1_0.txt", ljh::memory_mapped::permissions::rwx});
+	ljh::memory_mapped::file file{"../../LICENSE_1_0.txt", ljh::memory_mapped::permissions::rwx};
+	REQUIRE(file.is_open());
+	REQUIRE(file.size() == sizeof(LICENSE));
+	SECTION("view")
+	{
+		REQUIRE_NOTHROW(ljh::memory_mapped::view{file, ljh::memory_mapped::permissions::rx, 0, file.size()});
+		ljh::memory_mapped::view view{file, ljh::memory_mapped::permissions::rx, 0, file.size()};
+		REQUIRE(view.valid());
+		REQUIRE(memcmp(view.as<char>(), LICENSE, sizeof(LICENSE)) == 0);
+	}
+	SECTION("view write ")
+	{
+		REQUIRE_NOTHROW(ljh::memory_mapped::view{file, ljh::memory_mapped::permissions::rwx, 0, file.size()});
+		ljh::memory_mapped::view view{file, ljh::memory_mapped::permissions::rwx, 0, file.size()};
+		REQUIRE(view.valid());
+		REQUIRE(memcmp(view.as<char>(), LICENSE, sizeof(LICENSE)) == 0);
+	}
+}
+
+TEST_CASE("copy on write","[memory_mapped_file]")
+{
+	REQUIRE_NOTHROW(ljh::memory_mapped::file{"../../LICENSE_1_0.txt", ljh::memory_mapped::permissions::rw});
+	ljh::memory_mapped::file file{"../../LICENSE_1_0.txt", ljh::memory_mapped::permissions::rw};
+	ljh::memory_mapped::view ref{file, ljh::memory_mapped::permissions::r, 0, file.size()};
+	REQUIRE(ref.valid());
+	ljh::memory_mapped::view write{file, ljh::memory_mapped::permissions::r | ljh::memory_mapped::permissions::copy_on_write, 0, file.size()};
+	REQUIRE(write.valid());
+	write.as<char>()[0] = 0xA;
+	REQUIRE(memcmp(ref.as<char>(), write.as<char>(), file.size()) != 0);
 }

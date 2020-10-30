@@ -14,14 +14,17 @@
 #    include <cstring>
 #elif defined(__linux__)
 #    include <unistd.h>
+#    include <fcntl.h>
 #    include <sys/types.h>
 #    include <sys/stat.h>
 #    include <sys/mman.h>
+#    include <string.h>
 #endif
 
 ljh::memory_mapped::file::file(std::filesystem::path&& filename, permissions permissions)
 {
 	if ((permissions & permissions::rw) == permissions::w) { throw invalid_permissions{}; }
+	if ((permissions & permissions::rwx) == permissions::x) { throw invalid_permissions{}; }
 
 #ifdef _WIN32
 	DWORD access    = 0;
@@ -42,13 +45,29 @@ ljh::memory_mapped::file::file(std::filesystem::path&& filename, permissions per
 	}
 
 	file_handle = CreateFileW(filename.c_str(), access, shareMode, NULL, OPEN_EXISTING, 0, NULL);
-	if (file_handle == invalid_handle) { throw invalid_file{}; /* GetLastError(); */ }
+	if (file_handle == invalid_handle) { throw invalid_file{}; }
 	file_descriptor = CreateFileMappingW(file_handle, NULL, protect, 0, 0, NULL);
-	if (file_descriptor == invalid_handle) { throw invalid_file{}; /* GetLastError(); */ }
+	if (file_descriptor == invalid_handle) { throw invalid_file{}; }
 	
 	LARGE_INTEGER size_help;
 	GetFileSizeEx(file_handle, &size_help);
 	memcpy(&filesize, &size_help, sizeof(filesize));
+#else
+	int mode = 0;
+	switch (permissions)
+	{
+	case permissions::r  : mode = O_RDONLY; break;
+	case permissions::w  : mode = O_WRONLY; break;
+	case permissions::rw : mode = O_RDWR  ; break;
+	case permissions::rx : mode = O_RDONLY; break;
+	case permissions::rwx: mode = O_RDWR  ; break;
+	}
+
+	struct stat st;
+	if (stat(filename.c_str(), &st)) { throw invalid_file{}; }
+	file_descriptor = open(filename.c_str(), mode);
+	if (file_descriptor == invalid_handle) { throw invalid_file{}; }
+	filesize = st.st_size;
 #endif
 }
 
@@ -58,6 +77,8 @@ ljh::memory_mapped::file::~file()
 #ifdef _WIN32
 	CloseHandle(file_descriptor);
 	CloseHandle(file_handle);
+#else
+	close(file_descriptor);
 #endif
 }
 
@@ -94,12 +115,21 @@ bool ljh::memory_mapped::file::is_open() const noexcept
 
 ljh::memory_mapped::view::view(file& fd, permissions permissions, size_t start, size_t length)
 {
-	if (start < 0 || start + length > fd.filesize || length < 0 || fd.file_descriptor == invalid_handle)
+	if (!fd.is_open())
+	{
+		throw invalid_file{};
+	}
+	if (start < 0 || start + length > fd.size() || length < 0)
 	{
 		throw invalid_position{};
 	}
 	if ((permissions & permissions::rw ) == permissions::w) { throw invalid_permissions{}; }
 	if ((permissions & permissions::rwx) == permissions::x) { throw invalid_permissions{}; }
+
+	if ((permissions & (permissions::write | permissions::copy_on_write)) == (permissions::write | permissions::copy_on_write))
+	{
+		throw invalid_permissions{};
+	}
 #ifdef _WIN32
 	DWORD access = 0;
 
@@ -117,20 +147,40 @@ ljh::memory_mapped::view::view(file& fd, permissions permissions, size_t start, 
 	}
 
 	data = MapViewOfFile(fd.file_descriptor, access, start >> 32, start & 0xFFFFFFFF, length);
-	if (data == nullptr) { throw invalid_file{}; /* GetLastError(); */ }
+	if (data == nullptr) { throw invalid_file{}; }
+	this->length = length;
+#else
+	int prot  = 0;
+	int flags = 0;
+
+	if ((permissions & permissions::r) == permissions::r) { prot |= PROT_READ ; }
+	if ((permissions & permissions::w) == permissions::w) { prot |= PROT_WRITE; }
+	if ((permissions & permissions::x) == permissions::x) { prot |= PROT_EXEC ; }
+
+	if ((permissions & permissions::copy_on_write) == permissions::copy_on_write)
+	{
+		prot |= PROT_WRITE;
+		flags |= MAP_PRIVATE;
+	}
+	else
+	{
+		flags |= MAP_SHARED;
+	}
+
+	data = mmap(nullptr, length, prot, flags, fd.file_descriptor, start);
+	if (data == MAP_FAILED) { throw invalid_file{}; }
 	this->length = length;
 #endif
 }
 
-ljh::memory_mapped::view::~view() noexcept(false)
+ljh::memory_mapped::view::~view()
 {
 	if (!valid()) { return; }
 	flush();
 #ifdef _WIN32
-	if (UnmapViewOfFile(data) == 0)
-	{
-		throw io_error{};
-	}
+	UnmapViewOfFile(data);
+#else
+	munmap(data, length);
 #endif
 	data = nullptr;
 	length = 0;
@@ -199,4 +249,13 @@ const char* ljh::memory_mapped::invalid_file::what() const noexcept
 const char* ljh::memory_mapped::invalid_permissions::what() const noexcept
 {
 	return "invalid_permissions";
+}
+
+const char* ljh::memory_mapped::io_error::error_string() const noexcept
+{
+#ifdef _WIN32
+	return "";
+#else 
+	return strerror(_error_code);
+#endif
 }

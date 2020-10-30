@@ -8,7 +8,7 @@
 // SPDX-License-Identifier: BSL-1.0
 // 
 // Requires C++17
-// Requires type_traits.hpp and char_convertions.hpp
+// Requires type_traits.hpp and char_convertions.hpp and cpp_version.hpp
 // 
 // ABOUT
 //
@@ -21,11 +21,16 @@
 
 #include "type_traits.hpp"
 #include "char_convertions.hpp"
+#include "cpp_version.hpp"
 
-#include <compare>
 #include <limits>
 #include <string>
 #include <string_view>
+#if LJH_CPP_VERSION > LJH_CPP17_VERSION
+#    if __has_include(<compare>)
+#        include <compare>
+#    endif
+#endif
 
 #undef min
 #undef max
