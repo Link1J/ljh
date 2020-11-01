@@ -31,5 +31,5 @@ install(TARGETS ljh EXPORT ljh
 	PUBLIC_HEADER DESTINATION include
 	BUNDLE        DESTINATION bin
 )
-install(EXPORT ljh NAMESPACE ljh DESTINATION lib/cmake/ljh)
+install(EXPORT ljh NAMESPACE ljh DESTINATION lib/cmake/ljh FILE ljh-config.cmake)
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/ DESTINATION include)
