@@ -18,15 +18,16 @@
 //     1.0 Inital Version
 
 #pragma once
+#include <type_traits>
 
 namespace ljh
 {
 	namespace int_types
 	{
-		using s08 =          char     ;
-		using s16 =          short    ;
-		using s32 =          int      ;
-		using s64 =          long long;
+		using s08 =   signed char     ;
+		using s16 =   signed short    ;
+		using s32 =   signed int      ;
+		using s64 =   signed long long;
 		using u08 = unsigned char     ;
 		using u16 = unsigned short    ;
 		using u32 = unsigned int      ;
@@ -37,13 +38,24 @@ namespace ljh
 }
 
 // Size checks
-static_assert(sizeof(ljh::int_types::s08) == 1, "Type 'ljh::int_types::s08' is not 1 byte large. Please correct this file for your platform.");
-static_assert(sizeof(ljh::int_types::s16) == 2, "Type 'ljh::int_types::s16' is not 2 byte large. Please correct this file for your platform.");
-static_assert(sizeof(ljh::int_types::s32) == 4, "Type 'ljh::int_types::s32' is not 4 byte large. Please correct this file for your platform.");
-static_assert(sizeof(ljh::int_types::s64) == 8, "Type 'ljh::int_types::s64' is not 8 byte large. Please correct this file for your platform.");
-static_assert(sizeof(ljh::int_types::u08) == 1, "Type 'ljh::int_types::u08' is not 1 byte large. Please correct this file for your platform.");
-static_assert(sizeof(ljh::int_types::u16) == 2, "Type 'ljh::int_types::u16' is not 2 byte large. Please correct this file for your platform.");
-static_assert(sizeof(ljh::int_types::u32) == 4, "Type 'ljh::int_types::u32' is not 4 byte large. Please correct this file for your platform.");
-static_assert(sizeof(ljh::int_types::u64) == 8, "Type 'ljh::int_types::u64' is not 8 byte large. Please correct this file for your platform.");
-static_assert(sizeof(ljh::int_types::f32) == 4, "Type 'ljh::int_types::f32' is not 4 byte large. Please correct this file for your platform.");
-static_assert(sizeof(ljh::int_types::f64) == 8, "Type 'ljh::int_types::f64' is not 8 byte large. Please correct this file for your platform.");
+static_assert(sizeof(ljh::int_types::s08) == 1, "Type 'ljh::int_types::s08' is not 1 byte large. Please correct this file for your platform." );
+static_assert(sizeof(ljh::int_types::s16) == 2, "Type 'ljh::int_types::s16' is not 2 bytes large. Please correct this file for your platform.");
+static_assert(sizeof(ljh::int_types::s32) == 4, "Type 'ljh::int_types::s32' is not 4 bytes large. Please correct this file for your platform.");
+static_assert(sizeof(ljh::int_types::s64) == 8, "Type 'ljh::int_types::s64' is not 8 bytes large. Please correct this file for your platform.");
+static_assert(sizeof(ljh::int_types::u08) == 1, "Type 'ljh::int_types::u08' is not 1 byte large. Please correct this file for your platform." );
+static_assert(sizeof(ljh::int_types::u16) == 2, "Type 'ljh::int_types::u16' is not 2 bytes large. Please correct this file for your platform.");
+static_assert(sizeof(ljh::int_types::u32) == 4, "Type 'ljh::int_types::u32' is not 4 bytes large. Please correct this file for your platform.");
+static_assert(sizeof(ljh::int_types::u64) == 8, "Type 'ljh::int_types::u64' is not 8 bytes large. Please correct this file for your platform.");
+static_assert(sizeof(ljh::int_types::f32) == 4, "Type 'ljh::int_types::f32' is not 4 bytes large. Please correct this file for your platform.");
+static_assert(sizeof(ljh::int_types::f64) == 8, "Type 'ljh::int_types::f64' is not 8 bytes large. Please correct this file for your platform.");
+
+static_assert(std::is_signed  <ljh::int_types::s08>::value, "Type 'ljh::int_types::s08' is not signed. Please correct this file for your platform."    );
+static_assert(std::is_signed  <ljh::int_types::s16>::value, "Type 'ljh::int_types::s16' is not signed. Please correct this file for your platform."    );
+static_assert(std::is_signed  <ljh::int_types::s32>::value, "Type 'ljh::int_types::s32' is not signed. Please correct this file for your platform."    );
+static_assert(std::is_signed  <ljh::int_types::s64>::value, "Type 'ljh::int_types::s64' is not signed. Please correct this file for your platform."    );
+static_assert(std::is_unsigned<ljh::int_types::u08>::value, "Type 'ljh::int_types::u08' is not unsigned. Please correct this file for your platform."  );
+static_assert(std::is_unsigned<ljh::int_types::u16>::value, "Type 'ljh::int_types::u16' is not unsigned. Please correct this file for your platform."  );
+static_assert(std::is_unsigned<ljh::int_types::u32>::value, "Type 'ljh::int_types::u32' is not unsigned. Please correct this file for your platform."  );
+static_assert(std::is_unsigned<ljh::int_types::u64>::value, "Type 'ljh::int_types::u64' is not unsigned. Please correct this file for your platform."  );
+static_assert(std::is_signed  <ljh::int_types::f32>::value, "Type 'ljh::int_types::f32' is not signed. Please report the problem to the compiler devs.");
+static_assert(std::is_signed  <ljh::int_types::f64>::value, "Type 'ljh::int_types::f64' is not signed. Please report the problem to the compiler devs.");
