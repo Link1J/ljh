@@ -29,13 +29,13 @@
 namespace ljh
 {
 	template <typename Char, std::size_t Size, typename Traits = std::char_traits<Char>>
-	struct basic_compile_time_string
+	struct compile_time_string
 	{
 		using char_type = Char;
 
 		char_type content[Size] = {};
 
-		constexpr basic_compile_time_string(const char_type (&input)[Size + 1]) noexcept
+		constexpr compile_time_string(const char_type (&input)[Size + 1]) noexcept
 		{
 			if constexpr (Size != 0)
 			{
@@ -47,7 +47,7 @@ namespace ljh
 		}
 		
 		template <typename Traits2>
-		constexpr basic_compile_time_string(const basic_compile_time_string<Char, Size, Traits2> &other) noexcept
+		constexpr compile_time_string(const compile_time_string<Char, Size, Traits2> &other) noexcept
 		{
 			for (std::size_t i{0}; i < Size; ++i)
 			{
@@ -105,23 +105,17 @@ namespace ljh
 	};
 
 	template<typename Char, std::size_t Size, typename Traits = std::char_traits<Char>>
-	basic_compile_time_string(const Char (&)[Size]) -> basic_compile_time_string<Char, Size - 1, Traits>;
+	compile_time_string(const Char (&)[Size]) -> compile_time_string<Char, Size - 1, Traits>;
 	template<typename Char, std::size_t Size, typename Traits = std::char_traits<Char>>
-	basic_compile_time_string(basic_compile_time_string<Char, Size>) -> basic_compile_time_string<Char, Size, Traits>;
-
-	template<std::size_t N> using compile_time_string    = basic_compile_time_string<char    , N>;
-	template<std::size_t N> using wcompile_time_string   = basic_compile_time_string<wchar_t , N>;
-	template<std::size_t N> using u8compile_time_string  = basic_compile_time_string<char8_t , N>;
-	template<std::size_t N> using u16compile_time_string = basic_compile_time_string<char16_t, N>;
-	template<std::size_t N> using u32compile_time_string = basic_compile_time_string<char32_t, N>;
+	compile_time_string(compile_time_string<Char, Size>) -> compile_time_string<Char, Size, Traits>;
 }
 
 namespace std
 {
 	template<typename Char, std::size_t Size>
-	struct hash<ljh::basic_compile_time_string<Char, Size>>
+	struct hash<ljh::compile_time_string<Char, Size>>
 	{
-		std::size_t operator()(ljh::basic_compile_time_string<Char, Size> const& s) const noexcept
+		std::size_t operator()(ljh::compile_time_string<Char, Size> const& s) const noexcept
 		{
 			return s.hash();
 		}
