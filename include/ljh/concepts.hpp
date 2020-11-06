@@ -18,12 +18,13 @@
 
 #pragma once
 #include "cpp_version.hpp"
-#if __cpp_concepts < 201907L
+#if LJH_CPP_VERSION < LJH_CPP17_VERSION || !(__cpp_concepts > 0)
 #error "C++20 concepts are needed for this header"
 #endif
 
 #include <concepts>
 #include <type_traits>
+#include "type_traits.hpp"
 
 namespace ljh
 {
@@ -42,4 +43,7 @@ namespace ljh
 		char16_t,
 		char32_t
 	>;
+
+	template<typename T>
+	concept scoped_enum = is_scoped_enum_v<T>;
 }

@@ -50,7 +50,7 @@ namespace ljh
 
 		std::string _get_windows_dir(REFKNOWNFOLDERID folder_id, int folder_csidl)
 		{
-			using SHGetKnownFolderPath_FNP = HRESULT(*)(REFKNOWNFOLDERID,DWORD,HANDLE,PWSTR*);
+			using SHGetKnownFolderPath_FNP = HRESULT(__stdcall*)(REFKNOWNFOLDERID,DWORD,HANDLE,PWSTR*);
 			static auto _SHGetKnownFolderPath = (SHGetKnownFolderPath_FNP)GetProcAddress(LoadLibrary(TEXT("Shell32.dll")), "SHGetKnownFolderPath");
 			if (_SHGetKnownFolderPath != NULL)
 			{

@@ -88,7 +88,7 @@ namespace ljh
 			: version(std::basic_string_view<_char, _traits>{text.data(),text.size()})
 		{}
 
-		template<typename _char, typename = typename std::enable_if_t<is_char_v<_char>>>
+		template<typename _char, typename = typename std::enable_if_t<is_char_type_v<_char>>>
 		version(_char const * text)
 			: version(std::basic_string_view{text})
 		{}
@@ -108,7 +108,7 @@ namespace ljh
 		{
 		}
 
-#if defined(__cpp_impl_three_way_comparison) && defined(__cpp_lib_three_way_comparison)
+#if defined(__cpp_impl_three_way_comparison) && __has_include(<compare>)
 		std::strong_ordering operator<=>(const version& rhs) const 
 		{
 			if (auto cmp = _major <=> rhs._major; cmp != std::strong_ordering::equal) { return cmp; }

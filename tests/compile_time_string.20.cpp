@@ -8,5 +8,15 @@
 #include "ljh/compile_time_string.hpp"
 
 TEST_CASE("compile time strings", "[compile_time_string]" ) {
-	REQUIRE(ljh::basic_compile_time_string{"ljh"}.hash() == 0);
+	if constexpr (sizeof(std::size_t) == 4)
+	{
+		CHECK(ljh::basic_compile_time_string{"ljh"   }.hash() == 0x564AB9C1);
+		CHECK(ljh::basic_compile_time_string{"link1j"}.hash() == 0x868C17C6);
+		
+	}
+	else if constexpr (sizeof(std::size_t) == 8)
+	{
+		CHECK(ljh::basic_compile_time_string{"ljh"   }.hash() == 0x12468A191DA726C1);
+		CHECK(ljh::basic_compile_time_string{"link1j"}.hash() == 0x54EFEFC5BB2C6526);
+	}
 }

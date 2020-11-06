@@ -20,7 +20,7 @@
 
 #pragma once
 #include "cpp_version.hpp"
-#if __cpp_nontype_template_args < 201911L
+#if LJH_CPP_VERSION < LJH_CPP17_VERSION || __cpp_nontype_template_args < 201911L
 #error "C++20 support for non-type template args is needed"
 #endif
 
@@ -45,8 +45,9 @@ namespace ljh
 				}
 			}
 		}
-
-		constexpr basic_compile_time_string(const basic_compile_time_string &other) noexcept
+		
+		template <typename Traits2>
+		constexpr basic_compile_time_string(const basic_compile_time_string<Char, Size, Traits2> &other) noexcept
 		{
 			for (std::size_t i{0}; i < Size; ++i)
 			{
@@ -54,7 +55,7 @@ namespace ljh
 			}
 		}
 
-        [[nodiscard]] constexpr std::size_t size() const noexcept
+		[[nodiscard]] constexpr std::size_t size() const noexcept
 		{
 			return Size;
 		}
@@ -79,19 +80,20 @@ namespace ljh
 			return std::basic_string_view<char_type>{content, Size};
 		}
 
-		static constexpr std::size_t FNV_offset_basis_table[] = {
-			0, 0, 0, 0, 0x811C9DC5, 0, 0, 0, 0, 0xCBF29CE484222325
-		};
+		static constexpr std::size_t FNV_offset_basis = 
+			sizeof(std::size_t) == 4 ?         0x811C9DC5 :
+			sizeof(std::size_t) == 8 ? 0xCBF29CE484222325 :
+			0;
+		static_assert(FNV_offset_basis != 0, "Unknown value for FNV_offset_basis with the current size of std::size_t");
 
-		static constexpr std::size_t FNV_prime_table[] = {
-			0, 0, 0, 0, 0x01000193, 0, 0, 0, 0, 0x00000100000001B3
-		};
+		static constexpr std::size_t FNV_prime = 
+			sizeof(std::size_t) == 4 ?         0x01000193 :
+			sizeof(std::size_t) == 8 ? 0x00000100000001B3 :
+			0;
+		static_assert(FNV_prime != 0, "Unknown value for FNV_prime with the current size of std::size_t");
 
 		constexpr std::enable_if_t<sizeof(char_type) == 1, std::size_t> hash() const noexcept
 		{
-			const std::size_t FNV_offset_basis = FNV_offset_basis_table[sizeof(std::size_t)];
-			const std::size_t FNV_prime        = FNV_prime_table       [sizeof(std::size_t)];
-
 			std::size_t hash_data = FNV_offset_basis;
 			for (auto &byte_of_data : *this)
 			{
@@ -112,16 +114,14 @@ namespace ljh
 	template<std::size_t N> using u8compile_time_string  = basic_compile_time_string<char8_t , N>;
 	template<std::size_t N> using u16compile_time_string = basic_compile_time_string<char16_t, N>;
 	template<std::size_t N> using u32compile_time_string = basic_compile_time_string<char32_t, N>;
-
-	
 }
 
 namespace std
 {
-	template<typename Char, std::size_t Size, typename Traits>
-	struct hash<ljh::basic_compile_time_string<Char, Size, Traits>>
+	template<typename Char, std::size_t Size>
+	struct hash<ljh::basic_compile_time_string<Char, Size>>
 	{
-		std::size_t operator()(ljh::basic_compile_time_string<Char, Size, Traits> const& s) const noexcept
+		std::size_t operator()(ljh::basic_compile_time_string<Char, Size> const& s) const noexcept
 		{
 			return s.hash();
 		}

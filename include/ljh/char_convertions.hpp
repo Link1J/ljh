@@ -82,13 +82,13 @@ namespace ljh
 	}
 
 	template<typename _conv, typename _char, size_t _size>
-	typename std::enable_if<std::is_integral<_conv>::value && is_char<std::decay_t<_char>>::value>::type from_string(_conv& value, _char text[_size])
+	typename std::enable_if<std::is_integral<_conv>::value && is_char_type<std::decay_t<_char>>::value>::type from_string(_conv& value, _char text[_size])
 	{
 		_ljh::from_string(value, text, _size);
 	}
 
 	template<typename _conv, typename _char>
-	typename std::enable_if<std::is_integral<_conv>::value && is_char<std::decay_t<_char>>::value>::type from_string(_conv& value, _char* text)
+	typename std::enable_if<std::is_integral<_conv>::value && is_char_type<std::decay_t<_char>>::value>::type from_string(_conv& value, _char* text)
 	{
 		_char* curr; for (curr = text; *curr != 0; curr++) {}
 		_ljh::from_string(value, text, (curr - text)/sizeof(_char));
