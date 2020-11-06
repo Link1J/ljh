@@ -1,4 +1,12 @@
-//
-// Created by jrair on 11/5/2020.
-//
 
+//          Copyright Jared Irwin 2020
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          https://www.boost.org/LICENSE_1_0.txt)
+
+#include <catch2/catch_test_macros.hpp>
+#include "ljh/compile_time_string.hpp"
+
+TEST_CASE("compile time strings", "[compile_time_string]" ) {
+	REQUIRE(ljh::basic_compile_time_string{"ljh"}.hash() == 0);
+}
