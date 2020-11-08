@@ -4,10 +4,10 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-// function_traits.hpp - v1.1
+// function_traits.hpp - v1.0
 // SPDX-License-Identifier: BSL-1.0
 // 
-// Requires C++
+// Requires C++11
 // 
 // ABOUT
 //     Adds function traits
