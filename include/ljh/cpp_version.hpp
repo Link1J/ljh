@@ -466,3 +466,66 @@
 #else
 #define LJH_IF_CONSTEXPR if
 #endif
+
+#if __cpp_noexcept_function_type >= 201510L
+#define LJH_NOEXCEPT_FUNCTION_TYPE noexcept
+#else
+#define LJH_NOEXCEPT_FUNCTION_TYPE(A)
+#endif
+
+#if defined(__clang__)
+#define LJH_CALLING_CONVENTION_cdecl              __attribute__((cdecl             ))
+#define LJH_CALLING_CONVENTION_stdcall            __attribute__((stdcall           ))
+#define LJH_CALLING_CONVENTION_fastcall           __attribute__((fastcall          ))
+#define LJH_CALLING_CONVENTION_vectorcall         __attribute__((vectorcall        ))
+#define LJH_CALLING_CONVENTION_ms_abi             __attribute__((ms_abi            ))
+#define LJH_CALLING_CONVENTION_preserve_all       __attribute__((preserve_all      ))
+#define LJH_CALLING_CONVENTION_preserve_most      __attribute__((preserve_most     ))
+#define LJH_CALLING_CONVENTION_regcall            __attribute__((regcall           ))
+#define LJH_CALLING_CONVENTION_thiscall           __attribute__((thiscall          ))
+#define LJH_CALLING_CONVENTION_aarch64_vector_pcs __attribute__((aarch64_vector_pcs))
+#elif defined(__GNUC__)
+#define LJH_CALLING_CONVENTION_cdecl              __attribute__((cdecl             ))
+#define LJH_CALLING_CONVENTION_stdcall            __attribute__((stdcall           ))
+#define LJH_CALLING_CONVENTION_fastcall           __attribute__((fastcall          ))
+#define LJH_CALLING_CONVENTION_vectorcall         __attribute__((vectorcall        ))
+#define LJH_CALLING_CONVENTION_ms_abi             __attribute__((ms_abi            ))
+#define LJH_CALLING_CONVENTION_preserve_all       __attribute__((preserve_all      ))
+#define LJH_CALLING_CONVENTION_preserve_most      __attribute__((preserve_most     ))
+#define LJH_CALLING_CONVENTION_regcall            __attribute__((regcall           ))
+#define LJH_CALLING_CONVENTION_thiscall           __attribute__((thiscall          ))
+#define LJH_CALLING_CONVENTION_aarch64_vector_pcs __attribute__((aarch64_vector_pcs))
+#elif defined(_MSC_VER)
+#define LJH_CALLING_CONVENTION_cdecl              __cdecl     
+#define LJH_CALLING_CONVENTION_stdcall            __stdcall   
+#define LJH_CALLING_CONVENTION_fastcall           __fastcall  
+#define LJH_CALLING_CONVENTION_vectorcall         __vectorcall
+#define LJH_CALLING_CONVENTION_ms_abi             __cdecl     
+#define LJH_CALLING_CONVENTION_preserve_all       __cdecl     
+#define LJH_CALLING_CONVENTION_preserve_most      __cdecl     
+#define LJH_CALLING_CONVENTION_regcall            __cdecl     
+#define LJH_CALLING_CONVENTION_thiscall           __thiscall  
+#define LJH_CALLING_CONVENTION_aarch64_vector_pcs __cdecl     
+#elif defined(__INTEL_COMPILER)
+#define LJH_CALLING_CONVENTION_cdecl              __cdecl             
+#define LJH_CALLING_CONVENTION_stdcall            __stdcall           
+#define LJH_CALLING_CONVENTION_fastcall           __fastcall          
+#define LJH_CALLING_CONVENTION_vectorcall         __vectorcall        
+#define LJH_CALLING_CONVENTION_ms_abi             __ms_abi            
+#define LJH_CALLING_CONVENTION_preserve_all       __preserve_all      
+#define LJH_CALLING_CONVENTION_preserve_most      __preserve_most     
+#define LJH_CALLING_CONVENTION_regcall            __regcall           
+#define LJH_CALLING_CONVENTION_thiscall           __thiscall          
+#define LJH_CALLING_CONVENTION_aarch64_vector_pcs __aarch64_vector_pcs
+#else
+#define LJH_CALLING_CONVENTION_cdecl              
+#define LJH_CALLING_CONVENTION_stdcall            
+#define LJH_CALLING_CONVENTION_fastcall           
+#define LJH_CALLING_CONVENTION_vectorcall         
+#define LJH_CALLING_CONVENTION_ms_abi             
+#define LJH_CALLING_CONVENTION_preserve_all       
+#define LJH_CALLING_CONVENTION_preserve_most      
+#define LJH_CALLING_CONVENTION_regcall            
+#define LJH_CALLING_CONVENTION_thiscall           
+#define LJH_CALLING_CONVENTION_aarch64_vector_pcs 
+#endif
