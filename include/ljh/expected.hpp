@@ -270,16 +270,16 @@ namespace ljh
 	{
 		static constexpr bool copy_constructible = (std::is_void_v<T> || std::is_copy_constructible_v<T>) && std::is_copy_constructible_v<E>;
 		static constexpr bool move_constructible = (std::is_void_v<T> || std::is_move_constructible_v<T>) && std::is_move_constructible_v<E>;
-		static constexpr bool copy_assignable = (std::is_void_v<T> && std::is_copy_assignable_v<E> && std::is_copy_constructible_v<E>) || (!std::is_void_v<T> && std::is_copy_assignable_v<T> && std::is_copy_constructible_v<T> && std::is_copy_assignable_v<E> && std::is_copy_constructible_v<E> && (std::is_nothrow_move_constructible_v<E> || std::is_nothrow_move_constructible_v<T>));
-		static constexpr bool move_assignable = (std::is_void_v<T> || (std::is_move_assignable_v<T> && std::is_move_constructible_v<T>)) && std::is_nothrow_move_constructible_v<E> && std::is_nothrow_move_assignable_v<E>;
+		static constexpr bool copy_assignable    = (std::is_void_v<T> && std::is_copy_assignable_v<E> && std::is_copy_constructible_v<E>) || (!std::is_void_v<T> && std::is_copy_assignable_v<T> && std::is_copy_constructible_v<T> && std::is_copy_assignable_v<E> && std::is_copy_constructible_v<E> && (std::is_nothrow_move_constructible_v<E> || std::is_nothrow_move_constructible_v<T>));
+		static constexpr bool move_assignable    = (std::is_void_v<T> || (std::is_move_assignable_v<T> && std::is_move_constructible_v<T>)) && std::is_nothrow_move_constructible_v<E> && std::is_nothrow_move_assignable_v<E>;
 	};
 
 	template<class T, class E>
 	class expected
-		: public _ljh::copy_constructible<expected_traits<T,E>::copy_constructible>
-		, public _ljh::move_constructible<expected_traits<T,E>::move_constructible>
-		, public _ljh::copy_assignable   <expected_traits<T,E>::copy_assignable   >
-		, public _ljh::move_assignable   <expected_traits<T,E>::move_assignable   >
+		: _ljh::copy_constructible<expected_traits<T,E>::copy_constructible>
+		, _ljh::move_constructible<expected_traits<T,E>::move_constructible>
+		, _ljh::copy_assignable   <expected_traits<T,E>::copy_assignable   >
+		, _ljh::move_assignable   <expected_traits<T,E>::move_assignable   >
 	{
 		expected_storage<T,E> storage;
 		using val_t = typename expected_storage<T,E>::val_t;
