@@ -92,3 +92,9 @@ TEST_CASE("expected<int, int> ==", "[expected][equality]")
 	REQUIRE(test_e1 != ljh::expected<int, int>{});
 	REQUIRE(test_u1 != test_e1                  );
 }
+
+TEST_CASE("unexpected<const char*>", "[expected][unexpected]")
+{
+	ljh::unexpected<const char*> test{"Test"};
+	// is a compile test
+}

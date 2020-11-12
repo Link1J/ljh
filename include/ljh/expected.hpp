@@ -810,15 +810,9 @@ namespace ljh
 		constexpr       value_type&& value()      && noexcept { return std::move(val); }
 
 		template<class E1, class E2>
-		friend constexpr bool operator==(const unexpected<E1>& lhs, const unexpected<E2>& rhs)
-		{
-			return lhs.val == rhs.val;
-		}
+		friend constexpr bool operator==(const unexpected<E1>& lhs, const unexpected<E2>& rhs);
 		template<class E1, class E2>
-		friend constexpr bool operator!=(const unexpected<E1>& lhs, const unexpected<E2>& rhs)
-		{
-			return !(lhs == rhs);
-		}
+		friend constexpr bool operator!=(const unexpected<E1>& lhs, const unexpected<E2>& rhs);
 
 		std::enable_if_t<
 			std::is_swappable_v<E>
@@ -831,10 +825,7 @@ namespace ljh
 		template<class E1>
 		friend std::enable_if_t<
 			std::is_swappable_v<E1>
-		, void> swap(unexpected<E1>& x, unexpected<E1>& y) noexcept(noexcept(x.swap(y)))
-		{
-			x.swap(y);
-		}
+		, void> swap(unexpected<E1>& x, unexpected<E1>& y) noexcept(noexcept(x.swap(y)));
 
 	private:
 		value_type val;
@@ -929,6 +920,26 @@ namespace ljh
 		std::is_swappable_v<E1>
 	), void> swap(expected<T1, E1>& x, expected<T1, E1>& y)
 	noexcept(noexcept(x.swap(y)))
+	{
+		x.swap(y);
+	}
+
+	template<class E1, class E2>
+	constexpr bool operator==(const unexpected<E1>& lhs, const unexpected<E2>& rhs)
+	{
+		return lhs.val == rhs.val;
+	}
+
+	template<class E1, class E2>
+	constexpr bool operator!=(const unexpected<E1>& lhs, const unexpected<E2>& rhs)
+	{
+		return !(lhs == rhs);
+	}
+
+	template<class E1>
+	std::enable_if_t<
+		std::is_swappable_v<E1>
+	, void> swap(unexpected<E1>& x, unexpected<E1>& y) noexcept(noexcept(x.swap(y)))
 	{
 		x.swap(y);
 	}
