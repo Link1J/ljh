@@ -263,6 +263,18 @@ namespace ljh
 			}
 			return *this;
 		}
+
+		~expected_storage()
+		{
+			if (has_val)
+			{
+				val.~val_t();
+			}
+			else
+			{
+				unex.~err_t();
+			}
+		}
 	};
 
 	template<typename T, typename E>
@@ -437,18 +449,6 @@ namespace ljh
 		explicit constexpr expected(unexpect_t, std::initializer_list<U> il, Args&&... args)
 			: storage(false, err_t{il, std::forward<Args>(args)...}, unexpect)
 		{
-		}
-
-		~expected()
-		{
-			if (storage.has_val)
-			{
-				storage.val.~val_t();
-			}
-			else
-			{
-				storage.unex.~err_t();
-			}
 		}
 
 		template<class U = value_type, typename = std::enable_if_t<
