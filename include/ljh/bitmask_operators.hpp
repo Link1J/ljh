@@ -8,7 +8,7 @@
 // SPDX-License-Identifier: BSL-1.0
 // 
 // Requires C++17
-// Requires is_scoped_enum.hpp and static_cast_underlying.hpp
+// Requires is_scoped_enum.hpp and casting.hpp
 // 
 // Based on code from https://blog.bitwigglers.org/using-enum-classes-as-type-safe-bitmasks/
 // 
@@ -40,28 +40,28 @@ template<typename T>
 constexpr ljh::bitmask_operators::enable_t<T> operator|(T lhs, T rhs) 
 {
 	static_assert(ljh::is_scoped_enum<T>::value, "Type is not a scoped enum.");
-	return static_cast<T>(ljh::static_cast_underlying(lhs) | ljh::static_cast_underlying(rhs)); 
+	return static_cast<T>(ljh::underlying_cast(lhs) | ljh::underlying_cast(rhs)); 
 }
 
 template<typename T> 
 constexpr ljh::bitmask_operators::enable_t<T> operator&(T lhs, T rhs) 
 {
 	static_assert(ljh::is_scoped_enum<T>::value, "Type is not a scoped enum.");
-	return static_cast<T>(ljh::static_cast_underlying(lhs) & ljh::static_cast_underlying(rhs)); 
+	return static_cast<T>(ljh::underlying_cast(lhs) & ljh::underlying_cast(rhs)); 
 }
 
 template<typename T> 
 constexpr ljh::bitmask_operators::enable_t<T> operator^(T lhs, T rhs) 
 {
 	static_assert(ljh::is_scoped_enum<T>::value, "Type is not a scoped enum.");
-	return static_cast<T>(ljh::static_cast_underlying(lhs) ^ ljh::static_cast_underlying(rhs)); 
+	return static_cast<T>(ljh::underlying_cast(lhs) ^ ljh::underlying_cast(rhs)); 
 }
 
 template<typename T> 
 constexpr ljh::bitmask_operators::enable_t<T> operator~(T rhs) 
 {
 	static_assert(ljh::is_scoped_enum<T>::value, "Type is not a scoped enum.");
-	return static_cast<T>(~ljh::static_cast_underlying(rhs)); 
+	return static_cast<T>(~ljh::underlying_cast(rhs)); 
 }
 
 template<typename T> 
