@@ -4,7 +4,7 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-// casting.hpp - v1.1
+// casting.hpp - v1.2
 // SPDX-License-Identifier: BSL-1.0
 // 
 // Requires C++11
@@ -16,7 +16,8 @@
 //
 // Version History
 //     1.0 Inital Version
-//     1.0 Rename casting.hpp and add reinterpret
+//     1.1 Rename casting.hpp and add reinterpret
+//     1.2 Add pointer_cast and dereference_as, Rename static_cast_underlying to underlying_cast
 
 #pragma once
 
@@ -25,7 +26,7 @@
 namespace ljh
 {
 	template<typename T> 
-	constexpr typename std::underlying_type<T>::type static_cast_underlying(T a) 
+	constexpr typename std::underlying_type<T>::type underlying_cast(T a) 
 	{
 		return static_cast<typename std::underlying_type<T>::type>(a); 
 	};
@@ -34,5 +35,17 @@ namespace ljh
 	out reinterpret(in&& value)
 	{
 		return *(out*)(&value);
+	}
+
+	template<typename out, typename in>
+	out* pointer_cast(in* value)
+	{
+		return reinterpret_cast<out*>(value);
+	}
+
+	template<typename out, typename in>
+	out dereference_as(in* value)
+	{
+		return *pointer_cast<out>(value);
 	}
 }
