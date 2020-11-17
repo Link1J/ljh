@@ -58,8 +58,8 @@ namespace ljh
 		bool operator==(uintptr_t other) const noexcept { return (uintptr_t)function ==        other; }\
 		bool operator==(void*     other) const noexcept { return (void*    )function ==        other; }\
 \
-		bool operator!=(uintptr_t other) const noexcept { return !(function == other); }\
-		bool operator!=(void*     other) const noexcept { return !(function == other); }\
+		bool operator!=(uintptr_t other) const noexcept { return !(*this == other); }\
+		bool operator!=(void*     other) const noexcept { return !(*this == other); }\
 \
 		R operator()(Args... args) const noexcept(traits::is::no_exceptions) { return function(args...); }\
 		type get() const noexcept { return function; }\

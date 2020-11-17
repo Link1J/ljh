@@ -25,6 +25,7 @@ static bool temp_noexcept() noexcept { return false; }
 TEST_CASE("function_pointer C++17", "[function_pointer]") {
 	ljh::function_pointer<decltype(temp)> test {temp};
 	REQUIRE(test);
+	CHECK(test != (uintptr_t)0);
 	CHECK(test == temp);
 	CHECK(test != temp_noexcept);
 	REQUIRE(test());
@@ -33,6 +34,7 @@ TEST_CASE("function_pointer C++17", "[function_pointer]") {
 TEST_CASE("function_pointer noexcept C++17", "[function_pointer]") {
 	ljh::function_pointer<decltype(temp_noexcept)> test {temp_noexcept};
 	REQUIRE(test);
+	CHECK(test != (uintptr_t)0);
 	CHECK(test != temp);
 	CHECK(test == temp_noexcept);
 	REQUIRE(!test());
@@ -41,5 +43,6 @@ TEST_CASE("function_pointer noexcept C++17", "[function_pointer]") {
 TEST_CASE("function_pointer empty", "[function_pointer]") {
 	ljh::function_pointer<void()> test;
 	REQUIRE(test.empty());
+	CHECK(test == (uintptr_t)0);
 	REQUIRE(!test);
 }
