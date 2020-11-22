@@ -18,7 +18,7 @@
 //     1.0 Inital Version
 
 
-#include <ljh/function_traits.hpp>
+#include "function_traits.hpp"
 
 #if defined(__GNUC__) || defined(__clang__)
 #pragma GCC diagnostic push
