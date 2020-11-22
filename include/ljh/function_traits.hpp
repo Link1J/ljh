@@ -73,9 +73,9 @@ namespace ljh
 		{\
 			constexpr static bool no_exceptions    = Noexcept;\
 			constexpr static bool variadic         = !std::is_same<void(*) ArgList, void (*)(Args...)>::value;\
-			constexpr static bool function         = std::is_same<FUNCTION, as::function        >::value;\
-			constexpr static bool function_pointer = std::is_same<FUNCTION, as::function_pointer>::value;\
-			constexpr static bool std_function     = std::is_same<FUNCTION, as::std_function    >::value;\
+			constexpr static bool function         = std::is_same<FUNCTION, typename as::function        >::value;\
+			constexpr static bool function_pointer = std::is_same<FUNCTION, typename as::function_pointer>::value;\
+			constexpr static bool std_function     = std::is_same<FUNCTION, typename as::std_function    >::value;\
 			constexpr static bool member_function  = false;\
 			constexpr static bool constant         = false;\
 		};\
@@ -102,8 +102,8 @@ namespace ljh
 			constexpr static bool no_exceptions    = Noexcept;\
 			constexpr static bool variadic         = !std::is_same<void(*) ArgList, void (*)(Args...)>::value;\
 			constexpr static bool function         = false;\
-			constexpr static bool function_pointer = std::is_same<FUNCTION, as::function_pointer>::value;\
-			constexpr static bool std_function     = std::is_same<FUNCTION, as::std_function    >::value;\
+			constexpr static bool function_pointer = std::is_same<FUNCTION, typename as::function_pointer>::value;\
+			constexpr static bool std_function     = std::is_same<FUNCTION, typename as::std_function    >::value;\
 			constexpr static bool member_function  = true;\
 			constexpr static bool constant         = Const;\
 		};\

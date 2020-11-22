@@ -24,6 +24,8 @@
 #include <utility>
 #include <memory>
 #include <type_traits>
+#include "cpp_version.hpp"
+#include "type_traits.hpp"
 
 namespace _ljh
 {
@@ -331,7 +333,7 @@ namespace ljh
 			!std::is_convertible_v<const expected<U, G>&, unexpected<E>> &&
 			!std::is_convertible_v<const expected<U, G>&&, unexpected<E>>
 		>, U>
-		explicit(
+		LJH_CPP20_EXPLICIT(
 			(!(std::is_void_v<T> && std::is_void_v<U>) && !std::is_convertible_v<const U&, T>) ||
 			!std::is_convertible_v<const G&, E>
 		)
@@ -367,7 +369,7 @@ namespace ljh
 			!std::is_convertible_v<const expected<U, G>&, unexpected<E>> &&
 			!std::is_convertible_v<const expected<U, G>&&, unexpected<E>>
 		>, U>
-		explicit(
+		LJH_CPP20_EXPLICIT(
 			(!(std::is_void_v<T> && std::is_void_v<U>) && !std::is_convertible_v<U&&, T>) ||
 			!std::is_convertible_v<G&&, E>
 		)
@@ -387,11 +389,11 @@ namespace ljh
 		template<class U = value_type, typename = std::enable_if_t<
 			!std::is_void_v<T> && 
 			std::is_constructible_v<T, U&&> && 
-			!std::is_same_v<std::remove_cvref_t<U>, in_place_t> &&
-			!std::is_same_v<expected<value_type, E>, std::remove_cvref_t<U>> &&
-			!std::is_same_v<unexpected<error_type>, std::remove_cvref_t<U>>
+			!std::is_same_v<remove_cvref_t<U>, in_place_t> &&
+			!std::is_same_v<expected<value_type, E>, remove_cvref_t<U>> &&
+			!std::is_same_v<unexpected<error_type>, remove_cvref_t<U>>
 		>>
-		explicit(
+		LJH_CPP20_EXPLICIT(
 			!std::is_convertible_v<U&&, T>
 		)
 		constexpr expected(U&& rhs)
@@ -402,7 +404,7 @@ namespace ljh
 		template<class G = error_type, typename = std::enable_if_t<
 			std::is_constructible_v<error_type,const G&>
 		>>
-		explicit(
+		LJH_CPP20_EXPLICIT(
 			!std::is_convertible_v<const G&, error_type>
 		)
 		constexpr expected(const unexpected<G>& rhs)
@@ -412,7 +414,7 @@ namespace ljh
 		template<class G = error_type, typename = std::enable_if_t<
 			std::is_constructible_v<error_type,G&&>
 		>>
-		explicit(
+		LJH_CPP20_EXPLICIT(
 			!std::is_convertible_v<G&&, error_type>
 		)
 		constexpr expected(unexpected<G>&& rhs) noexcept(std::is_nothrow_constructible_v<error_type, G&&>)
@@ -453,7 +455,7 @@ namespace ljh
 
 		template<class U = value_type, typename = std::enable_if_t<
 			!std::is_void_v<T> &&
-			!std::is_same_v<expected<T,E>, std::remove_cvref_t<U>> &&
+			!std::is_same_v<expected<T,E>, remove_cvref_t<U>> &&
 			!std::conjunction_v<std::is_scalar<T>, std::is_same<T, std::decay_t<U>>> &&
 			std::is_constructible_v<T, U> &&
 			std::is_assignable_v<val_t&, U> &&

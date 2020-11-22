@@ -89,4 +89,19 @@ namespace ljh
 	inline constexpr bool is_function_pointer_v = is_function_pointer<T>::value;
 #endif
 
+#if LJH_CPP_VERSION > LJH_CPP17_VERSION
+	template<typename T> using remove_cvref   = std::remove_cvref  <T>;
+	template<typename T> using remove_cvref_t = std::remove_cvref_t<T>;
+#else
+	template< class T >
+	struct remove_cvref
+	{
+		using type = typename std::remove_cv<typename std::remove_reference<T>::type>::type;
+	};
+	
+#if LJH_CPP_VERSION >= LJH_CPP14_VERSION
+	template< class T >
+	using remove_cvref_t = typename remove_cvref<T>::type;
+#endif
+#endif
 }

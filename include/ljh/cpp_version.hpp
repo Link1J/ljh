@@ -473,6 +473,12 @@
 #define LJH_NOEXCEPT_FUNCTION_TYPE(A)
 #endif
 
+#if __cpp_conditional_explicit >= 201806L
+#define LJH_CPP20_EXPLICIT explicit
+#else
+#define LJH_CPP20_EXPLICIT(...)
+#endif
+
 #if defined(__clang__)
 #define LJH_CALLING_CONVENTION_cdecl              __attribute__((cdecl             ))
 #define LJH_CALLING_CONVENTION_stdcall            __attribute__((stdcall           ))
