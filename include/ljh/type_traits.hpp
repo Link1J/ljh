@@ -25,6 +25,7 @@
 //     1.3 Add is_callable and is_function_pointer
 
 #pragma once
+
 #include "cpp_version.hpp"
 #include <type_traits>
 

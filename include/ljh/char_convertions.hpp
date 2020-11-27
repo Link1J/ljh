@@ -43,7 +43,7 @@ namespace _ljh
 			if (text[0] == '-') { a = 1; }
 		}
 		
-		for (value = 0; a < size; a++)
+		for (; a < (int)size; a++)
 		{
 			if (!(text[a] >= '0' && text[a] <= '9'))
 			{

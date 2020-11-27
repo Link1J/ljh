@@ -17,6 +17,8 @@
 // Version History
 //     1.0 Inital Version
 
+#pragma once
+
 #include <type_traits>
 #include <tuple>
 #include <functional>
@@ -25,6 +27,67 @@
 #if defined(__GNUC__) || defined(__clang__)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wattributes"
+#endif
+
+#if defined(__clang__)
+#define LJH_CALLING_CONVENTION_cdecl              __attribute__((cdecl             ))
+#define LJH_CALLING_CONVENTION_stdcall            __attribute__((stdcall           ))
+#define LJH_CALLING_CONVENTION_fastcall           __attribute__((fastcall          ))
+#define LJH_CALLING_CONVENTION_vectorcall         __attribute__((vectorcall        ))
+#define LJH_CALLING_CONVENTION_ms_abi             __attribute__((ms_abi            ))
+#define LJH_CALLING_CONVENTION_preserve_all       __attribute__((preserve_all      ))
+#define LJH_CALLING_CONVENTION_preserve_most      __attribute__((preserve_most     ))
+#define LJH_CALLING_CONVENTION_regcall            __attribute__((regcall           ))
+#define LJH_CALLING_CONVENTION_thiscall           __attribute__((thiscall          ))
+#define LJH_CALLING_CONVENTION_aarch64_vector_pcs __attribute__((aarch64_vector_pcs))
+#elif defined(__GNUC__)
+#define LJH_CALLING_CONVENTION_cdecl              __attribute__((cdecl             ))
+#define LJH_CALLING_CONVENTION_stdcall            __attribute__((stdcall           ))
+#define LJH_CALLING_CONVENTION_fastcall           __attribute__((fastcall          ))
+#define LJH_CALLING_CONVENTION_vectorcall         __attribute__((vectorcall        ))
+#define LJH_CALLING_CONVENTION_ms_abi             __attribute__((ms_abi            ))
+#define LJH_CALLING_CONVENTION_preserve_all       __attribute__((preserve_all      ))
+#define LJH_CALLING_CONVENTION_preserve_most      __attribute__((preserve_most     ))
+#define LJH_CALLING_CONVENTION_regcall            __attribute__((regcall           ))
+#define LJH_CALLING_CONVENTION_thiscall           __attribute__((thiscall          ))
+#define LJH_CALLING_CONVENTION_aarch64_vector_pcs __attribute__((aarch64_vector_pcs))
+#elif defined(_MSC_VER)
+#define LJH_CALLING_CONVENTION_cdecl              __cdecl     
+#define LJH_CALLING_CONVENTION_stdcall            __stdcall   
+#define LJH_CALLING_CONVENTION_fastcall           __fastcall  
+#define LJH_CALLING_CONVENTION_vectorcall         __vectorcall
+#define LJH_CALLING_CONVENTION_ms_abi             __cdecl     
+#define LJH_CALLING_CONVENTION_preserve_all       __cdecl     
+#define LJH_CALLING_CONVENTION_preserve_most      __cdecl     
+#define LJH_CALLING_CONVENTION_regcall            __cdecl     
+#define LJH_CALLING_CONVENTION_thiscall           __thiscall  
+#define LJH_CALLING_CONVENTION_aarch64_vector_pcs __cdecl     
+#elif defined(__INTEL_COMPILER)
+#define LJH_CALLING_CONVENTION_cdecl              __cdecl             
+#define LJH_CALLING_CONVENTION_stdcall            __stdcall           
+#define LJH_CALLING_CONVENTION_fastcall           __fastcall          
+#define LJH_CALLING_CONVENTION_vectorcall         __vectorcall        
+#define LJH_CALLING_CONVENTION_ms_abi             __ms_abi            
+#define LJH_CALLING_CONVENTION_preserve_all       __preserve_all      
+#define LJH_CALLING_CONVENTION_preserve_most      __preserve_most     
+#define LJH_CALLING_CONVENTION_regcall            __regcall           
+#define LJH_CALLING_CONVENTION_thiscall           __thiscall          
+#define LJH_CALLING_CONVENTION_aarch64_vector_pcs __aarch64_vector_pcs
+#else
+#define LJH_CALLING_CONVENTION_cdecl              
+#define LJH_CALLING_CONVENTION_stdcall            
+#define LJH_CALLING_CONVENTION_fastcall           
+#define LJH_CALLING_CONVENTION_vectorcall         
+#define LJH_CALLING_CONVENTION_ms_abi             
+#define LJH_CALLING_CONVENTION_preserve_all       
+#define LJH_CALLING_CONVENTION_preserve_most      
+#define LJH_CALLING_CONVENTION_regcall            
+#define LJH_CALLING_CONVENTION_thiscall           
+#define LJH_CALLING_CONVENTION_aarch64_vector_pcs 
+#endif
+
+#if defined(cdecl)
+#undef cdecl
 #endif
 
 namespace ljh
@@ -119,6 +182,12 @@ namespace ljh
 		TRAIT_INTERALS_MEMBER(std::function<R (LJH_CALLING_CONVENTION_##CC M::*) ArgList       noexcept(Noexcept)>, CC, Noexcept, ArgList, false);\
 		TRAIT_INTERALS_MEMBER(std::function<R (LJH_CALLING_CONVENTION_##CC M::*) ArgList const noexcept(Noexcept)>, CC, Noexcept, ArgList, true )
 
+#define MAKE_ALL_TRAITS_M(CC, Noexcept, ArgList)\
+		TRAIT_INTERALS_MEMBER(              R (LJH_CALLING_CONVENTION_##CC M::*) ArgList       noexcept(Noexcept) , CC, Noexcept, ArgList, false);\
+		TRAIT_INTERALS_MEMBER(              R (LJH_CALLING_CONVENTION_##CC M::*) ArgList const noexcept(Noexcept) , CC, Noexcept, ArgList, true );\
+		TRAIT_INTERALS_MEMBER(std::function<R (LJH_CALLING_CONVENTION_##CC M::*) ArgList       noexcept(Noexcept)>, CC, Noexcept, ArgList, false);\
+		TRAIT_INTERALS_MEMBER(std::function<R (LJH_CALLING_CONVENTION_##CC M::*) ArgList const noexcept(Noexcept)>, CC, Noexcept, ArgList, true )
+
 #if __cpp_noexcept_function_type >= 201510L
 #define MAKE_TRAITS(CC, ArgList)\
 		MAKE_ALL_TRAITS(CC, false, ArgList);\
@@ -127,27 +196,35 @@ namespace ljh
 #define MAKE_TRAITS(CC, ArgList)\
 		MAKE_ALL_TRAITS(CC, false, ArgList)
 #endif
+#if __cpp_noexcept_function_type >= 201510L
+#define MAKE_TRAITS_M(CC, ArgList)\
+		MAKE_ALL_TRAITS_M(CC, false, ArgList);\
+		MAKE_ALL_TRAITS_M(CC, true , ArgList)
+#else
+#define MAKE_TRAITS_M(CC, ArgList)\
+		MAKE_ALL_TRAITS_M(CC, false, ArgList)
+#endif
 
-	MAKE_TRAITS(cdecl             , (Args...)     );
-	MAKE_TRAITS(cdecl             , (Args..., ...));
-	MAKE_TRAITS(stdcall           , (Args...)     );
-	MAKE_TRAITS(stdcall           , (Args..., ...));
-	MAKE_TRAITS(fastcall          , (Args...)     );
-	MAKE_TRAITS(fastcall          , (Args..., ...));
-	MAKE_TRAITS(vectorcall        , (Args...)     );
-//	MAKE_TRAITS(vectorcall        , (Args..., ...));
-	MAKE_TRAITS(regcall           , (Args...)     );
-//	MAKE_TRAITS(regcall           , (Args..., ...));
-	MAKE_TRAITS(ms_abi            , (Args...)     );
-	MAKE_TRAITS(ms_abi            , (Args..., ...));
-	MAKE_TRAITS(preserve_all      , (Args...)     );
-	MAKE_TRAITS(preserve_all      , (Args..., ...));
-	MAKE_TRAITS(preserve_most     , (Args...)     );
-	MAKE_TRAITS(preserve_most     , (Args..., ...));
-	MAKE_TRAITS(thiscall          , (Args...)     );
-//	MAKE_TRAITS(thiscall          , (Args..., ...));
-	MAKE_TRAITS(aarch64_vector_pcs, (Args...)     );
-	MAKE_TRAITS(aarch64_vector_pcs, (Args..., ...));
+	MAKE_TRAITS  (cdecl             , (Args...)     );
+	MAKE_TRAITS  (cdecl             , (Args..., ...));
+	MAKE_TRAITS  (stdcall           , (Args...)     );
+//	MAKE_TRAITS  (stdcall           , (Args..., ...));
+	MAKE_TRAITS  (fastcall          , (Args...)     );
+//	MAKE_TRAITS  (fastcall          , (Args..., ...));
+	MAKE_TRAITS  (vectorcall        , (Args...)     );
+//	MAKE_TRAITS  (vectorcall        , (Args..., ...));
+	MAKE_TRAITS  (regcall           , (Args...)     );
+//	MAKE_TRAITS  (regcall           , (Args..., ...));
+	MAKE_TRAITS  (ms_abi            , (Args...)     );
+	MAKE_TRAITS  (ms_abi            , (Args..., ...));
+	MAKE_TRAITS  (preserve_all      , (Args...)     );
+	MAKE_TRAITS  (preserve_all      , (Args..., ...));
+	MAKE_TRAITS  (preserve_most     , (Args...)     );
+	MAKE_TRAITS  (preserve_most     , (Args..., ...));
+	MAKE_TRAITS_M(thiscall          , (Args...)     );
+//	MAKE_TRAITS_M(thiscall          , (Args..., ...));
+	MAKE_TRAITS  (aarch64_vector_pcs, (Args...)     );
+	MAKE_TRAITS  (aarch64_vector_pcs, (Args..., ...));
 
 #undef MAKE_TRAITS
 #undef MAKE_ALL_TRAITS

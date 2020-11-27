@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.5)
 project(ljh_tests LANGUAGES CXX VERSION 0.0.0)
 include(FetchContent)
 
+set(CATCH_BUILD_TESTING OFF)
+
 FetchContent_Declare(Catch2
 	GIT_REPOSITORY https://github.com/catchorg/Catch2.git
 	GIT_TAG        v3.0.0-preview3

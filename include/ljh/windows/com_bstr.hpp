@@ -26,6 +26,7 @@
 #include <winrt/base.h>
 #include <string>
 #include <string_view>
+#include <cassert>
 
 namespace ljh::windows
 {
@@ -70,19 +71,19 @@ namespace ljh::windows
 
 		const_reference operator[](size_type pos) const noexcept
 		{
-			WINRT_ASSERT(pos < size());
+			assert(pos < size());
 			return *(begin() + pos);
 		}
 
 		const_reference front() const noexcept
 		{
-			WINRT_ASSERT(!empty());
+			assert(!empty());
 			return *begin();
 		}
 
 		const_reference back() const noexcept
 		{
-			WINRT_ASSERT(!empty());
+			assert(!empty());
 			return *(end() - 1);
 		}
 
@@ -148,7 +149,7 @@ namespace ljh::windows
 		
 		bstr* put() noexcept
 		{
-			WINRT_ASSERT(string != nullptr);
+			assert(string != nullptr);
 			return &string;
 		}
 

@@ -32,15 +32,15 @@ namespace ljh
 	};
 
 	template<typename out, typename in>
-	out reinterpret(in&& value)
+	out* pointer_cast(in* value)
 	{
-		return *(out*)(&value);
+		return (out*)(value);
 	}
 
 	template<typename out, typename in>
-	out* pointer_cast(in* value)
+	out reinterpret(in&& value)
 	{
-		return reinterpret_cast<out*>(value);
+		return pointer_cast<out>(&value);
 	}
 
 	template<typename out, typename in>

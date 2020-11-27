@@ -21,6 +21,7 @@
 //     1.0 Inital Version
 
 #pragma once
+
 #include <utility>
 #include <memory>
 #include <type_traits>

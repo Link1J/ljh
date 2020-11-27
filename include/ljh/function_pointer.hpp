@@ -17,6 +17,7 @@
 // Version History
 //     1.0 Inital Version
 
+#pragma once
 
 #include "function_traits.hpp"
 
@@ -85,7 +86,7 @@ namespace ljh
 	MAKE_POINTERS(ms_abi            );
 	MAKE_POINTERS(preserve_all      );
 	MAKE_POINTERS(preserve_most     );
-	MAKE_POINTERS(thiscall          );
+//	MAKE_POINTERS(thiscall          );
 	MAKE_POINTERS(aarch64_vector_pcs);
 
 #undef MAKE_POINTERS

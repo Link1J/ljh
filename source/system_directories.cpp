@@ -38,7 +38,7 @@ namespace ljh
 			T data;
 		};
 
-		std::string to_utf8(wchar_t* string)
+		static std::string to_utf8(wchar_t* string)
 		{
 			std::string output;
 			int size = WideCharToMultiByte(CP_UTF8, 0, string, -1, NULL, 0, NULL, NULL);
