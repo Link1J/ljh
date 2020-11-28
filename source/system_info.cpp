@@ -84,7 +84,7 @@ static void init_static()
 			ExitProcess(1);
 		}
 	}
-	catch (LSTATUS error)
+	catch (LSTATUS)
 	{
 	}
 
@@ -149,19 +149,12 @@ ljh::expected<ljh::version, ljh::system_info::error> ljh::system_info::get_versi
 	init_static();
 #if defined(LJH_TARGET_Windows)
 
-	
-
-// Get Kernel Version
-// 1) CurrentMajorVersionNumber.CurrentMinorVersionNumber.CurrentBuildNumber.UBR
-// 2) CurrentVersion.CurrentBuildNumber.UBR
-// 3) RtlGetVersion
-
 	version::value_type v_patch = 0;
 	try
 	{
 		v_patch = (version::value_type)windows::registry::key::LOCAL_MACHINE[L"SOFTWARE"][L"Microsoft"][L"Windows NT"][L"CurrentVersion"](L"UBR");
 	}
-	catch (LSTATUS error)
+	catch (LSTATUS)
 	{
 	}
 
@@ -171,44 +164,6 @@ ljh::expected<ljh::version, ljh::system_info::error> ljh::system_info::get_versi
 	else               { GetVersionExW(&osinfo); }
 
 	return version{osinfo.dwMajorVersion, osinfo.dwMinorVersion, osinfo.dwBuildNumber, v_patch};
-
-	/*try
-	{
-		auto key = windows::registry::key::LOCAL_MACHINE[L"SOFTWARE"][L"Microsoft"][L"Windows NT"][L"CurrentVersion"];
-		version::value_type v_major = -1, v_minor = -1, v_build = 0, v_patch = 0;
-
-		if (key.get_value(L"CurrentMajorVersionNumber").has_value())
-		{
-			v_major = (version::value_type)key(L"CurrentMajorVersionNumber");
-			v_minor = (version::value_type)key(L"CurrentMinorVersionNumber");
-		}
-		else if (key.get_value(L"CurrentVersion").has_value())
-		{
-			version temp{(std::wstring)key(L"CurrentVersion")};
-			v_major = temp.major();
-			v_minor = temp.minor();
-		}
-
-		if (key.get_value(L"CurrentBuildNumber").has_value())
-			from_string(v_build, (std::wstring)key(L"CurrentBuildNumber"));
-		else if (key.get_value(L"CurrentBuild").has_value())
-			from_string(v_build, (std::wstring)key(L"CurrentBuild"));
-			
-		if (key.get_value(L"UBR").has_value())
-			v_patch = (version::value_type)key(L"UBR");
-
-		return version{v_major, v_minor, v_build, v_patch};
-	}
-	catch (...)
-	{
-		OSVERSIONINFOW osinfo;
-		osinfo.dwOSVersionInfoSize = sizeof(osinfo);
-		if (RtlGetVersion) { RtlGetVersion(&osinfo); }
-		else               { GetVersionExW(&osinfo); }
-		return version{osinfo.dwMajorVersion, osinfo.dwMinorVersion, osinfo.dwBuildNumber};
-	}
-	return unexpected{error::cannot_get_version};
-	*/
 #elif defined(LJH_TARGET_Linux) || defined(LJH_TARGET_Unix)
 	struct utsname buffer;
 	uname(&buffer);
@@ -256,12 +211,6 @@ ljh::expected<std::string, ljh::system_info::error> ljh::system_info::get_string
 				}
 
 	if (!string.empty()) { string += " mimicking "; }
-
-// Get Windows Display Name
-// 1) ProductName + "Version" + DisplayVersion
-// 2) ProductName + "Version" + ReleaseId
-// 3) ProductName + CSDVersion
-// 4) ProductName
 
 	auto key = windows::registry::key::LOCAL_MACHINE[L"SOFTWARE"][L"Microsoft"][L"Windows NT"][L"CurrentVersion"];
 	string += to_utf8((std::wstring)key(L"ProductName"));
@@ -479,7 +428,7 @@ namespace ljh::system_info::versions
 	const info_data Windows_98                  { platform::WindowsDOS, { 4, 10,  1998            },   1998};
 	const info_data Windows_98SE                { platform::WindowsDOS, { 4, 10,  2222            },   2222};
 	const info_data Windows_ME                  { platform::WindowsDOS, { 4, 90,  3000            },   3000};
-	const info_data Windows_NT_3_1              { platform::WindowsNT , { 3,  5,   511 /*,     1*/},    511};
+	const info_data Windows_NT_3_1              { platform::WindowsNT , { 3,  1,   511 /*,     1*/},    511};
 	const info_data Windows_NT_3_1_SP_1         { platform::WindowsNT , { 3,  1,   511 /*,     1*/},    511};
 	const info_data Windows_NT_3_1_SP_2         { platform::WindowsNT , { 3,  1,   511 /*,     1*/},    511};
 	const info_data Windows_NT_3_1_SP_3         { platform::WindowsNT , { 3,  1,   528 /*,     1*/},    528};
