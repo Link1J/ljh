@@ -38,13 +38,3 @@ install(TARGETS ljh EXPORT ljh
 )
 install(EXPORT ljh NAMESPACE ljh:: DESTINATION lib/cmake/ljh FILE ljh-config.cmake)
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/ DESTINATION include)
-
-add_executable(main
-	source/main.cpp
-)
-set_target_properties(main PROPERTIES 
-	CXX_STANDARD 20
-	CXX_STANDARD_REQUIRED YES
-	CXX_EXTENSIONS NO
-)
-target_link_libraries(main ljh)
