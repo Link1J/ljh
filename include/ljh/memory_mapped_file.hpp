@@ -92,19 +92,20 @@ namespace ljh::memory_mapped
 		T* as() noexcept 
 		{
 			if (sizeof(T) > length) { return nullptr; }
-			return reinterpret_cast<T*>(data);
+			return reinterpret_cast<T*>((char*)data + offset);
 		}
 
 		template<typename T>
 		const T* as() const noexcept 
 		{
 			if (sizeof(T) > length) { return nullptr; }
-			return reinterpret_cast<const T*>(data);
+			return reinterpret_cast<const T*>((char*)data + offset);
 		}
 
 	private:
 		void*  data   = nullptr;
 		size_t length = 0      ;
+		size_t offset = 0      ;
 	};
 
 	class io_error : public std::exception

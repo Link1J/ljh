@@ -145,6 +145,12 @@ ljh::memory_mapped::view::view(file& fd, permissions permissions, size_t start, 
 	{
 		access |= FILE_MAP_COPY;
 	}
+	
+	SYSTEM_INFO sys_info;
+	GetSystemInfo(&sys_info);
+
+	offset = start % sys_info.dwAllocationGranularity;
+	start  = floor(start / sys_info.dwAllocationGranularity) * sys_info.dwAllocationGranularity;
 
 	data = MapViewOfFile(fd.file_descriptor, access, start >> 32, start & 0xFFFFFFFF, length);
 	if (data == nullptr) { throw invalid_file{}; }

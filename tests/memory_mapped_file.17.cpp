@@ -161,7 +161,6 @@ TEST_CASE("exec","[memory_mapped_file]")
 
 TEST_CASE("copy on write","[memory_mapped_file]")
 {
-	REQUIRE_NOTHROW(ljh::memory_mapped::file{"../../LICENSE_1_0.txt", ljh::memory_mapped::permissions::rw});
 	ljh::memory_mapped::file file{"../../LICENSE_1_0.txt", ljh::memory_mapped::permissions::rw};
 	ljh::memory_mapped::view ref{file, ljh::memory_mapped::permissions::r, 0, file.size()};
 	REQUIRE(ref.valid());
@@ -181,4 +180,13 @@ TEST_CASE("error_string","[memory_mapped_file]")
 	{
 		REQUIRE(!std::string{e.error_string()}.empty());
 	}
+}
+
+TEST_CASE("misaligned view","[memory_mapped_file]")
+{
+	ljh::memory_mapped::file file{"../../LICENSE_1_0.txt", ljh::memory_mapped::permissions::rw};
+	REQUIRE_NOTHROW(ljh::memory_mapped::view{file, ljh::memory_mapped::permissions::r, 40, 1});
+	ljh::memory_mapped::view ref{file, ljh::memory_mapped::permissions::r, 40, 1};
+	REQUIRE(ref.valid());
+	REQUIRE(*ref.as<char>() == LICENSE[40]);
 }
