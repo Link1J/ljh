@@ -34,9 +34,21 @@ namespace ljh
 			
 			void attach_streams()
 			{
-				if (GetStdHandle(STD_OUTPUT_HANDLE)) freopen("CONOUT$", "w", stdout);
-				if (GetStdHandle(STD_INPUT_HANDLE )) freopen("CONIN$" , "r", stdin );
-				if (GetStdHandle(STD_ERROR_HANDLE )) freopen("CONOUT$", "w", stderr);
+				if (GetStdHandle(STD_OUTPUT_HANDLE))
+				{
+					freopen("CONOUT$", "w", stdout);
+					setvbuf(stdout, NULL, _IONBF, 0);
+				}
+				if (GetStdHandle(STD_INPUT_HANDLE ))
+				{
+					freopen("CONIN$", "r", stdin);
+					setvbuf(stdin, NULL, _IONBF, 0);
+				}
+				if (GetStdHandle(STD_ERROR_HANDLE))
+				{
+					freopen("CONOUT$", "w", stderr);
+					setvbuf(stderr, NULL, _IONBF, 0);
+				}
 			}
 
 			void attach_to_parent()
