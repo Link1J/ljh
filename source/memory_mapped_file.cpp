@@ -149,12 +149,14 @@ ljh::memory_mapped::view::view(file& fd, permissions permissions, size_t start, 
 	SYSTEM_INFO sys_info;
 	GetSystemInfo(&sys_info);
 
+
 	offset = start % sys_info.dwAllocationGranularity;
-	start  = floor(start / sys_info.dwAllocationGranularity) * sys_info.dwAllocationGranularity;
+	start = floor(start / sys_info.dwAllocationGranularity) * sys_info.dwAllocationGranularity;
+	length += offset;
 
 	data = MapViewOfFile(fd.file_descriptor, access, start >> 32, start & 0xFFFFFFFF, length);
 	if (data == nullptr) { throw invalid_file{}; }
-	this->length = length;
+	this->length = length - offset;
 #else
 	int prot  = 0;
 	int flags = 0;
