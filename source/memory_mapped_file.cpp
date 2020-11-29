@@ -254,11 +254,10 @@ const char* ljh::memory_mapped::invalid_permissions::what() const noexcept
 const char* ljh::memory_mapped::io_error::error_string() const noexcept
 {
 #ifdef _WIN32
-	static const char buffer[100];
+	static char buffer[300];
 	FormatMessageA(
-		FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL,
-		_error_code, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&buffer,
-		sizeof(buffer), NULL
+		FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, _error_code,
+		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), buffer, sizeof(buffer), NULL
 	);
 	return buffer;
 #else 

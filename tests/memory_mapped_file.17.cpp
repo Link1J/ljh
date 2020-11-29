@@ -170,3 +170,15 @@ TEST_CASE("copy on write","[memory_mapped_file]")
 	write.as<char>()[0] = 0xA;
 	REQUIRE(memcmp(ref.as<char>(), write.as<char>(), file.size()) != 0);
 }
+
+TEST_CASE("error_string","[memory_mapped_file]")
+{
+	try
+	{
+		ljh::memory_mapped::file no_file{"C://%APPDATA%", ljh::memory_mapped::permissions::rwx};
+	}
+	catch (const ljh::memory_mapped::io_error& e)
+	{
+		REQUIRE(!std::string{e.error_string()}.empty());
+	}
+}
