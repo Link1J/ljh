@@ -69,7 +69,7 @@ stages:
       inputs:
         workingDirectory: $(BuildConfiguration)
         cmakeArgs: '--build . --config $(BuildConfiguration)'
-    - script: mkdir $(BuildConfiguration)
+    - script: 'ctest -C $(BuildConfiguration)'
       displayName: Run Tests
       workingDirectory: $(BuildConfiguration)
     - task: PublishTestResults@2
