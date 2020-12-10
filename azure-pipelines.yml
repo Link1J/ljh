@@ -52,7 +52,7 @@ stages:
       displayName: Run Build Process
       inputs:
         workingDirectory: $(BuildConfiguration)
-        cmakeArgs: '--build . --config $(BuildConfiguration) -Dljh_BUILD_TESTS=ON'
+        cmakeArgs: '--build . --config $(BuildConfiguration)'
     
 - stage: Test   
   displayName: Tests
