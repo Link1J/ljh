@@ -38,6 +38,8 @@ TEST_CASE("system_info::get_sdk()", "[test_17][system_info]")
 #endif
 }
 
+
+#if !defined(LJH_TARGET_Windows)
 TEST_CASE("system_info::get_model()", "[test_17][system_info]")
 {
 	auto test = ljh::system_info::get_model();
@@ -61,3 +63,4 @@ TEST_CASE("system_info::get_manufacturer()", "[test_17][system_info]")
 	REQUIRE(!test.value().empty());
 #endif
 }
+#endif
