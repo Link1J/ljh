@@ -57,6 +57,5 @@ stages:
     - task: PublishTestResults@2
       inputs:
         testResultsFormat: 'cTest'
-        testResultsFiles: '**/TEST-*.xml'
-        searchFolder: '$(BuildConfiguration)'
+        testResultsFiles: '**/Test-*.xml'
         failTaskOnFailedTests: true
