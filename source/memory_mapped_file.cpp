@@ -150,7 +150,6 @@ ljh::memory_mapped::view::view(file& fd, permissions permissions, size_t start, 
 	SYSTEM_INFO sys_info;
 	GetSystemInfo(&sys_info);
 
-
 	offset = start % sys_info.dwAllocationGranularity;
 	start = floor(start / sys_info.dwAllocationGranularity) * sys_info.dwAllocationGranularity;
 	length += offset;
@@ -175,6 +174,12 @@ ljh::memory_mapped::view::view(file& fd, permissions permissions, size_t start, 
 	{
 		flags |= MAP_SHARED;
 	}
+	
+	auto page_size = sysconf(_SC_PAGESIZE);
+
+	offset = start % page_size;
+	start = floor(start / page_size) * page_size;
+	length += offset;
 
 	data = mmap(nullptr, length, prot, flags, fd.file_descriptor, start);
 	if (data == MAP_FAILED) { throw invalid_file{}; }
