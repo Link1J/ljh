@@ -39,7 +39,7 @@ set_target_properties(tests_20 PROPERTIES CXX_STANDARD 20 CXX_STANDARD_REQUIRED 
 target_link_libraries(tests_20 Catch2::Catch2WithMain ljh)
 
 include(CTest)
-include(Catch)
-catch_discover_tests(tests_11)
-catch_discover_tests(tests_17)
-catch_discover_tests(tests_20)
+include(ParseAndAddCatchTests)
+ParseAndAddCatchTests(tests_11 PARSE_CATCH_TESTS_ADD_TO_CONFIGURE_DEPENDS=ON)
+ParseAndAddCatchTests(tests_17 PARSE_CATCH_TESTS_ADD_TO_CONFIGURE_DEPENDS=ON)
+ParseAndAddCatchTests(tests_20 PARSE_CATCH_TESTS_ADD_TO_CONFIGURE_DEPENDS=ON)
