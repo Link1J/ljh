@@ -58,34 +58,40 @@ stages:
   displayName: Tests
   dependsOn: Build
   
-  strategy:
-    matrix:
-      LinuxDebug:
-        OS: 'Linux'
-        imageName: 'ubuntu-latest'
-        BuildConfiguration: 'Debug'
-      LinuxRelease:
-        OS: 'Linux'
-        imageName: 'ubuntu-latest'
-        BuildConfiguration: 'RelWithDebInfo'
-      MacOSDebug:
-        OS: 'MacOS'
-        imageName: 'macos-latest'
-        BuildConfiguration: 'Debug'
-      MacOSRelease:
-        OS: 'MacOS'
-        imageName: 'macos-latest'
-        BuildConfiguration: 'RelWithDebInfo'
-      WindowsDebug:
-        OS: 'Windows'
-        imageName: 'windows-latest'
-        BuildConfiguration: 'Debug'
-      WindowsRelease:
-        OS: 'Windows'
-        imageName: 'windows-latest'
-        BuildConfiguration: 'RelWithDebInfo'
-   pool:
-    vmImage: $(imageName)
+  jobs:
+  - job: RunTests
+    displayName: Run Tests
+    strategy:
+      matrix:
+        LinuxDebug:
+          OS: 'Linux'
+          imageName: 'ubuntu-latest'
+          BuildConfiguration: 'Debug'
+        LinuxRelease:
+          OS: 'Linux'
+          imageName: 'ubuntu-latest'
+          BuildConfiguration: 'RelWithDebInfo'
+        MacOSDebug:
+          OS: 'MacOS'
+          imageName: 'macos-latest'
+          BuildConfiguration: 'Debug'
+        MacOSRelease:
+          OS: 'MacOS'
+          imageName: 'macos-latest'
+          BuildConfiguration: 'RelWithDebInfo'
+        WindowsDebug:
+          OS: 'Windows'
+          imageName: 'windows-latest'
+          BuildConfiguration: 'Debug'
+        WindowsRelease:
+          OS: 'Windows'
+          imageName: 'windows-latest'
+          BuildConfiguration: 'RelWithDebInfo'
+    pool:
+      vmImage: $(imageName)
 
-  steps:
-   - task: PublishTestResults@2
+    steps:
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFormat: cTest
+
