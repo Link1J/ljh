@@ -69,15 +69,28 @@ stages:
       inputs:
         workingDirectory: $(BuildConfiguration)
         cmakeArgs: '--build . --config $(BuildConfiguration)'
-    - script: 'ctest -C $(BuildConfiguration) -T Test --output-on-failure'
+    - script: | 
+        ./tests_11.exe -r jUnit -s -h -out texts_11_data.xml
+        ./tests_17.exe -r jUnit -s -h -out texts_17_data.xml
+        ./tests_20.exe -r jUnit -s -h -out texts_20_data.xml
       continueOnError: true
       displayName: Run Tests
-      workingDirectory: $(BuildConfiguration)
+      workingDirectory: $(BuildConfiguration)/tests
+      target: windows-latest
+    - script: | 
+        ./tests_11 -r jUnit -s -h -out texts_11_data.xml
+        ./tests_17 -r jUnit -s -h -out texts_17_data.xml
+        ./tests_20 -r jUnit -s -h -out texts_20_data.xml
+      continueOnError: true
+      displayName: Run Tests
+      workingDirectory: $(BuildConfiguration)/tests
+      target: ubuntu-20.04
     - task: PublishTestResults@2
       displayName: Publish Test Results
       inputs:
-        testResultsFormat: 'cTest'
-        testResultsFiles: 'Testing/*/Test.xml'
+        testResultsFormat: 'JTest'
+        testResultsFiles: '**/tests_*.xml'
         failTaskOnFailedTests: true
         configuration: '$(BuildConfiguration)'
         searchFolder: $(BuildConfiguration)
+        mergeTestResults: true
