@@ -137,7 +137,7 @@ ljh::expected<ljh::system_info::platform, ljh::system_info::error> ljh::system_i
 #if defined(LJH_TARGET_Windows)
 	return platform::Windows;
 #elif defined(LJH_TARGET_MacOS)
-	return platform::MacOS;
+	return platform::macOS;
 #elif defined(LJH_TARGET_Linux)
 	return platform::Linux;
 #elif defined(LJH_TARGET_Android)
@@ -178,7 +178,7 @@ ljh::expected<ljh::version, ljh::system_info::error> ljh::system_info::get_versi
 #elif defined(LJH_TARGET_Android)
 	return get_system_prop("ro.build.version.release");
 #elif defined(LJH_TARGET_MacOS)
-	auto version = get_version_obj_c();
+	auto version = __os_info_get_version_obj_c();
 	if (version > macOS_10_15 && version < macOS_11)
 		version = macOS_11.version;
 	return version;
@@ -231,8 +231,8 @@ ljh::expected<std::string, ljh::system_info::error> ljh::system_info::get_string
 
 	return string;
 #elif defined(LJH_TARGET_MacOS)
-	auto string = get_string_obj_c();
-	auto ver = get_version_obj_c();
+	auto string = __os_info_get_string_obj_c();
+	auto ver = __os_info_get_version_obj_c();
 
 	if (!string.empty())
 		string = string.substr(8);
@@ -298,15 +298,15 @@ ljh::expected<std::string, ljh::system_info::error> ljh::system_info::get_string
 	else if (sdk >= 3 ) { string += " Cupcake"           ; }
 	return string;
 #elif defined(LJH_TARGET_iOS)
-	auto string = get_string_obj_c();
-	auto ver = get_version_obj_c();
+	auto string = __os_info_get_string_obj_c();
+	auto ver = __os_info_get_version_obj_c();
 	
 	if (!string.empty())
 		string = string.substr(8);
 	else
 		string = ver;
 
-	if (ver >= version{13} && get_model_obj_c().starts_with("iPad"))
+	if (ver >= version{13} && __os_info_get_model_obj_c().starts_with("iPad"))
 		string = "iPadOS " + string;
 	else if (ver >= version{3})
 		string = "iOS " + string;
@@ -330,7 +330,7 @@ ljh::expected<ljh::u32, ljh::system_info::error> ljh::system_info::get_sdk()
 	}
 	return info_version->build();
 #elif defined(LJH_TARGET_MacOS) || defined(LJH_TARGET_iOS)
-	auto version = get_version_obj_c();
+	auto version = __os_info_get_version_obj_c();
 	return version.major() << 16 | version.minor() << 8  | version.build();
 #elif defined(LJH_TARGET_Linux) || defined(LJH_TARGET_Unix)
 	return unexpected{error::no_info};
