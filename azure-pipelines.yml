@@ -53,12 +53,39 @@ stages:
       inputs:
         workingDirectory: $(BuildConfiguration)
         cmakeArgs: '--build . --config $(BuildConfiguration) -Dljh_BUILD_TESTS=ON'
-    - task: PublishPipelineArtifact@1
-      displayName: Publish Build Artifact
-      inputs:
-        targetPath: $(BuildConfiguration)
-        artifactName: '$(OS)$(BuildConfiguration)'
     
 - stage: Test   
-  displayName: Test
+  displayName: Tests
   dependsOn: Build
+  
+  strategy:
+    matrix:
+      LinuxDebug:
+        OS: 'Linux'
+        imageName: 'ubuntu-latest'
+        BuildConfiguration: 'Debug'
+      LinuxRelease:
+        OS: 'Linux'
+        imageName: 'ubuntu-latest'
+        BuildConfiguration: 'RelWithDebInfo'
+      MacOSDebug:
+        OS: 'MacOS'
+        imageName: 'macos-latest'
+        BuildConfiguration: 'Debug'
+      MacOSRelease:
+        OS: 'MacOS'
+        imageName: 'macos-latest'
+        BuildConfiguration: 'RelWithDebInfo'
+      WindowsDebug:
+        OS: 'Windows'
+        imageName: 'windows-latest'
+        BuildConfiguration: 'Debug'
+      WindowsRelease:
+        OS: 'Windows'
+        imageName: 'windows-latest'
+        BuildConfiguration: 'RelWithDebInfo'
+   pool:
+    vmImage: $(imageName)
+
+  steps:
+   - task: PublishTestResults@2
