@@ -76,7 +76,7 @@ static void init_static()
 	}
 
 	// Windows Longhorn
-	if (version.major() >= 6 && version.build() > 5000)
+	if (version.major() >= 6 && version.major() == 0 && version.build() > 5000)
 	{
 		std::string message_text = 
 			"Windows Vista's pre-reset builds are buggy and broken.\n"

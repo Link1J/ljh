@@ -26,6 +26,7 @@ add_executable(tests_17
 	memory_mapped_file.17.cpp
 	function_pointer.17.cpp
 	expected.17.cpp
+	system_info.17.cpp
 )
 set_target_properties(tests_17 PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)
 target_link_libraries(tests_17 Catch2::Catch2WithMain ljh)
