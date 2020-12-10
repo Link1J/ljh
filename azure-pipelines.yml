@@ -69,7 +69,7 @@ stages:
       inputs:
         workingDirectory: $(BuildConfiguration)
         cmakeArgs: '--build . --config $(BuildConfiguration)'
-    - script: 'ctest -C $(BuildConfiguration)'
+    - script: 'ctest -C $(BuildConfiguration) -T Test --output-on-failure'
       continueOnError: true
       displayName: Run Tests
       workingDirectory: $(BuildConfiguration)
