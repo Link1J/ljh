@@ -76,7 +76,7 @@ stages:
       continueOnError: true
       displayName: Run Tests
       workingDirectory: $(BuildConfiguration)/tests
-      target: windows-latest
+      target: windows
     - script: | 
         ./tests_11 -r jUnit -s -h -out texts_11_data.xml
         ./tests_17 -r jUnit -s -h -out texts_17_data.xml
@@ -84,7 +84,7 @@ stages:
       continueOnError: true
       displayName: Run Tests
       workingDirectory: $(BuildConfiguration)/tests
-      target: ubuntu-20.04
+      target: ubuntu
     - task: PublishTestResults@2
       displayName: Publish Test Results
       inputs:
