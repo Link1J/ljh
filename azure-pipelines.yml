@@ -94,4 +94,4 @@ stages:
         configuration: '$(BuildConfiguration)'
         searchFolder: '$(BuildConfiguration)'
         mergeTestResults: true
-        testRunTitle: '$(Agent.JobName)-$(BuildConfiguration)'
+        testRunTitle: '$(Agent.JobName)'
