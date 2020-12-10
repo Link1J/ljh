@@ -108,7 +108,7 @@ namespace ljh
 		{
 		}
 
-#if defined(__cpp_impl_three_way_comparison) && __has_include(<compare>)
+#if __cpp_impl_three_way_comparison >= 201907L && __has_include(<compare>)
 		std::strong_ordering operator<=>(const version& rhs) const 
 		{
 			if (auto cmp = _major <=> rhs._major; cmp != std::strong_ordering::equal) { return cmp; }

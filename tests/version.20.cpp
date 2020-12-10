@@ -7,7 +7,7 @@
 #include <catch2/catch_test_macros.hpp>
 #include "ljh/version.hpp"
 
-#if defined(__cpp_impl_three_way_comparison) && __has_include(<compare>)
+#if __cpp_impl_three_way_comparison >= 201907L && __has_include(<compare>)
 namespace Catch
 {
 	template<>
