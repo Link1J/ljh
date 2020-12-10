@@ -11,30 +11,46 @@ stages:
 
     strategy:
       matrix:
-        LinuxDebug:
+        Linux_Debug:
           OS: 'Linux'
-          imageName: 'ubuntu-latest'
+          imageName: 'ubuntu-20.04'
           BuildConfiguration: 'Debug'
-        LinuxRelease:
+          Generator: ''
+        Linux_Release:
           OS: 'Linux'
-          imageName: 'ubuntu-latest'
+          imageName: 'ubuntu-20.04'
           BuildConfiguration: 'RelWithDebInfo'
-        MacOSDebug:
+          Generator: ''
+        MacOS_Debug:
           OS: 'MacOS'
           imageName: 'macos-latest'
           BuildConfiguration: 'Debug'
-        MacOSRelease:
+          Generator: ''
+        MacOS_Release:
           OS: 'MacOS'
           imageName: 'macos-latest'
           BuildConfiguration: 'RelWithDebInfo'
-        WindowsDebug:
+          Generator: ''
+        Windows_32bit_Debug:
           OS: 'Windows'
           imageName: 'windows-latest'
           BuildConfiguration: 'Debug'
-        WindowsRelease:
+          Generator: '-G "Visual Studio 16 2019" -A Win32'
+        Windows_32bit_Release:
           OS: 'Windows'
           imageName: 'windows-latest'
           BuildConfiguration: 'RelWithDebInfo'
+          Generator: '-G "Visual Studio 16 2019" -A Win32'
+        Windows_64bit_Debug:
+          OS: 'Windows'
+          imageName: 'windows-latest'
+          BuildConfiguration: 'Debug'
+          Generator: '-G "Visual Studio 16 2019" -A x64'
+        Windows_64bit_Release:
+          OS: 'Windows'
+          imageName: 'windows-latest'
+          BuildConfiguration: 'RelWithDebInfo'
+          Generator: '-G "Visual Studio 16 2019" -A x64'
 
     pool:
       vmImage: $(imageName)
@@ -47,7 +63,7 @@ stages:
       displayName: Generate CMake Cache
       inputs:
         workingDirectory: $(BuildConfiguration)
-        cmakeArgs: '-DCMAKE_BUILD_TYPE=$(BuildConfiguration) .. -Dljh_BUILD_TESTS=ON'
+        cmakeArgs: '-DCMAKE_BUILD_TYPE=$(BuildConfiguration) $(Generator) .. -Dljh_BUILD_TESTS=ON'
     - task: CMake@1
       displayName: Run Build Process
       inputs:
@@ -57,5 +73,5 @@ stages:
     - task: PublishTestResults@2
       inputs:
         testResultsFormat: 'cTest'
-        testResultsFiles: '**/Test-*.xml'
+        testResultsFiles: '**/Test.xml'
         failTaskOnFailedTests: true
