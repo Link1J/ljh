@@ -5,14 +5,15 @@
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "ljh/memory_mapped_file.hpp"
+#include "ljh/system_info.hpp"
 
-#ifdef _WIN32
+#if defined(LJH_TARGET_Windows)
 #    define WIN32_LEAN_AND_MEAN
 #    define NOMINMAX
 #    include <windows.h>
 #    include <memoryapi.h>
 #    include <cstring>
-#elif defined(__linux__)
+#else
 #    include <unistd.h>
 #    include <fcntl.h>
 #    include <sys/types.h>

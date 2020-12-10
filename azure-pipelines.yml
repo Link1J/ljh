@@ -94,6 +94,3 @@ stages:
         configuration: '$(BuildConfiguration)'
         searchFolder: '$(BuildConfiguration)'
         mergeTestResults: true
-    - publish: '$(Build.SourcesDirectory)'
-      artifact: $(Agent.JobName)
-      condition: succeededOrFailed()
