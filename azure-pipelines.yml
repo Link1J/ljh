@@ -71,7 +71,9 @@ stages:
         cmakeArgs: '--build . --config $(BuildConfiguration)'
   
     - task: PublishTestResults@2
+      displayName: Run Tests
       inputs:
         testResultsFormat: 'cTest'
-        testResultsFiles: '**/Test.xml'
+        testResultsFiles: '**/Testing/**/Test.xml'
         failTaskOnFailedTests: true
+        configuration: '$(BuildConfiguration)'
