@@ -108,7 +108,8 @@ namespace ljh
 		{
 		}
 
-#if __cpp_impl_three_way_comparison >= 201907L && __has_include(<compare>)
+// Apple Clang is dumb, so don't use <=> with it
+#if __cpp_impl_three_way_comparison >= 201907L && __has_include(<compare>) && !defined(__apple_build_version__)
 		std::strong_ordering operator<=>(const version& rhs) const 
 		{
 			if (auto cmp = _major <=> rhs._major; cmp != std::strong_ordering::equal) { return cmp; }
