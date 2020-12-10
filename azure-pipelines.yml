@@ -6,8 +6,8 @@ stages:
   displayName: Build
 
   jobs:
-  - job: RunCMakeTask
-    displayName: Run CMake Task
+  - job: BuildTest
+    displayName: Build & Test
 
     strategy:
       matrix:
@@ -70,19 +70,19 @@ stages:
         workingDirectory: $(BuildConfiguration)
         cmakeArgs: '--build . --config $(BuildConfiguration)'
     - pwsh: | 
-        ./$(BuildConfiguration)/tests_11.exe -r jUnit -s -h -out texts_11_data.xml
-        ./$(BuildConfiguration)/tests_17.exe -r jUnit -s -h -out texts_17_data.xml
-        ./$(BuildConfiguration)/tests_20.exe -r jUnit -s -h -out texts_20_data.xml
+        ./$(BuildConfiguration)/tests_11.exe -r jUnit -s -h -out tests_11_data.xml
+        ./$(BuildConfiguration)/tests_17.exe -r jUnit -s -h -out tests_17_data.xml
+        ./$(BuildConfiguration)/tests_20.exe -r jUnit -s -h -out tests_20_data.xml
       ignoreLASTEXITCODE: true
-      displayName: Run Tests
+      displayName: Run Tests (Windows)
       workingDirectory: '$(BuildConfiguration)/tests'
       condition: eq(variables['agent.os'], 'Windows_NT')
     - pwsh: | 
-        ./tests_11 -r jUnit -s -h -out texts_11_data.xml
-        ./tests_17 -r jUnit -s -h -out texts_17_data.xml
-        ./tests_20 -r jUnit -s -h -out texts_20_data.xml
+        ./tests_11 -r jUnit -s -h -out tests_11_data.xml
+        ./tests_17 -r jUnit -s -h -out tests_17_data.xml
+        ./tests_20 -r jUnit -s -h -out tests_20_data.xml
       ignoreLASTEXITCODE: true
-      displayName: Run Tests
+      displayName: Run Tests (Linux)
       workingDirectory: '$(BuildConfiguration)/tests'
       condition: eq(variables['agent.os'], 'Linux')
     - task: PublishTestResults@2
