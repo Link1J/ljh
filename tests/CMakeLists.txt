@@ -31,13 +31,6 @@ set_target_properties(tests_17 PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED 
 target_link_libraries(tests_17 Catch2::Catch2WithMain ljh)
 target_compile_definitions(tests_17 PRIVATE CATCH_CONFIG_CONSOLE_WIDTH=300)
 
-add_executable(tests_temp
-	function_pointer.17.cpp
-)
-set_target_properties(tests_temp PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)
-target_link_libraries(tests_temp Catch2::Catch2WithMain ljh)
-target_compile_definitions(tests_temp PRIVATE CATCH_CONFIG_CONSOLE_WIDTH=300)
-
 add_executable(tests_20
 	expected.20.cpp
 	version.20.cpp
