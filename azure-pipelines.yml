@@ -70,6 +70,7 @@ stages:
         workingDirectory: $(BuildConfiguration)
         cmakeArgs: '--build . --config $(BuildConfiguration)'
     - script: 'ctest -C $(BuildConfiguration)'
+      continueOnError: true
       displayName: Run Tests
       workingDirectory: $(BuildConfiguration)
     - task: PublishTestResults@2
