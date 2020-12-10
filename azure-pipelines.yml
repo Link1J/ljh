@@ -73,15 +73,11 @@ stages:
       continueOnError: true
       displayName: Run Tests
       workingDirectory: $(BuildConfiguration)
-    - script: 'tree'
-      continueOnError: true
-      displayName: Run Tests
-      workingDirectory: $(BuildConfiguration)
     - task: PublishTestResults@2
       displayName: Publish Test Results
       inputs:
         testResultsFormat: 'cTest'
-        testResultsFiles: '**/Testing/**/Test.xml'
+        testResultsFiles: 'Testing/*/Test.xml'
         failTaskOnFailedTests: true
         configuration: '$(BuildConfiguration)'
         searchFolder: $(BuildConfiguration)
