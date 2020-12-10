@@ -75,13 +75,16 @@ stages:
         ./tests_20 -r jUnit -s -h -out texts_20_data.xml
       ignoreLASTEXITCODE: true
       displayName: Run Tests
-      workingDirectory: $(BuildConfiguration)/tests
+      workingDirectory: '$(BuildConfiguration)/tests'
     - task: PublishTestResults@2
       displayName: Publish Test Results
       inputs:
-        testResultsFormat: 'JTest'
+        testResultsFormat: JUnit
         testResultsFiles: '**/tests_*.xml'
         failTaskOnFailedTests: true
         configuration: '$(BuildConfiguration)'
-        searchFolder: $(BuildConfiguration)
+        searchFolder: '$(BuildConfiguration)'
         mergeTestResults: true
+    - publish: '$(Build.SourcesDirectory)'
+      artifact: $(Agent.JobName)
+      condition: succeededOrFailed()
