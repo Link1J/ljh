@@ -1,0 +1,64 @@
+trigger:
+- main
+
+stages:
+- stage: Build
+  displayName: Build
+
+  jobs:
+  - job: RunCMakeTask
+    displayName: Run CMake Task
+
+    strategy:
+      matrix:
+        LinuxDebug:
+          OS: 'Linux'
+          imageName: 'ubuntu-latest'
+          BuildConfiguration: 'Debug'
+        LinuxRelease:
+          OS: 'Linux'
+          imageName: 'ubuntu-latest'
+          BuildConfiguration: 'RelWithDebInfo'
+        MacOSDebug:
+          OS: 'MacOS'
+          imageName: 'macos-latest'
+          BuildConfiguration: 'Debug'
+        MacOSRelease:
+          OS: 'MacOS'
+          imageName: 'macos-latest'
+          BuildConfiguration: 'RelWithDebInfo'
+        WindowsDebug:
+          OS: 'Windows'
+          imageName: 'windows-latest'
+          BuildConfiguration: 'Debug'
+        WindowsRelease:
+          OS: 'Windows'
+          imageName: 'windows-latest'
+          BuildConfiguration: 'RelWithDebInfo'
+
+    pool:
+      vmImage: $(imageName)
+
+    steps:
+    - script: mkdir $(BuildConfiguration)
+      displayName: Create Build Directory
+      workingDirectory: $(Build.SourcesDirectory)
+    - task: CMake@1
+      displayName: Generate CMake Cache
+      inputs:
+        workingDirectory: $(BuildConfiguration)
+        cmakeArgs: '-DCMAKE_BUILD_TYPE=$(BuildConfiguration) .. -Dljh_BUILD_TESTS=ON'
+    - task: CMake@1
+      displayName: Run Build Process
+      inputs:
+        workingDirectory: $(BuildConfiguration)
+        cmakeArgs: '--build . --config $(BuildConfiguration) -Dljh_BUILD_TESTS=ON'
+    - task: PublishPipelineArtifact@1
+      displayName: Publish Build Artifact
+      inputs:
+        targetPath: $(BuildConfiguration)
+        artifactName: '$(OS)$(BuildConfiguration)'
+    
+- stage: Test   
+  displayName: Test
+  dependsOn: Build
