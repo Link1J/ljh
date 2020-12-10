@@ -43,7 +43,7 @@ auto EqualsVersion(const ljh::version& range) -> EqualsVersionMatcher {
 	return EqualsVersionMatcher{range};
 }
 
-TEST_CASE("version constructors - string_view", "[version]")
+TEST_CASE("version constructors - string_view", "[test_17][version]")
 {
 	CHECK_THAT(ljh::version{"1.2.3.4"sv}, EqualsVersion({1,2,3,4}));
 	CHECK_THAT(ljh::version{"1.2.3"sv  }, EqualsVersion({1,2,3,0}));
@@ -53,21 +53,21 @@ TEST_CASE("version constructors - string_view", "[version]")
 	CHECK_THAT(ljh::version{"..3"sv    }, EqualsVersion({0,0,3,0}));
 	CHECK_THAT(ljh::version{".2"sv     }, EqualsVersion({0,2,0,0}));
 }
-TEST_CASE("version constructors - string", "[version]")
+TEST_CASE("version constructors - string", "[test_17][version]")
 {
 	CHECK_THAT(ljh::version{"1.2.3.4"s}, EqualsVersion({1,2,3,4}));
 	CHECK_THAT(ljh::version{"1.2.3"s  }, EqualsVersion({1,2,3,0}));
 	CHECK_THAT(ljh::version{"1.2"s    }, EqualsVersion({1,2,0,0}));
 	CHECK_THAT(ljh::version{"1"s      }, EqualsVersion({1,0,0,0}));
 }
-TEST_CASE("version constructors - const char*", "[version]")
+TEST_CASE("version constructors - const char*", "[test_17][version]")
 {
 	CHECK_THAT(ljh::version{"1.2.3.4"}, EqualsVersion({1,2,3,4}));
 	CHECK_THAT(ljh::version{"1.2.3"  }, EqualsVersion({1,2,3,0}));
 	CHECK_THAT(ljh::version{"1.2"    }, EqualsVersion({1,2,0,0}));
 	CHECK_THAT(ljh::version{"1"      }, EqualsVersion({1,0,0,0}));
 }
-TEST_CASE("version constructors - ljh::limit::max", "[version]")
+TEST_CASE("version constructors - ljh::limit::max", "[test_17][version]")
 {
 	CHECK_THAT(ljh::version(ljh::limit::max        ), EqualsVersion({ljh::version::max_value,ljh::version::max_value,ljh::version::max_value,ljh::version::max_value}));
 	CHECK_THAT(ljh::version(ljh::limit::max,1      ), EqualsVersion({                      1,ljh::version::max_value,ljh::version::max_value,ljh::version::max_value}));
@@ -75,7 +75,7 @@ TEST_CASE("version constructors - ljh::limit::max", "[version]")
 	CHECK_THAT(ljh::version(ljh::limit::max,1,2,3  ), EqualsVersion({                      1,                      2,                      3,ljh::version::max_value}));
 	CHECK_THAT(ljh::version(ljh::limit::max,1,2,3,4), EqualsVersion({                      1,                      2,                      3,                      4}));
 }
-TEST_CASE("version constructors - ljh::limit::min", "[version]")
+TEST_CASE("version constructors - ljh::limit::min", "[test_17][version]")
 {
 	CHECK_THAT(ljh::version(ljh::limit::min        ), EqualsVersion({ljh::version::min_value,ljh::version::min_value,ljh::version::min_value,ljh::version::min_value}));
 	CHECK_THAT(ljh::version(ljh::limit::min,1      ), EqualsVersion({                      1,ljh::version::min_value,ljh::version::min_value,ljh::version::min_value}));
@@ -84,32 +84,32 @@ TEST_CASE("version constructors - ljh::limit::min", "[version]")
 	CHECK_THAT(ljh::version(ljh::limit::min,1,2,3,4), EqualsVersion({                      1,                      2,                      3,                      4}));
 }
 
-TEST_CASE("version compare - greater then", "[version]")
+TEST_CASE("version compare - greater then", "[test_17][version]")
 {
 	CHECK(ljh::version{1,2,3,5} > ljh::version{1,2,3,4});
 	CHECK(ljh::version{1,2,4,4} > ljh::version{1,2,3,4});
 	CHECK(ljh::version{1,3,3,4} > ljh::version{1,2,3,4});
 	CHECK(ljh::version{2,2,3,4} > ljh::version{1,2,3,4});
 }
-TEST_CASE("version compare - less then", "[version]")
+TEST_CASE("version compare - less then", "[test_17][version]")
 {
 	CHECK(ljh::version{1,2,3,3} < ljh::version{1,2,3,4});
 	CHECK(ljh::version{1,2,2,4} < ljh::version{1,2,3,4});
 	CHECK(ljh::version{1,1,3,4} < ljh::version{1,2,3,4});
 	CHECK(ljh::version{0,2,3,4} < ljh::version{1,2,3,4});
 }
-TEST_CASE("version compare - equal to", "[version]")
+TEST_CASE("version compare - equal to", "[test_17][version]")
 {
 	CHECK(ljh::version{1,2,3,4} == ljh::version{1,2,3,4});
 }
-TEST_CASE("version compare - not equal to", "[version]")
+TEST_CASE("version compare - not equal to", "[test_17][version]")
 {
 	CHECK(ljh::version{1,2,3,3} != ljh::version{1,2,3,4});
 	CHECK(ljh::version{1,2,2,4} != ljh::version{1,2,3,4});
 	CHECK(ljh::version{1,1,3,4} != ljh::version{1,2,3,4});
 	CHECK(ljh::version{0,2,3,4} != ljh::version{1,2,3,4});
 }
-TEST_CASE("version compare - greater then equal to", "[version]")
+TEST_CASE("version compare - greater then equal to", "[test_17][version]")
 {
 	CHECK(ljh::version{1,2,3,4} >= ljh::version{1,2,3,4});
 	CHECK(ljh::version{1,2,3,5} >= ljh::version{1,2,3,4});
@@ -117,7 +117,7 @@ TEST_CASE("version compare - greater then equal to", "[version]")
 	CHECK(ljh::version{1,3,3,4} >= ljh::version{1,2,3,4});
 	CHECK(ljh::version{2,2,3,4} >= ljh::version{1,2,3,4});
 }
-TEST_CASE("version compare - less then equal to", "[version]")
+TEST_CASE("version compare - less then equal to", "[test_17][version]")
 {
 	CHECK(ljh::version{1,2,3,4} <= ljh::version{1,2,3,4});
 	CHECK(ljh::version{1,2,3,3} <= ljh::version{1,2,3,4});

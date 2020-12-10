@@ -5,7 +5,13 @@
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "ljh/system_info.hpp"
-#include "ljh/function_pointer.hpp"
+
+#if defined(__GNUC__) || defined(__clang__)
+#pragma GCC diagnostic push
+#elif defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable : 4996)
+#endif
 
 #if defined(LJH_TARGET_Windows)
 #    define WIN32_LEAN_AND_MEAN
@@ -14,6 +20,7 @@
 #    include <winternl.h>
 #    include "ljh/windows/registry.hpp"
 #    include "ljh/char_convertions.hpp"
+#    include "ljh/function_pointer.hpp"
 #    undef MessageBox
 static ljh::function_pointer<NTSTATUS WINAPI(POSVERSIONINFOW            )> RtlGetVersion        ;
 static ljh::function_pointer<const char*    (                           )> wine_get_version     ;
@@ -257,19 +264,19 @@ ljh::expected<std::string, ljh::system_info::error> ljh::system_info::get_string
 			std::getline(file, temp);
 
 			if (temp.starts_with("NAME="   ))
-				name         = temp.substr(6, temp.find_last_of('"') - 6);
+				name    = temp.substr(6, temp.find_last_of('"') - 6);
 			if (temp.starts_with("VERSION="))
-				version_temp = temp.substr(9, temp.find_last_of('"') - 9);
+				version = temp.substr(9, temp.find_last_of('"') - 9);
 		}
 
-		if (version_temp != "")
-			name += " " + version_temp;
+		if (version != "")
+			name += " " + version;
 		name += " on ";
 	}
 
 	struct utsname buffer;
 	uname(&buffer);
-	name += buffer.sysname + " " + buffer.release;
+	name += buffer.sysname + std::string{" "} + buffer.release;
 
 	return name;
 #elif defined(LJH_TARGET_Android)
@@ -657,3 +664,9 @@ namespace ljh::system_info::versions
 	const info_data iPadOS_14_2                 = iOS_14_2       ;
 	const info_data iPadOS_14_3                 = iOS_14_3       ;
 }
+
+#if defined(__GNUC__) || defined(__clang__)
+#pragma GCC diagnostic pop
+#elif defined(_MSC_VER)
+#pragma warning(pop)
+#endif

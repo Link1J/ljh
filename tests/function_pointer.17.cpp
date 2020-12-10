@@ -14,7 +14,7 @@ namespace Catch
 	{
 		static std::string convert(ljh::function_pointer<T> const& value)
 		{
-			return StringMaker<ljh::function_pointer<T>::type>{}.convert(value.get());
+			return StringMaker<typename ljh::function_pointer<T>::type>{}.convert(value.get());
 		}
 	};
 }
@@ -22,7 +22,7 @@ namespace Catch
 static bool temp() { return true; }
 static bool temp_noexcept() noexcept { return false; }
 
-TEST_CASE("function_pointer C++17", "[function_pointer]") {
+TEST_CASE("function_pointer", "[test_17][function_pointer]") {
 	ljh::function_pointer<decltype(temp)> test {temp};
 	REQUIRE(test);
 	CHECK(test != (uintptr_t)0);
@@ -31,7 +31,7 @@ TEST_CASE("function_pointer C++17", "[function_pointer]") {
 	REQUIRE(test());
 }
 
-TEST_CASE("function_pointer noexcept C++17", "[function_pointer]") {
+TEST_CASE("function_pointer noexcept", "[test_17][function_pointer]") {
 	ljh::function_pointer<decltype(temp_noexcept)> test {temp_noexcept};
 	REQUIRE(test);
 	CHECK(test != (uintptr_t)0);
@@ -40,7 +40,7 @@ TEST_CASE("function_pointer noexcept C++17", "[function_pointer]") {
 	REQUIRE(!test());
 }
 
-TEST_CASE("function_pointer empty", "[function_pointer]") {
+TEST_CASE("function_pointer empty", "[test_17][function_pointer]") {
 	ljh::function_pointer<void()> test;
 	REQUIRE(test.empty());
 	CHECK(test == (uintptr_t)0);

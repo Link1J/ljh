@@ -5,9 +5,12 @@
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include <catch2/catch_test_macros.hpp>
+
+#if __cpp_nontype_template_args >= 201911
+
 #include "ljh/compile_time_string.hpp"
 
-TEST_CASE("compile time string", "[compile_time_string]" ) {
+TEST_CASE("compile time string", "[test_20][compile_time_string]" ) {
 	if constexpr (sizeof(std::size_t) == 4)
 	{
 		CHECK(ljh::compile_time_string{"ljh"   }.hash() == 0x564AB9C1);
@@ -20,3 +23,5 @@ TEST_CASE("compile time string", "[compile_time_string]" ) {
 		CHECK(ljh::compile_time_string{"link1j"}.hash() == 0x54EFEFC5BB2C6526);
 	}
 }
+
+#endif

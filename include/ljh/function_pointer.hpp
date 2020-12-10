@@ -24,6 +24,9 @@
 #if defined(__GNUC__) || defined(__clang__)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wattributes"
+#elif defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable : 4348)
 #endif
 
 namespace ljh
@@ -48,25 +51,49 @@ namespace ljh
 		using noexcept_t = function_traits<R LJH_CALLING_CONVENTION_##CC (Args...) noexcept(!Noexcept)>;\
 		type function = nullptr;\
 \
+		template<typename T, int = sizeof(function_traits<T>)>\
+		struct enable_function_pointer;\
+\
+		template<typename T>\
+		struct enable_function_pointer<T, 1>\
+		{\
+			using ref = typename std::enable_if<function_traits<T>::is::function_pointer, function_pointer&>::type;\
+			using boo = typename std::enable_if<function_traits<T>::is::function_pointer, bool             >::type;\
+		};\
+\
 	public:\
 		constexpr function_pointer() noexcept = default;\
-		constexpr function_pointer(uintptr_t other) noexcept : function{reinterpret_cast<type>(other)} {}\
-		constexpr function_pointer(void*     other) noexcept : function{reinterpret_cast<type>(other)} {}\
+		constexpr          function_pointer(type      other) noexcept : function{                       other } {}\
+		constexpr explicit function_pointer(uintptr_t other) noexcept : function{reinterpret_cast<type>(other)} {}\
+		constexpr explicit function_pointer(void*     other) noexcept : function{reinterpret_cast<type>(other)} {}\
+		template<typename T, typename = typename enable_function_pointer<T>::ref>\
+		constexpr explicit function_pointer(T         other) noexcept : function{reinterpret_cast<type>(other)} {}\
 \
 		function_pointer& operator=(uintptr_t other) noexcept { function = reinterpret_cast<type>(other); return *this; }\
 		function_pointer& operator=(void*     other) noexcept { function = reinterpret_cast<type>(other); return *this; }\
+		template<typename T> typename enable_function_pointer<T>::ref \
+		                  operator=(T         other) noexcept { function = reinterpret_cast<type>(other); return *this; }\
 \
-		bool operator==(uintptr_t other) const noexcept { return (uintptr_t)function ==        other; }\
-		bool operator==(void*     other) const noexcept { return (void*    )function ==        other; }\
+		bool operator==(type      other) const noexcept { return function ==                        other ; }\
+		bool operator==(uintptr_t other) const noexcept { return function == reinterpret_cast<type>(other); }\
+		bool operator==(void*     other) const noexcept { return function == reinterpret_cast<type>(other); }\
+		template<typename T> typename enable_function_pointer<T>::boo \
+		     operator==(T         other) const noexcept { return function == reinterpret_cast<type>(other); }\
 \
+		bool operator!=(type      other) const noexcept { return !(*this == other); }\
 		bool operator!=(uintptr_t other) const noexcept { return !(*this == other); }\
 		bool operator!=(void*     other) const noexcept { return !(*this == other); }\
+		template<typename T> typename enable_function_pointer<T>::boo \
+		     operator!=(T         other) const noexcept { return !(*this == other); }\
 \
 		R operator()(Args... args) const noexcept(traits::is::no_exceptions) { return function(args...); }\
 		type get() const noexcept { return function; }\
 		bool empty() const noexcept { return function == nullptr; }\
 \
-		operator bool() const noexcept { return !empty(); }\
+		         operator bool     () const noexcept { return !empty(); }\
+		         operator type     () const noexcept { return            get(); }\
+		explicit operator void*    () const noexcept { return (void*    )get(); }\
+		explicit operator uintptr_t() const noexcept { return (uintptr_t)get(); }\
 	}
 
 #if __cpp_noexcept_function_type >= 201510L
@@ -95,8 +122,11 @@ namespace ljh
 
 #if defined(__GNUC__) || defined(__clang__)
 #pragma GCC diagnostic pop
+#elif defined(_MSC_VER)
+#pragma warning(pop)
 #endif
 
 const auto a = sizeof(ljh::function_pointer<void()>) == sizeof(void(*)());
+const auto b = sizeof(ljh::function_traits<void()>);
 
 static_assert(sizeof(ljh::function_pointer<void()>) == sizeof(void(*)()), "ljh::function_pointer and a function pointer must be the same size");

@@ -5,10 +5,13 @@
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include <catch2/catch_test_macros.hpp>
+
+#if __cpp_concepts > 0
+
 #include "ljh/concepts.hpp"
 #include "ljh/memory_mapped_file.hpp"
 
-TEST_CASE("char_type", "[concepts]") {
+TEST_CASE("char_type", "[test_20][concepts]") {
 	CHECK(ljh::char_type<char>);
 	CHECK(ljh::char_type<wchar_t>);
 	CHECK(ljh::char_type<std::string::value_type>);
@@ -21,8 +24,10 @@ TEST_CASE("char_type", "[concepts]") {
 
 enum test_enum { AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA };
 
-TEST_CASE("scoped_enum", "[concepts]") {
+TEST_CASE("scoped_enum", "[test_20][concepts]") {
 	CHECK(ljh::scoped_enum<ljh::memory_mapped::permissions>);
 	CHECK(!ljh::scoped_enum<int>);
 	CHECK(!ljh::scoped_enum<test_enum>);
 }
+
+#endif

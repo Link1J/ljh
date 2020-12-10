@@ -6,7 +6,9 @@ add_library(ljh STATIC
 	source/system_directories.cpp
 	source/memory_mapped_file.cpp
 	source/system_info.cpp
-	source/system_info.mm
+	$<$<PLATFORM_ID:Darwin>:
+		source/system_info.mm
+	>
 	$<$<PLATFORM_ID:Windows>:
 		source/windows/registry.cpp
 	>

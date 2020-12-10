@@ -7,57 +7,57 @@
 #include <catch2/catch_test_macros.hpp>
 #include "ljh/system_directories.hpp"
 
-TEST_CASE("system_directories::home()", "[system_directories]")
+TEST_CASE("system_directories::home()", "[test_98][system_directories]")
 {
 	REQUIRE(!ljh::system_directories::home().empty());
 }
 
-TEST_CASE("system_directories::cache()", "[system_directories]")
+TEST_CASE("system_directories::cache()", "[test_98][system_directories]")
 {
 	REQUIRE(!ljh::system_directories::cache().empty());
 }
 
-TEST_CASE("system_directories::config()", "[system_directories]")
+TEST_CASE("system_directories::config()", "[test_98][system_directories]")
 {
 	REQUIRE(!ljh::system_directories::config().empty());
 }
 
-TEST_CASE("system_directories::data()", "[system_directories]")
+TEST_CASE("system_directories::data()", "[test_98][system_directories]")
 {
 	REQUIRE(!ljh::system_directories::data().empty());
 }
 
-TEST_CASE("system_directories::documents()", "[system_directories]")
+TEST_CASE("system_directories::documents()", "[test_98][system_directories]")
 {
 	REQUIRE(!ljh::system_directories::documents().empty());
 }
 
-TEST_CASE("system_directories::desktop()", "[system_directories]")
+TEST_CASE("system_directories::desktop()", "[test_98][system_directories]")
 {
 	REQUIRE(!ljh::system_directories::desktop().empty());
 }
 
-TEST_CASE("system_directories::pictures()", "[system_directories]")
+TEST_CASE("system_directories::pictures()", "[test_98][system_directories]")
 {
 	REQUIRE(!ljh::system_directories::pictures().empty());
 }
 
-TEST_CASE("system_directories::music()", "[system_directories]")
+TEST_CASE("system_directories::music()", "[test_98][system_directories]")
 {
 	REQUIRE(!ljh::system_directories::music().empty());
 }
 
-TEST_CASE("system_directories::videos()", "[system_directories]")
+TEST_CASE("system_directories::videos()", "[test_98][system_directories]")
 {
 	REQUIRE(!ljh::system_directories::videos().empty());
 }
 
-TEST_CASE("system_directories::downloads()", "[system_directories]")
+TEST_CASE("system_directories::downloads()", "[test_98][system_directories]")
 {
 	REQUIRE(!ljh::system_directories::downloads().empty());
 }
 
-TEST_CASE("system_directories::save_games()", "[system_directories]")
+TEST_CASE("system_directories::save_games()", "[test_98][system_directories]")
 {
 	REQUIRE(!ljh::system_directories::save_games().empty());
 }

@@ -19,15 +19,24 @@ add_executable(tests_11
 )
 set_target_properties(tests_11 PROPERTIES CXX_STANDARD 11 CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)
 target_link_libraries(tests_11 Catch2::Catch2WithMain ljh)
+target_compile_definitions(tests_11 PRIVATE CATCH_CONFIG_CONSOLE_WIDTH=300)
 
 add_executable(tests_17
 	version.17.cpp
 	memory_mapped_file.17.cpp
 	function_pointer.17.cpp
-	expected.20.cpp
+	expected.17.cpp
 )
 set_target_properties(tests_17 PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)
 target_link_libraries(tests_17 Catch2::Catch2WithMain ljh)
+target_compile_definitions(tests_17 PRIVATE CATCH_CONFIG_CONSOLE_WIDTH=300)
+
+add_executable(tests_temp
+	function_pointer.17.cpp
+)
+set_target_properties(tests_temp PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)
+target_link_libraries(tests_temp Catch2::Catch2WithMain ljh)
+target_compile_definitions(tests_temp PRIVATE CATCH_CONFIG_CONSOLE_WIDTH=300)
 
 add_executable(tests_20
 	expected.20.cpp
@@ -37,6 +46,7 @@ add_executable(tests_20
 )
 set_target_properties(tests_20 PROPERTIES CXX_STANDARD 20 CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)
 target_link_libraries(tests_20 Catch2::Catch2WithMain ljh)
+target_compile_definitions(tests_20 PRIVATE CATCH_CONFIG_CONSOLE_WIDTH=300)
 
 include(CTest)
 include(ParseAndAddCatchTests)
