@@ -84,7 +84,7 @@ stages:
       ignoreLASTEXITCODE: true
       displayName: Run Tests (Linux)
       workingDirectory: '$(BuildConfiguration)/tests'
-      condition: eq(variables['agent.os'], 'Linux')
+      condition: eq(variables['agent.os'], 'Linux', 'Darwin')
     - task: PublishTestResults@2
       displayName: Publish Test Results
       inputs:
