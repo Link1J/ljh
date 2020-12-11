@@ -23,6 +23,14 @@ target_include_directories(ljh
 		$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
 		$<INSTALL_INTERFACE:include>
 )
+target_link_libraries(ljh
+	PUBLIC
+		$<$<PLATFORM_ID:Darwin>:
+			"-framework CoreFoundation"
+			"-framework Foundation"
+			"-framework CoreServices"
+		>
+)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
