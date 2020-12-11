@@ -5,28 +5,32 @@
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "ljh/system_directories.hpp"
+#include "ljh/system_info.hpp"
 
-#ifdef _WIN32
+#if defined(LJH_TARGET_Windows)
 #    define WIN32_LEAN_AND_MEAN
 #    define NOMINMAX
 #    include <windows.h>
 #    include <stringapiset.h>
 #    include <shlobj.h>
 #    include <type_traits>
-#elif defined(__linux__)
+#elif defined(LJH_TARGET_Linux) || defined(LJH_TARGET_Unix)
 #    include <cstdlib>
 #    include <unistd.h>
 #    include <sys/types.h>
 #    include <sys/stat.h>
 #    include <pwd.h>
 #    include <fstream>
+#elif defined(LJH_TARGET_MacOS)
+#    include <pwd.h>
+#    include <unistd.h>
 #endif
 
 namespace ljh
 {
 	namespace system_directories
 	{
-#ifdef _WIN32
+#if defined(LJH_TARGET_Windows)
 		template<typename T>
 		class co_task_free
 		{
@@ -135,7 +139,7 @@ namespace ljh
 			}
 			return value;
 		}
-#elif defined(__linux__)
+#elif defined(LJH_TARGET_Linux) || defined(LJH_TARGET_Unix)
 		bool _directory_exists(std::string& path)
 		{
 			struct stat file_stats;
@@ -363,6 +367,127 @@ namespace ljh
 		std::string save_games()
 		{
 			return data();
+		}
+
+#elif defined(LJH_TARGET_MacOS)
+		std::string home()
+		{
+			std::string dir = getenv("HOME");
+			if (getuid() != 0 && !dir.empty())
+			{
+				return dir;
+			}
+			passwd* pw = getpwuid(getuid());
+			if (!pw)
+			{
+				return "";
+			}
+			return pw->pw_dir;
+		}
+
+		std::string cache()
+		{
+			return home() + "/Library/Caches";
+		}
+
+		std::string config()
+		{
+			return home() + "/Library/Application Support";
+		}
+
+		std::string data()
+		{
+			return home() + "/Library/Application Support";
+		}
+
+		std::string documents()
+		{
+			return home() + "/Desktop";
+		}
+
+		std::string desktop()
+		{
+			return home() + "/Desktop";
+		}
+
+		std::string pictures()
+		{
+			return home() + "/Pictures";
+		}
+
+		std::string music()
+		{
+			return home() + "/Music";
+		}
+
+		std::string videos()
+		{
+			return home() + "/Movies";
+		}
+
+		std::string downloads()
+		{
+			return home() + "/Library/Caches";
+		}
+
+		std::string save_games()
+		{
+			return home() + "/Library/Application Support";
+		}
+#else
+		std::string home()
+		{
+			return "";
+		}
+
+		std::string cache()
+		{
+			return "";
+		}
+
+		std::string config()
+		{
+			return "";
+		}
+
+		std::string data()
+		{
+			return "";
+		}
+
+		std::string documents()
+		{
+			return "";
+		}
+
+		std::string desktop()
+		{
+			return "";
+		}
+
+		std::string pictures()
+		{
+			return "";
+		}
+
+		std::string music()
+		{
+			return "";
+		}
+
+		std::string videos()
+		{
+			return "";
+		}
+
+		std::string downloads()
+		{
+			return "";
+		}
+
+		std::string save_games()
+		{
+			return "";
 		}
 #endif
 	}
