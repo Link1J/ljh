@@ -25,6 +25,7 @@
 #endif
 
 #include <string_view>
+#include <stdexcept>
 
 namespace ljh
 {
