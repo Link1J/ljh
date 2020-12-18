@@ -50,7 +50,7 @@
 #define LJH_CALLING_CONVENTION_regcall            __attribute__((regcall           ))
 #define LJH_CALLING_CONVENTION_thiscall           __attribute__((thiscall          ))
 #define LJH_CALLING_CONVENTION_aarch64_vector_pcs __attribute__((aarch64_vector_pcs))
-#if LJH_GCC_VERSION < LJH_COMPILER_GEN_VERSION(10, 0)
+#if !defined(_WIN32)
 #undef  LJH_CALLING_CONVENTION_ms_abi             
 #define LJH_CALLING_CONVENTION_ms_abi             __attribute__((cdecl             ))
 #endif
