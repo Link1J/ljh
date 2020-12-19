@@ -20,6 +20,7 @@
 #pragma once
 
 #include "function_traits.hpp"
+#include "int_types.hpp"
 
 #if defined(__GNUC__) || defined(__clang__)
 #pragma GCC diagnostic push
@@ -27,6 +28,23 @@
 #elif defined(_MSC_VER)
 #pragma warning(push)
 #pragma warning(disable : 4348)
+#endif
+
+#if LJH_CPP_VERSION >= LJH_CPP17_VERSION && __has_include(<string_view>)
+#include <string_view>
+#define _string_type std::string_view
+#else
+#include <string>
+#define _string_type std::string
+#endif
+
+#ifdef LJH_FUNCTION_POINTERS_LOAD_RETURNS_EXPECTED
+#if LJH_CPP_VERSION < LJH_CPP17_VERSION
+#error "LJH_FUNCTION_POINTERS_LOAD_RETURNS_EXPECTED needs C++17 or newer"
+#undef LJH_FUNCTION_POINTERS_LOAD_RETURNS_EXPECTED
+#else
+#include "expected.hpp"
+#endif
 #endif
 
 namespace ljh
@@ -118,6 +136,42 @@ namespace ljh
 
 #undef MAKE_POINTERS
 #undef POINTERS_INTERALS
+
+	bool _load_dll(const char* dll_name, const char* function_name, void** function, u32* error);
+
+#ifndef LJH_FUNCTION_POINTERS_LOAD_RETURNS_EXPECTED
+	template<typename function_type>
+	function_pointer<function_type> load_function(_string_type dll_name, _string_type function_name)
+	{
+		void* function; u32 error;
+		_load_dll(dll_name.data(), function_name.data(), &function, &error);
+		return function_pointer<function_type>{function};
+	}
+	template<typename function_type>
+	function_pointer<function_type> load_function(_string_type dll_name, u16 ordinal)
+	{
+		void* function; u32 error;
+		_load_dll(dll_name.data(), (const char*)(ordinal), &function, &error);
+		return function_pointer<function_type>{function};
+	}
+#else
+	template<typename function_type, typename _char = char>
+	expected<function_pointer<function_type>,u32> load_function(_string_type dll_name, _string_type function_name)
+	{
+		void* function; u32 error;
+		if (!_load_dll(dll_name.data(), function_name.data(), &function, &error))
+			return unexpected{error};
+		return function_pointer<function_type>{function};
+	}
+	template<typename function_type, typename _char = char>
+	expected<function_pointer<function_type>,u32> load_function(_string_type dll_name, u16 ordinal)
+	{
+		void* function; u32 error;
+		if (!_load_dll(dll_name.data(), (const char*)(ordinal), &function, &error))
+			return unexpected{error};
+		return function_pointer<function_type>{function};
+	}
+#endif
 }
 
 #if defined(__GNUC__) || defined(__clang__)
@@ -126,7 +180,6 @@ namespace ljh
 #pragma warning(pop)
 #endif
 
-const auto a = sizeof(ljh::function_pointer<void()>) == sizeof(void(*)());
-const auto b = sizeof(ljh::function_traits<void()>);
+#undef _string_type
 
 static_assert(sizeof(ljh::function_pointer<void()>) == sizeof(void(*)()), "ljh::function_pointer and a function pointer must be the same size");

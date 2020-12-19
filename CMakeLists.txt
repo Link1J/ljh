@@ -6,6 +6,7 @@ add_library(ljh STATIC
 	source/system_directories.cpp
 	source/memory_mapped_file.cpp
 	source/system_info.cpp
+	source/function_pointer.cpp
 	$<$<PLATFORM_ID:Darwin>:
 		source/system_info.mm
 	>
@@ -29,6 +30,9 @@ target_link_libraries(ljh
 			"-framework CoreFoundation"
 			"-framework Foundation"
 			"-framework CoreServices"
+		>
+		$<$<PLATFORM_ID:Linux>:
+			dl
 		>
 )
 
