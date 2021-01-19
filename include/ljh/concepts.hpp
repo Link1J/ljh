@@ -46,4 +46,7 @@ namespace ljh
 
 	template<typename T>
 	concept scoped_enum = is_scoped_enum_v<T>;
+
+	template<typename T>
+	concept function_type = std::is_function_v<T>;
 }

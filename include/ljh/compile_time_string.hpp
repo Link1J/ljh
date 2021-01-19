@@ -33,7 +33,7 @@
 
 namespace ljh
 {
-	template <typename Char, std::size_t Size, typename Traits = std::char_traits<Char>>
+	template <typename Char, std::size_t Size>
 	struct compile_time_string
 	{
 		using char_type = Char;
@@ -51,8 +51,7 @@ namespace ljh
 			}
 		}
 		
-		template <typename Traits2>
-		[[nodiscard]] constexpr compile_time_string(const compile_time_string<Char, Size, Traits2> &other) noexcept
+		[[nodiscard]] constexpr compile_time_string(const compile_time_string<Char, Size> &other) noexcept
 		{
 			for (std::size_t i{0}; i < Size; ++i)
 			{
@@ -101,16 +100,16 @@ namespace ljh
 		}
 	};
 
-	template<typename Char, std::size_t Size, typename Traits = std::char_traits<Char>>
-	compile_time_string(const Char (&)[Size]) -> compile_time_string<Char, Size - 1, Traits>;
-	template<typename Char, std::size_t Size, typename Traits = std::char_traits<Char>>
-	compile_time_string(compile_time_string<Char, Size>) -> compile_time_string<Char, Size, Traits>;
+	template<typename Char, std::size_t Size>
+	compile_time_string(const Char (&)[Size]) -> compile_time_string<Char, Size - 1>;
+	template<typename Char, std::size_t Size>
+	compile_time_string(const compile_time_string<Char, Size>& ) -> compile_time_string<Char, Size>;
 
-	inline namespace compile_time_string_literals
-	{
-		template<compile_time_string text> [[nodiscard]] auto operator ""_cts() { return text; }
-		template<compile_time_string text> [[nodiscard]] auto operator ""_hash() { return text.hash(); }
-	}
+	//inline namespace compile_time_string_literals
+	//{
+	//	template<ljh::compile_time_string text> [[nodiscard]] constexpr auto operator ""_cts () { return text       ; }
+	//	template<ljh::compile_time_string text> [[nodiscard]] constexpr auto operator ""_hash() { return text.hash(); }
+	//}
 }
 
 namespace std

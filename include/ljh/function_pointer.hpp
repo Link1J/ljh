@@ -55,18 +55,18 @@ namespace ljh
 #define POINTERS_INTERALS(CC, Noexcept)\
 	template<typename R, typename... Args>\
 	class function_pointer<\
-		R LJH_CALLING_CONVENTION_##CC (Args...) noexcept(Noexcept),\
+		R LJH_CALLING_CONVENTION_##CC (Args...) LJH_NOEXCEPT_FUNCTION_TYPE(Noexcept),\
 		std::is_same<calling_conventions::cdecl_::type, calling_conventions::CC##_::type>::value\
 			? calling_conventions::CC##_::id \
 			: 0 \
 	>\
 	{\
 	public:\
-		using traits = function_traits<R LJH_CALLING_CONVENTION_##CC (Args...) noexcept(Noexcept)>;\
+		using traits = function_traits<R LJH_CALLING_CONVENTION_##CC (Args...) LJH_NOEXCEPT_FUNCTION_TYPE(Noexcept)>;\
 		using type = typename traits::as::function_pointer;\
 \
 	private:\
-		using noexcept_t = function_traits<R LJH_CALLING_CONVENTION_##CC (Args...) noexcept(!Noexcept)>;\
+		using noexcept_t = function_traits<R LJH_CALLING_CONVENTION_##CC (Args...) LJH_NOEXCEPT_FUNCTION_TYPE(!Noexcept)>;\
 		type function = nullptr;\
 \
 		template<typename T, int = sizeof(function_traits<T>)>\
@@ -104,7 +104,7 @@ namespace ljh
 		template<typename T> typename enable_function_pointer<T>::boo \
 		     operator!=(T         other) const noexcept { return !(*this == other); }\
 \
-		R operator()(Args... args) const noexcept(traits::is::no_exceptions) { return function(args...); }\
+		R operator()(Args... args) const LJH_NOEXCEPT_FUNCTION_TYPE(traits::is::no_exceptions) { return function(args...); }\
 		type get() const noexcept { return function; }\
 		bool empty() const noexcept { return function == nullptr; }\
 \
