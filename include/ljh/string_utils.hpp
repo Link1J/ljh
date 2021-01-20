@@ -94,6 +94,24 @@ namespace ljh
 		return output;
 	}
 
+	template<size_t S, class C, class T = std::char_traits<C>, class A = std::allocator<C>>
+	std::vector<std::basic_string<C,T,A>> split(const std::basic_string<C,T,A>& s, const C (&seperator)[S])
+	{
+		using size_type = typename std::basic_string<C,T,A>::size_type;
+
+		std::vector<std::basic_string<C,T,A>> output;
+		size_type prev_pos = 0, pos = 0;
+
+		while((pos = s.find(seperator, pos)) != std::basic_string<C,T,A>::npos)
+		{
+			output.push_back(s.substr(prev_pos, pos - prev_pos));
+			prev_pos = ++pos;
+		}
+
+		output.push_back(s.substr(prev_pos, pos-prev_pos));
+		return output;
+	}
+
 #if __cpp_lib_string_view >= 201606L
 	template<class C, class T = std::char_traits<C>>
 	void ltrim(std::basic_string_view<C,T> &s)
@@ -141,6 +159,24 @@ namespace ljh
 
 	template<class C, class T = std::char_traits<C>>
 	std::vector<std::basic_string_view<C,T>> split(const std::basic_string_view<C,T>& s, C seperator)
+	{
+		using size_type = typename std::basic_string_view<C,T>::size_type;
+		
+		std::vector<std::basic_string_view<C,T>> output;
+		size_type::size_type prev_pos = 0, pos = 0;
+
+		while((pos = s.find(seperator, pos)) != std::basic_string_view<C,T>::npos)
+		{
+			output.push_back(s.substr(prev_pos, pos - prev_pos));
+			prev_pos = ++pos;
+		}
+
+		output.push_back(s.substr(prev_pos, pos-prev_pos));
+		return output;
+	}
+	
+	template<size_t S, class C, class T = std::char_traits<C>, class A = std::allocator<C>>
+	std::vector<std::basic_string<C,T,A>> split(const std::basic_string<C,T,A>& s, const C (&seperator)[S])
 	{
 		using size_type = typename std::basic_string_view<C,T>::size_type;
 		
