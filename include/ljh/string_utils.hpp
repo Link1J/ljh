@@ -105,7 +105,7 @@ namespace ljh
 		while((pos = s.find(seperator, pos)) != std::basic_string<C,T,A>::npos)
 		{
 			output.push_back(s.substr(prev_pos, pos - prev_pos));
-			prev_pos = pos += C - 1;
+			prev_pos = pos += S - 1;
 		}
 
 		output.push_back(s.substr(prev_pos, pos-prev_pos));
@@ -186,7 +186,7 @@ namespace ljh
 		while((pos = s.find(seperator, pos)) != std::basic_string_view<C,T>::npos)
 		{
 			output.push_back(s.substr(prev_pos, pos - prev_pos));
-			prev_pos = pos += C - 1;
+			prev_pos = pos += S - 1;
 		}
 
 		output.push_back(s.substr(prev_pos, pos-prev_pos));
