@@ -151,7 +151,7 @@ namespace ljh
 	function_pointer<function_type> load_function(_string_type dll_name, u16 ordinal)
 	{
 		void* function; u32 error;
-		_load_dll(dll_name.data(), (const char*)(ordinal), &function, &error);
+		_load_dll(dll_name.data(), (const char*)(uintptr_t)(ordinal), &function, &error);
 		return function_pointer<function_type>{function};
 	}
 #else
@@ -167,7 +167,7 @@ namespace ljh
 	expected<function_pointer<function_type>,u32> load_function(_string_type dll_name, u16 ordinal)
 	{
 		void* function; u32 error;
-		if (!_load_dll(dll_name.data(), (const char*)(ordinal), &function, &error))
+		if (!_load_dll(dll_name.data(), (const char*)(uintptr_t)(ordinal), &function, &error))
 			return unexpected{error};
 		return function_pointer<function_type>{function};
 	}
