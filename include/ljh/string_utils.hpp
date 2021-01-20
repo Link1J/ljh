@@ -105,7 +105,7 @@ namespace ljh
 		while((pos = s.find(seperator, pos)) != std::basic_string<C,T,A>::npos)
 		{
 			output.push_back(s.substr(prev_pos, pos - prev_pos));
-			prev_pos = pos += S - 1;
+			prev_pos = ++pos;
 		}
 
 		output.push_back(s.substr(prev_pos, pos-prev_pos));
@@ -175,8 +175,8 @@ namespace ljh
 		return output;
 	}
 	
-	template<size_t S, class C, class T = std::char_traits<C>, class A = std::allocator<C>>
-	std::vector<std::basic_string<C,T,A>> split(const std::basic_string<C,T,A>& s, const C (&seperator)[S])
+	template<size_t S, class C, class T = std::char_traits<C>>
+	std::vector<std::basic_string_view<C,T>> split(const std::basic_string_view<C,T>& s, const C (&seperator)[S])
 	{
 		using size_type = typename std::basic_string_view<C,T>::size_type;
 		
@@ -186,7 +186,7 @@ namespace ljh
 		while((pos = s.find(seperator, pos)) != std::basic_string_view<C,T>::npos)
 		{
 			output.push_back(s.substr(prev_pos, pos - prev_pos));
-			prev_pos = pos += S - 1;
+			prev_pos = ++pos;
 		}
 
 		output.push_back(s.substr(prev_pos, pos-prev_pos));
