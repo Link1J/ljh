@@ -6,7 +6,7 @@
 
 cmake_minimum_required(VERSION 3.11.0)
 option(ljh_BUILD_TESTS "Build the Self Tests" OFF)
-option(ljh_INSTALL "Build the Self Tests" ON)
+option(ljh_INSTALL "Install" ON)
 project(ljh)
 
 add_library(ljh STATIC
@@ -19,6 +19,7 @@ add_library(ljh STATIC
 	>
 	$<$<PLATFORM_ID:Windows>:
 		source/windows/registry.cpp
+		source/windows/wmi.cpp
 	>
 )
 set_target_properties(ljh PROPERTIES 
@@ -41,6 +42,10 @@ target_link_libraries(ljh
 		$<$<PLATFORM_ID:Linux>:
 			dl
 		>
+)
+target_compile_options(ljh
+	PRIVATE
+		/await
 )
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)

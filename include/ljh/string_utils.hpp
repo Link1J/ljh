@@ -24,6 +24,8 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <locale>
+#include <codecvt>
 
 #if __cpp_lib_string_view >= 201606L
 #include <string_view>
@@ -112,6 +114,16 @@ namespace ljh
 		return output;
 	}
 
+	std::wstring convert_string(const std::string& str)
+	{
+		return std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t>{}.from_bytes(str);
+	}
+	
+	std::string convert_string(const std::wstring& wstr)
+	{
+		return std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t>{}.to_bytes(wstr);
+	}
+
 #if __cpp_lib_string_view >= 201606L
 	template<class C, class T = std::char_traits<C>>
 	void ltrim(std::basic_string_view<C,T> &s)
@@ -163,7 +175,7 @@ namespace ljh
 		using size_type = typename std::basic_string_view<C,T>::size_type;
 		
 		std::vector<std::basic_string_view<C,T>> output;
-		size_type::size_type prev_pos = 0, pos = 0;
+		size_type prev_pos = 0, pos = 0;
 
 		while((pos = s.find(seperator, pos)) != std::basic_string_view<C,T>::npos)
 		{
@@ -181,7 +193,7 @@ namespace ljh
 		using size_type = typename std::basic_string_view<C,T>::size_type;
 		
 		std::vector<std::basic_string_view<C,T>> output;
-		size_type::size_type prev_pos = 0, pos = 0;
+		size_type prev_pos = 0, pos = 0;
 
 		while((pos = s.find(seperator, pos)) != std::basic_string_view<C,T>::npos)
 		{
