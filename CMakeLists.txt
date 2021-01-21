@@ -34,6 +34,10 @@ target_include_directories(ljh
 )
 target_link_libraries(ljh
 	PUBLIC
+		$<$<PLATFORM_ID:Windows>:
+			wbemuuid
+			windowsapp
+		>
 		$<$<PLATFORM_ID:Darwin>:
 			"-framework CoreFoundation"
 			"-framework Foundation"

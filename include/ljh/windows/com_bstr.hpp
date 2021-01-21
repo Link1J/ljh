@@ -201,14 +201,14 @@ namespace ljh::windows
 
 	inline namespace com_bstr_literals
 	{
-		auto operator "" _bstr(const wchar_t* string, std::size_t size)
+		inline auto operator "" _bstr(const wchar_t* string, std::size_t size)
 		{
 			return com_bstr{std::wstring_view{string, size}};
 		}
 	}
 }
 
-std::wostream& operator<<(std::wostream& os, const ljh::windows::com_bstr& string)
+inline std::wostream& operator<<(std::wostream& os, const ljh::windows::com_bstr& string)
 {
 	return os << string.c_str();
 }
