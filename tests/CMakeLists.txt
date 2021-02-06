@@ -22,6 +22,13 @@ set_target_properties(tests_11 PROPERTIES CXX_STANDARD 11 CXX_STANDARD_REQUIRED 
 target_link_libraries(tests_11 Catch2::Catch2WithMain ljh)
 target_compile_definitions(tests_11 PRIVATE CATCH_CONFIG_CONSOLE_WIDTH=300)
 
+add_executable(tests_14
+	compile_time_string.14.cpp
+)
+set_target_properties(tests_14 PROPERTIES CXX_STANDARD 14 CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)
+target_link_libraries(tests_14 Catch2::Catch2WithMain ljh)
+target_compile_definitions(tests_14 PRIVATE CATCH_CONFIG_CONSOLE_WIDTH=300)
+
 add_executable(tests_17
 	version.17.cpp
 	memory_mapped_file.17.cpp
@@ -29,6 +36,7 @@ add_executable(tests_17
 	expected.17.cpp
 	system_info.17.cpp
 	string_utils.17.cpp
+	dbus.17.cpp
 )
 set_target_properties(tests_17 PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)
 target_link_libraries(tests_17 Catch2::Catch2WithMain ljh)
@@ -38,6 +46,7 @@ add_executable(tests_20
 	expected.20.cpp
 	version.20.cpp
 	compile_time_string.20.cpp
+	delay_loaded_functions.20.cpp
 	concepts.20.cpp
 )
 set_target_properties(tests_20 PROPERTIES CXX_STANDARD 20 CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)

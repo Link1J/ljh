@@ -9,6 +9,11 @@ option(ljh_BUILD_TESTS "Build the Self Tests" OFF)
 option(ljh_INSTALL "Install" ON)
 project(ljh)
 
+if (UNIX AND NOT APPLE)
+	find_package(PkgConfig)
+	pkg_check_modules(DBUS REQUIRED IMPORTED_TARGET dbus-1)
+endif()
+
 add_library(ljh STATIC
 	source/system_directories.cpp
 	source/memory_mapped_file.cpp
@@ -20,6 +25,9 @@ add_library(ljh STATIC
 	$<$<PLATFORM_ID:Windows>:
 		source/windows/registry.cpp
 		source/windows/wmi.cpp
+	>
+	$<$<PLATFORM_ID:Linux>:
+		source/unix/dbus.cpp
 	>
 )
 set_target_properties(ljh PROPERTIES 
@@ -46,6 +54,7 @@ target_link_libraries(ljh
 		>
 		$<$<PLATFORM_ID:Linux>:
 			dl
+			PkgConfig::DBUS
 		>
 )
 target_compile_options(ljh
