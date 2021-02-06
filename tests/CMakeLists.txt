@@ -1,6 +1,15 @@
-cmake_minimum_required(VERSION 3.5)
+
+#          Copyright Jared Irwin 2020-2021
+# Distributed under the Boost Software License, Version 1.0.
+#    (See accompanying file LICENSE_1_0.txt or copy at
+#          https://www.boost.org/LICENSE_1_0.txt)
+
 project(ljh_tests LANGUAGES CXX VERSION 0.0.0)
 include(FetchContent)
+
+if(POLICY CMP0110)
+	cmake_policy(SET CMP0110 NEW)
+endif()
 
 set(CATCH_BUILD_TESTING OFF)
 
