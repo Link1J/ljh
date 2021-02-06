@@ -41,22 +41,25 @@ target_include_directories(ljh
 		$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
 		$<INSTALL_INTERFACE:include>
 )
-target_link_libraries(ljh
-	PUBLIC
-		$<$<PLATFORM_ID:Windows>:
-			wbemuuid
-			windowsapp
-		>
-		$<$<PLATFORM_ID:Darwin>:
-			"-framework CoreFoundation"
-			"-framework Foundation"
-			"-framework CoreServices"
-		>
-		$<$<PLATFORM_ID:Linux>:
-			dl
-			PkgConfig::DBUS
-		>
-)
+
+if (WIN32)
+	target_link_libraries(ljh PUBLIC
+		wbemuuid
+		windowsapp
+	)
+elseif (APPLE)
+	target_link_libraries(ljh PUBLIC
+		"-framework CoreFoundation"
+		"-framework Foundation"
+		"-framework CoreServices"
+	)
+elseif (UNIX)
+	target_link_libraries(ljh PUBLIC
+		dl
+		PkgConfig::DBUS
+	)
+endif()
+
 target_compile_options(ljh
 	PRIVATE
 		$<$<PLATFORM_ID:Windows>:

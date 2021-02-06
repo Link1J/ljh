@@ -43,10 +43,3 @@ TEST_CASE("compile time string - user define literal", "[test_20][compile_time_s
 	REQUIRE(test == "test");
 }
 #endif
-
-using namespace ljh::compile_time_string_literals;
-
-
-#if __cpp_nontype_template_args >= 201911L
-
-#endif

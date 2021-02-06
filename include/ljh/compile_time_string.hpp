@@ -82,7 +82,9 @@ namespace ljh
 		
 		[[nodiscard]] constexpr char_type& operator[](std::size_t i)
 		{
-			return i < Size ? content[i] : throw std::out_of_range("");
+			if (i < Size)
+				return content[i];
+			throw std::out_of_range("");
 		}
 
 		[[nodiscard]] constexpr char_type operator[](std::size_t i) const

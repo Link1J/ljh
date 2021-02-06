@@ -36,8 +36,13 @@ add_executable(tests_17
 	expected.17.cpp
 	system_info.17.cpp
 	string_utils.17.cpp
-	dbus.17.cpp
 )
+if (UNIX AND NOT APPLE)
+	target_sources(tests_17
+		dbus.17.cpp
+	)
+endif()
+
 set_target_properties(tests_17 PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)
 target_link_libraries(tests_17 Catch2::Catch2WithMain ljh)
 target_compile_definitions(tests_17 PRIVATE CATCH_CONFIG_CONSOLE_WIDTH=300)
@@ -56,5 +61,6 @@ target_compile_definitions(tests_20 PRIVATE CATCH_CONFIG_CONSOLE_WIDTH=300)
 include(CTest)
 include(ParseAndAddCatchTests)
 ParseAndAddCatchTests(tests_11 PARSE_CATCH_TESTS_ADD_TO_CONFIGURE_DEPENDS=ON)
+ParseAndAddCatchTests(tests_14 PARSE_CATCH_TESTS_ADD_TO_CONFIGURE_DEPENDS=ON)
 ParseAndAddCatchTests(tests_17 PARSE_CATCH_TESTS_ADD_TO_CONFIGURE_DEPENDS=ON)
 ParseAndAddCatchTests(tests_20 PARSE_CATCH_TESTS_ADD_TO_CONFIGURE_DEPENDS=ON)

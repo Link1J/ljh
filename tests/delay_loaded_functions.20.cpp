@@ -8,7 +8,7 @@
 #include "ljh/cpp_version.hpp"
 
 // Currently GCC doesn't work, but GCC 10 does not define __cpp_nontype_template_args correctly. Maybe GCC 11 will work?
-#if __cpp_nontype_template_args >= 201911L && (defined(LJH_COMPILER_GCC) || defined(LJH_COMPILER_MSVC) || (!defined(LJH_COMPILER_APPLE_CLANG) && LJH_CLANG_VERSION >= LJH_COMPILER_GEN_VERSION(12, 0)) || (defined(LJH_COMPILER_APPLE_CLANG) && LJH_CLANG_VERSION >= LJH_COMPILER_GEN_VERSION(14, 0))
+#if __cpp_nontype_template_args >= 201911L && (defined(LJH_COMPILER_GCC) || defined(LJH_COMPILER_MSVC) || (!defined(LJH_COMPILER_APPLE_CLANG) && LJH_CLANG_VERSION >= LJH_COMPILER_GEN_VERSION(12, 0)) || (defined(LJH_COMPILER_APPLE_CLANG) && LJH_CLANG_VERSION >= LJH_COMPILER_GEN_VERSION(14, 0)))
 #include "ljh/delay_loaded_functions.hpp"
 
 #if defined(LJH_TARGET_Windows)
