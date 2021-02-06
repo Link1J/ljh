@@ -38,7 +38,7 @@ add_executable(tests_17
 	string_utils.17.cpp
 )
 if (UNIX AND NOT APPLE)
-	target_sources(tests_17
+	target_sources(tests_17 PRIVATE
 		dbus.17.cpp
 	)
 endif()
