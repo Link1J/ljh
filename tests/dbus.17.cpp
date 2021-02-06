@@ -44,7 +44,7 @@ TEST_CASE("dbus - call (args, return)", "[test_17][dbus]" ) {
 	REQUIRE(dbus_obj.call("GetNameOwner").args("org.freedesktop.DBus").run<std::string>() == "org.freedesktop.DBus");
 }
 
-TEST_CASE("dbus - call (args, return)", "[test_17][dbus]" ) {
+TEST_CASE("dbus - call (args, store)", "[test_17][dbus]" ) {
 	using namespace ljh::unix;
 	
 	dbus::connection connection(dbus::bus::SYSTEM);
