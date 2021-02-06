@@ -39,29 +39,21 @@ namespace ljh::delay_load
 		using FARPROC = void(*)()  ;
 		using BOOL    = int        ;
 		extern "C" {
-			__declspec(dllimport) _os::HMODULE __stdcall LJH_OS_LoadLibraryA    (_os::LPCSTR lpLibFileName                   );
-			__declspec(dllimport) _os::FARPROC __stdcall LJH_OS_GetProcAddress  (_os::HMODULE hModule, _os::LPCSTR lpProcName);
-			__declspec(dllimport) _os::BOOL    __stdcall LJH_OS_FreeLibrary     (_os::HMODULE hLibModule                     );
-			__declspec(dllimport) _os::HMODULE __stdcall LJH_OS_GetModuleHandleA(_os::LPCSTR lpModuleName                    );
+			_os::HMODULE __stdcall LJH_OS_LoadLibraryA    (_os::LPCSTR lpLibFileName                   );
+			_os::FARPROC __stdcall LJH_OS_GetProcAddress  (_os::HMODULE hModule, _os::LPCSTR lpProcName);
+			_os::BOOL    __stdcall LJH_OS_FreeLibrary     (_os::HMODULE hLibModule                     );
+			_os::HMODULE __stdcall LJH_OS_GetModuleHandleA(_os::LPCSTR lpModuleName                    );
 		};
 #if defined(_M_IX86)
 #pragma comment(linker, "/alternatename:_LJH_OS_LoadLibraryA@4=_LoadLibraryA@4")
 #pragma comment(linker, "/alternatename:_LJH_OS_GetProcAddress@8=_GetProcAddress@8")
 #pragma comment(linker, "/alternatename:_LJH_OS_FreeLibrary@4=_FreeLibrary@4")
 #pragma comment(linker, "/alternatename:_LJH_OS_GetModuleHandleA@4=_GetModuleHandleA@4")
-#pragma comment(linker, "/alternatename:__imp__LJH_OS_LoadLibraryA@4=_LoadLibraryA@4")
-#pragma comment(linker, "/alternatename:__imp__LJH_OS_GetProcAddress@8=_GetProcAddress@8")
-#pragma comment(linker, "/alternatename:__imp__LJH_OS_FreeLibrary@4=_FreeLibrary@4")
-#pragma comment(linker, "/alternatename:__imp__LJH_OS_GetModuleHandleA@4=_GetModuleHandleA@4")
 #else
 #pragma comment(linker, "/alternatename:LJH_OS_LoadLibraryA=LoadLibraryA")
 #pragma comment(linker, "/alternatename:LJH_OS_GetProcAddress=GetProcAddress")
 #pragma comment(linker, "/alternatename:LJH_OS_FreeLibrary=FreeLibrary")
 #pragma comment(linker, "/alternatename:LJH_OS_GetModuleHandleA=GetModuleHandleA")
-#pragma comment(linker, "/alternatename:__imp_LJH_OS_LoadLibraryA=LoadLibraryA")
-#pragma comment(linker, "/alternatename:__imp_LJH_OS_GetProcAddress=GetProcAddress")
-#pragma comment(linker, "/alternatename:__imp_LJH_OS_FreeLibrary=FreeLibrary")
-#pragma comment(linker, "/alternatename:__imp_LJH_OS_GetModuleHandleA=GetModuleHandleA")
 #endif
 #define LOAD_LIB(name) ljh::delay_load::_os::LJH_OS_LoadLibraryA(name)
 #define GET_FUNC(dll, name) ljh::delay_load::_os::LJH_OS_GetProcAddress(dll, name)
@@ -93,6 +85,9 @@ namespace ljh::delay_load
 		
 		static void* function(std::string_view function) noexcept
 		{
+			auto a = _os::LJH_OS_GetModuleHandleA;
+			if (dll == nullptr)
+				dll = LOADED_LIB(name.data());
 			if (dll == nullptr)
 				dll = LOAD_LIB(name.data());
 			return GET_FUNC(dll, function.data());

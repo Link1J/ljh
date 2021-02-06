@@ -14,6 +14,7 @@
 #if defined(LJH_TARGET_Windows)
 #include <windows.h>
 #endif
+
 TEST_CASE("delay_loaded_functions", "[test_20][delay_loaded_functions]" ) {
 #if defined(LJH_TARGET_Windows)
 	ljh::delay_load::function<"kernel32.dll", "FreeLibrary", BOOL __stdcall(HMODULE)> function_test;
