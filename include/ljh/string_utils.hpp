@@ -32,6 +32,9 @@
 #include "get_index.hpp"
 #endif
 
+#include <ljh/_i_internal/string.hpp>
+#include <ljh/_i_internal/string_view.hpp>
+
 namespace ljh
 {
 	template<class C, class T = std::char_traits<C>, class A = std::allocator<C>>
@@ -217,4 +220,186 @@ namespace ljh
 		return output;
 	}
 #endif
+
+	template<class C, class T = char_traits<C>>
+	void ltrim(_i_basic_string<C,T> &s)
+	{
+		s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](C ch) {
+			return !std::isspace(ch);
+		}));
+	}
+
+	template<class C, class T = char_traits<C>>
+	void rtrim(_i_basic_string<C,T> &s)
+	{
+		s.erase(std::find_if(s.rbegin(), s.rend(), [](C ch) {
+			return !std::isspace(ch);
+		}).base(), s.end());
+	}
+
+	template<class C, class T = char_traits<C>>
+	void trim(_i_basic_string<C,T> &s)
+	{
+		ltrim(s);
+		rtrim(s);
+	}
+
+	template<class C, class T = char_traits<C>>
+	_i_basic_string<C,T> ltrim_copy(_i_basic_string<C,T> s)
+	{
+		ltrim(s);
+		return s;
+	}
+
+	template<class C, class T = char_traits<C>>
+	_i_basic_string<C,T> rtrim_copy(_i_basic_string<C,T> s)
+	{
+		rtrim(s);
+		return s;
+	}
+
+	template<class C, class T = char_traits<C>>
+	_i_basic_string<C,T> trim_copy(_i_basic_string<C,T> s)
+	{
+		trim(s);
+		return s;
+	}
+
+	template<class C, class T = char_traits<C>>
+	std::vector<_i_basic_string<C,T>> split(const _i_basic_string<C,T>& s, C seperator, std::size_t max_elements = 0)
+	{
+		using size_type = typename _i_basic_string<C,T>::size_type;
+
+		std::vector<_i_basic_string<C,T>> output;
+		size_type prev_pos = 0, pos = 0;
+
+		while((pos = s.find(seperator, pos)) != _i_basic_string<C,T>::npos)
+		{
+			output.push_back(s.substr(prev_pos, pos - prev_pos));
+			prev_pos = ++pos;
+
+			if (output.size() == max_elements - 1)
+				break;
+		}
+
+		output.push_back(s.substr(prev_pos));
+		return output;
+	}
+
+	template<size_t S, class C, class T = char_traits<C>>
+	std::vector<_i_basic_string<C,T>> split(const _i_basic_string<C,T>& s, const C (&seperator)[S], std::size_t max_elements = 0)
+	{
+		using size_type = typename _i_basic_string<C,T>::size_type;
+
+		std::vector<_i_basic_string<C,T>> output;
+		size_type prev_pos = 0, pos = 0;
+
+		while((pos = s.find(seperator, pos)) != _i_basic_string<C,T>::npos)
+		{
+			output.push_back(s.substr(prev_pos, pos - prev_pos));
+			prev_pos = pos += S - 1;
+
+			if (output.size() == max_elements - 1)
+				break;
+		}
+
+		output.push_back(s.substr(prev_pos));
+		return output;
+	}
+
+	inline _i_basic_string<wchar_t> convert_string(const _i_basic_string<char>& str)
+	{
+		auto a = std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t>{}.from_bytes(str.begin(), str.end());
+		return _i_basic_string<wchar_t>{a.data(), a.size()};
+	}
+	inline _i_basic_string<char> convert_string(const _i_basic_string<wchar_t>& wstr)
+	{
+		auto a = std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t>{}.to_bytes(wstr.begin(), wstr.end());
+		return _i_basic_string<char>{a.data(), a.size()};
+	}
+
+	template<class C, class T = std::char_traits<C>>
+	void ltrim(_i_basic_string_view<C,T> &s)
+	{
+		s.remove_prefix(get_index_if(s.begin(), s.end(), [](C ch) {
+			return !std::isspace(ch);
+		}));
+	}
+
+	template<class C, class T = std::char_traits<C>>
+	void rtrim(_i_basic_string_view<C,T> &s)
+	{
+		s.remove_suffix(get_index_if(s.rbegin(), s.rend(), [](C ch) {
+			return !std::isspace(ch);
+		}));
+	}
+
+	template<class C, class T = std::char_traits<C>>
+	void trim(_i_basic_string_view<C,T> &s)
+	{
+		ltrim(s);
+		rtrim(s);
+	}
+
+	template<class C, class T = std::char_traits<C>>
+	_i_basic_string_view<C,T> ltrim_copy(_i_basic_string_view<C,T> s)
+	{
+		ltrim(s);
+		return s;
+	}
+
+	template<class C, class T = std::char_traits<C>>
+	_i_basic_string_view<C,T> rtrim_copy(_i_basic_string_view<C,T> s)
+	{
+		rtrim(s);
+		return s;
+	}
+
+	template<class C, class T = std::char_traits<C>>
+	_i_basic_string_view<C,T> trim_copy(_i_basic_string_view<C,T> s)
+	{
+		trim(s);
+		return s;
+	}
+
+	template<class C, class T = std::char_traits<C>>
+	std::vector<_i_basic_string_view<C,T>> split(const _i_basic_string_view<C,T>& s, C seperator, std::size_t max_elements = 0)
+	{
+		using size_type = typename _i_basic_string_view<C,T>::size_type;
+
+		std::vector<_i_basic_string_view<C,T>> output;
+		size_type prev_pos = 0, pos = 0;
+
+		while((pos = s.find(seperator, pos)) != _i_basic_string_view<C,T>::npos)
+		{
+			output.push_back(s.substr(prev_pos, pos - prev_pos));
+			prev_pos = ++pos;
+
+			if (output.size() == max_elements - 1)
+				break;
+		}
+
+		output.push_back(s.substr(prev_pos));
+		return output;
+	}	
+	template<size_t S, class C, class T = std::char_traits<C>>
+	std::vector<_i_basic_string_view<C,T>> split(const _i_basic_string_view<C,T>& s, const C (&seperator)[S], std::size_t max_elements = 0)
+	{
+		using size_type = typename _i_basic_string_view<C,T>::size_type;
+
+		std::vector<_i_basic_string_view<C,T>> output;
+		size_type prev_pos = 0, pos = 0;
+
+		while((pos = s.find(seperator, pos)) != _i_basic_string_view<C,T>::npos)
+		{
+			output.push_back(s.substr(prev_pos, pos - prev_pos));
+			prev_pos = pos += S - 1;
+
+			if (output.size() == max_elements - 1)
+				break;
+		}
+
+		output.push_back(s.substr(prev_pos));
+		return output;
+	}
 }

@@ -24,9 +24,12 @@
 #pragma once
 #include "cpp_version.hpp"
 
-#include <string_view>
 #include <stdexcept>
 #include <cstddef>
+
+#if __cpp_lib_string_view >= 201606L
+#include <string_view>
+#endif
 
 namespace ljh
 {
@@ -37,9 +40,7 @@ namespace ljh
 
 		char_type content[Size + 1] = {};
 		
-		[[nodiscard]] constexpr compile_time_string() noexcept
-		{
-		}
+		[[nodiscard]] constexpr compile_time_string() noexcept = default;
 
 		[[nodiscard]] constexpr compile_time_string(const char_type (&input)[Size + 1]) noexcept
 		{
