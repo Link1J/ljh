@@ -186,11 +186,11 @@ namespace ljh
 		_i_LJH_CONSTEXPR_CONTAINER _i_basic_string(cref_of_type s)
 			: _i_basic_string(s.data(), s.size())
 		{}
-		template<typename T, typename = std::enable_if<convert_to_view<const T&>::value>::type>
+		template<typename T, typename _ = typename std::enable_if<convert_to_view<const T&>::value>::type>
 		explicit _i_LJH_CONSTEXPR_CONTAINER _i_basic_string(const T& t, size_type pos, size_type n)
 			: _i_basic_string(view_type(t).substr(pos, n).data(), n)
 		{}
-		template<typename T, typename = std::enable_if<convert_to_view_only<const T&>::value>::type>
+		template<typename T, typename _ = typename std::enable_if<convert_to_view_only<const T&>::value>::type>
 		explicit _i_LJH_CONSTEXPR_CONTAINER _i_basic_string(const T& t)
 			: _i_basic_string(t, 0, view_type(t).size())
 		{}
@@ -230,8 +230,8 @@ namespace ljh
 			s._i_is_full = false;
 			return *this;
 		}
-		template<typename T, typename = std::enable_if<convert_to_view<const T&>::value>::type>
-		_i_LJH_CONSTEXPR_CONTAINER _i_basic_string& assign(const T& t, size_type pos, size_type count = npos)
+		template<typename T> _i_LJH_CONSTEXPR_CONTAINER typename std::enable_if<convert_to_view<const T&>::value,
+		_i_basic_string&>::type assign(const T& t, size_type pos, size_type count = npos)
 		{
 			view_type view(t);
 			auto part = view.substr(pos, count);
@@ -260,8 +260,8 @@ namespace ljh
 		_i_LJH_CONSTEXPR_CONTAINER const_pointer data () const noexcept { return _i_get(); }
 		_i_LJH_CONSTEXPR_CONTAINER const_pointer c_str() const noexcept { return data  (); }
 
-		_i_LJH_CONSTEXPR_CONTAINER       reference at(size_type pos)       { if (pos >= size()) { throw std::out_of_range{}; } return data()[pos]; }
-		_i_LJH_CONSTEXPR_CONTAINER const_reference at(size_type pos) const { if (pos >= size()) { throw std::out_of_range{}; } return data()[pos]; }
+		_i_LJH_CONSTEXPR_CONTAINER       reference at(size_type pos)       { if (pos >= size()) { throw std::out_of_range{""}; } return data()[pos]; }
+		_i_LJH_CONSTEXPR_CONTAINER const_reference at(size_type pos) const { if (pos >= size()) { throw std::out_of_range{""}; } return data()[pos]; }
 		_i_LJH_CONSTEXPR_CONTAINER reference       operator[](size_type pos)       { _i_LJH_CONSTEXPR_CONTAINER value_type temp; if (pos == size()) { return temp; } return at(pos); }
 		_i_LJH_CONSTEXPR_CONTAINER const_reference operator[](size_type pos) const { _i_LJH_CONSTEXPR_CONTAINER value_type temp; if (pos == size()) { return temp; } return at(pos); }
 
@@ -366,7 +366,7 @@ namespace ljh
 		// Operations (Modify)
 		_i_LJH_CONSTEXPR_CONTAINER _i_basic_string& insert(size_type index, const_pointer s, size_type count)
 		{
-			if (index > size()) throw std::out_of_range{};
+			if (index > size()) throw std::out_of_range{""};
 
 			_i_create_space(index, count);
 			for (int a = 0; a < count; a++)
@@ -376,12 +376,12 @@ namespace ljh
 		}
 		_i_LJH_CONSTEXPR_CONTAINER _i_basic_string& insert(size_type index, cref_of_type str, size_type index_str, size_type count = npos)
 		{
-			if (index > size() || index_str > size()) throw std::out_of_range{};
+			if (index > size() || index_str > size()) throw std::out_of_range{""};
 			return insert(index, str.data() + index_str, count != npos ? count : str.size());
 		}
 		_i_LJH_CONSTEXPR_CONTAINER _i_basic_string& insert(size_type index, size_type count, value_type ch)
 		{
-			if (index > size()) throw std::out_of_range{};
+			if (index > size()) throw std::out_of_range{""};
 
 			_i_create_space(index, count);
 			for (int a = 0; a < count; a++)
@@ -503,7 +503,7 @@ namespace ljh
 		_i_LJH_CONSTEXPR_CONTAINER size_type copy(pointer dest, size_type count, size_type pos = 0) const
 		{
 			if (pos > size())
-				throw std::out_of_range{};
+				throw std::out_of_range{""};
 			auto randge = count < size() ? count : size();
 			for (int a = 0; a < randge; a++)
 				dest[a] = data()[pos + a];
@@ -512,7 +512,7 @@ namespace ljh
 
 		_i_LJH_CONSTEXPR_CONTAINER _i_basic_string substr(size_type pos = 0, size_type count = npos) const
 		{
-			if (pos > size()) throw std::out_of_range{};
+			if (pos > size()) throw std::out_of_range{""};
 			return _i_basic_string(data() + pos, count < size() ? count : size());
 		}
 

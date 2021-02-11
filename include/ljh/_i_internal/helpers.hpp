@@ -7,6 +7,12 @@
 #pragma once
 #include <iterator>
 
+#if __cpp_constexpr_dynamic_alloc >= 201907L
+#define _i_LJH_CONSTEXPR_CONTAINER constexpr
+#else
+#define _i_LJH_CONSTEXPR_CONTAINER
+#endif
+
 namespace ljh
 {
 	using size_t = decltype(sizeof(int));

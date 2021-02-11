@@ -6,9 +6,12 @@
 
 #include <catch2/catch_test_macros.hpp>
 
+#include "ljh/cpp_version.hpp"
+#include "ljh/os_build_info.hpp"
+#if !(defined(LJH_COMPILER_CLANG) && defined(LJH_TARGET_Windows))
+
 #define LJH_FUNCTION_POINTERS_LOAD_RETURNS_EXPECTED
 #include "ljh/function_pointer.hpp"
-#include "ljh/os_build_info.hpp"
 
 namespace Catch
 {
@@ -50,7 +53,7 @@ TEST_CASE("function_pointer empty", "[test_17][function_pointer]") {
 	REQUIRE(!test);
 }
 
-TEST_CASE("load_function !Fail", "[test_17][function_pointer]") {
+TEST_CASE("load_function", "[test_17][function_pointer]") {
 #if defined(LJH_TARGET_Windows)
 	auto pointer = ljh::load_function<void()>("kernel32.dll", "GetProcAddress");
 #elif defined(LJH_TARGET_MacOS) || defined(LJH_TARGET_iOS)
@@ -83,3 +86,5 @@ TEST_CASE("load_function Fail", "[test_17][function_pointer]") {
 		REQUIRE(!pointer);
 	}
 }
+
+#endif

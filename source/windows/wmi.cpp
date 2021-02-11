@@ -4,6 +4,10 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
+#include "ljh/cpp_version.hpp"
+
+#if !defined(LJH_COMPILER_CLANG)
+
 #include "ljh/windows/wmi.hpp"
 
 static winrt::com_ptr<IWbemLocator> locator;
@@ -128,3 +132,5 @@ ljh::windows::wmi::service& ljh::windows::wmi::service::root()
 	static ljh::windows::wmi::service service{L"ROOT\\CIMV2"_bstr};
 	return service;
 }
+
+#endif

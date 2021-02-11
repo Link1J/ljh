@@ -66,7 +66,6 @@ namespace ljh
 		using type = typename traits::as::function_pointer;\
 \
 	private:\
-		using noexcept_t = function_traits<R LJH_CALLING_CONVENTION_##CC (Args...) LJH_NOEXCEPT_FUNCTION_TYPE(!Noexcept)>;\
 		type function = nullptr;\
 \
 		template<typename T, int = sizeof(function_traits<T>)>\
@@ -104,7 +103,7 @@ namespace ljh
 		template<typename T> typename enable_function_pointer<T>::boo \
 		     operator!=(T         other) const noexcept { return !(*this == other); }\
 \
-		R operator()(Args... args) const LJH_NOEXCEPT_FUNCTION_TYPE(traits::is::no_exceptions) { return function(args...); }\
+		R operator()(Args... args) const LJH_NOEXCEPT_FUNCTION_TYPE(Noexcept) { return function(args...); }\
 		type get() const noexcept { return function; }\
 		bool empty() const noexcept { return function == nullptr; }\
 \
@@ -114,7 +113,7 @@ namespace ljh
 		explicit operator uintptr_t() const noexcept { return (uintptr_t)get(); }\
 	}
 
-#if __cpp_noexcept_function_type >= 201510L
+#if __cpp_noexcept_function_type >= 201510L && LJH_CPP_VERSION >= LJH_CPP17_VERSION
 #define MAKE_POINTERS(CC)\
 	POINTERS_INTERALS(CC, false);\
 	POINTERS_INTERALS(CC, true )

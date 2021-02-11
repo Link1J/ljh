@@ -8,12 +8,6 @@
 #include <ljh/_i_internal/helpers.hpp>
 #include <ljh/char_traits.hpp>
 
-#if LJH_CPP_VERSION > LJH_CPP17_VERSION
-#define _i_LJH_CONSTEXPR_CONTAINER constexpr
-#else
-#define _i_LJH_CONSTEXPR_CONTAINER
-#endif
-
 namespace ljh
 {
 	template<typename _i_char, typename _i_traits = char_traits<_i_char>>
@@ -58,7 +52,7 @@ namespace ljh
 		// Element access
 		constexpr const_pointer data () const noexcept { return _i_data; }
 
-		constexpr const_reference at(size_type pos) const { if (pos >= size()) { throw std::out_of_range{}; } return data()[pos]; }
+		constexpr const_reference at(size_type pos) const { if (pos >= size()) { throw std::out_of_range{""}; } return data()[pos]; }
 		constexpr const_reference operator[](size_type pos) const { return at(pos); }
 
 		constexpr const_reference front() const { return at(0         ); }
@@ -135,7 +129,7 @@ namespace ljh
 		constexpr size_type copy(pointer dest, size_type count, size_type pos = 0) const
 		{
 			if (pos > size())
-				throw std::out_of_range{};
+				throw std::out_of_range{""};
 			auto range = count < size() ? count : size();
 			for (int a = 0; a < range; a++)
 				dest[a] = data()[pos + a];
@@ -144,7 +138,7 @@ namespace ljh
 
 		constexpr _i_basic_string_view substr(size_type pos = 0, size_type count = npos) const
 		{
-			if (pos > size()) throw std::out_of_range{};
+			if (pos > size()) throw std::out_of_range{""};
 			return _i_basic_string_view(data() + pos, count < size() ? count : size());
 		}
 

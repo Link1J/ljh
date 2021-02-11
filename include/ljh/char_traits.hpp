@@ -90,7 +90,7 @@ namespace ljh
 	private:
 		using base = _i_char_traits<T>;
 
-		static constexpr base::char_type to_upper(base::char_type c)
+		static constexpr typename base::char_type to_upper(typename base::char_type c)
 		{
 			if ('a' <= c && c <= 'z')
 				return c - ('a' - 'A');
@@ -98,10 +98,10 @@ namespace ljh
 		}
 
 	public:
-		static constexpr bool eq(base::char_type  c1, base::char_type  c2) noexcept { return to_upper(c1) == to_upper(c2); }
-		static constexpr bool lt(base::char_type  c1, base::char_type  c2) noexcept { return to_upper(c1) <  to_upper(c2); }
+		static constexpr bool eq(typename base::char_type  c1, typename base::char_type  c2) noexcept { return to_upper(c1) == to_upper(c2); }
+		static constexpr bool lt(typename base::char_type  c1, typename base::char_type  c2) noexcept { return to_upper(c1) <  to_upper(c2); }
 
-		static constexpr int compare(const base::char_type* s1, const base::char_type* s2, size_t count) noexcept
+		static constexpr int compare(const typename base::char_type* s1, const typename base::char_type* s2, size_t count) noexcept
 		{
 			for (int i = 0; i < count; i++)
 			{
