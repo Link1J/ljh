@@ -202,7 +202,7 @@ namespace ljh
 
 		_i_LJH_CONSTEXPR_CONTAINER _i_basic_string& assign(const_pointer s, size_type count)
 		{
-			if (s.data() == data()) return *this;
+			if (s == data()) return *this;
 			_i_reconfig(count);
 			_i_fill(s, count);
 			return *this;
