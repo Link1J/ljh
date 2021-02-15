@@ -52,8 +52,49 @@ namespace ljh::unix::dbus
 	void call_times(A&... args) {
 		caller_impl<W>(Indices(), args...);
 	}
+	
+	template<typename T>
+	struct _i_object_path_allocator : public std::allocator<T>
+	{
+	public:
+		using size_type     = size_t;
+		using pointer       = T*;
+		using const_pointer = const T*;
 
-	class object_path : public std::string {};
+		template<typename T1>
+		struct rebind
+		{
+			typedef _i_object_path_allocator<T1> other;
+		};
+
+		pointer allocate(size_type n, const void *hint=0)
+		{
+			return std::allocator<T>::allocate(n, hint);
+		}
+
+		void deallocate(pointer p, size_type n)
+		{
+			return std::allocator<T>::deallocate(p, n);
+		}
+
+		_i_object_path_allocator()
+			: std::allocator<T>()
+		{}
+
+		_i_object_path_allocator(const _i_object_path_allocator& a)
+			: std::allocator<T>(a)
+		{}
+
+		template <class U>
+		_i_object_path_allocator(const _i_object_path_allocator<U>& a) 
+			: std::allocator<T>(a)
+		{}
+
+		~_i_object_path_allocator()
+		{}
+	};
+	using object_path = std::basic_string<char, std::char_traits<char>, _i_object_path_allocator<char>>;
+	static_assert(!std::is_same_v<object_path, std::string>, "std::string and object_path must be different types");
 
 	template<typename T>
 	constexpr auto _i_type_value_f()
