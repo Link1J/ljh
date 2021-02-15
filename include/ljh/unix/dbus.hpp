@@ -43,14 +43,14 @@ namespace ljh::unix::dbus
 	};
 
 	template<template<int> class W, std::size_t... I, typename...A>
-	void caller_impl(std::index_sequence<I...>, A&... args) {
+	void caller_impl(std::index_sequence<I...>, A&&... args) {
 		int t[] = { 0, ((void)W<I>()(args...), 1)... };
 		(void)t;
 	}
 	
 	template<template<int> class W, std::size_t N, typename Indices = std::make_index_sequence<N>, typename...A>
-	void call_times(A&... args) {
-		caller_impl<W>(Indices(), args...);
+	void call_times(A&&... args) {
+		caller_impl<W>(Indices(), std::forward<A>(args)...);
 	}
 	
 	template<typename T>
@@ -163,7 +163,7 @@ namespace ljh::unix::dbus
 	constexpr auto _i_gen_sig_f()
 	{
 		if constexpr (ljh::is_instance_v<T, std::vector>)
-			return compile_time_string{DBUS_TYPE_ARRAY_AS_STRING} + _i_gen_sig_f<T::value_type>();
+			return compile_time_string{DBUS_TYPE_ARRAY_AS_STRING} + _i_gen_sig_f<typename T::value_type>();
 		else if constexpr (ljh::is_instance_v<T, std::variant>)
 			return compile_time_string{DBUS_TYPE_VARIANT_AS_STRING};
 		else if constexpr (std::is_same_v<std::string, T>)
@@ -425,6 +425,10 @@ namespace ljh::unix::dbus
 		{
 			auto pending = do_call();
 			if (pending) throw pending;
+			
+			error err;
+			if (dbus_set_error_from_message((DBusError*)err, _message))
+				throw err;
 
 			DBusMessageIter iter;
 			dbus_message_iter_init(_message, &iter);
@@ -458,10 +462,13 @@ namespace ljh::unix::dbus
 	bool message::get(DBusMessageIter& item, T& data)
 	{
 		static_assert(std::is_same_v<std::decay_t<decltype(_i_type_value<T>)>, int>, "Unknown type");
-		if (dbus_message_iter_get_arg_type(&item) != _i_type_value<T>)
+
+		char cur = (char)dbus_message_iter_get_arg_type(&item);
+		char req = (char)_i_type_value<T>;
+		if (cur != req)
 		{
-			char cur = (char)dbus_message_iter_get_arg_type(&item);
-			char req = (char)_i_type_value<T>;
+			if (cur == DBUS_TYPE_INVALID)
+				throw std::runtime_error(std::string{"Got an invalid type over the requested type ("} + req + ")");
 			throw std::runtime_error(std::string{"Type ("} + cur + ") does not equal requested type (" + req + ")");
 		}
 		if constexpr (std::is_same_v<bool, T>)
@@ -482,9 +489,14 @@ namespace ljh::unix::dbus
 		}
 		else if constexpr (ljh::is_instance_v<T, std::vector>)
 		{
-			DBusMessageIter sub;
-			dbus_message_iter_recurse(&item, &sub);
-			while (get(sub, data.emplace_back()));
+			int count = dbus_message_iter_get_element_count(&item);
+			if (count > 0)
+			{
+				data.reserve(count);
+				DBusMessageIter sub;
+				dbus_message_iter_recurse(&item, &sub);
+				while (get(sub, data.emplace_back()));
+			}
 		}
 		else if constexpr (ljh::is_instance_v<T, std::variant>)
 		{
