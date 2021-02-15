@@ -280,7 +280,12 @@ namespace ljh::unix::dbus
 		{
 			using type = std::decay_t<T>;
 			static_assert(std::is_same_v<decltype(_i_type_value<T>), decltype(_i_type_value<int>)>, "Unknown type");
-			if constexpr (std::is_fundamental_v<T>)
+			if constexpr (std::is_same_v<bool, T>)
+			{
+				int value = data ? 1 : 0;
+				dbus_message_iter_append_basic(&item, _i_type_value<T>, &value);
+			}
+			else if constexpr (std::is_fundamental_v<T>)
 			{
 				dbus_message_iter_append_basic(&item, _i_type_value<T>, &data);
 			}
@@ -418,7 +423,13 @@ namespace ljh::unix::dbus
 			char req = (char)_i_type_value<T>;
 			throw std::runtime_error(std::string{"Type ("} + cur + ") does not equal requested type (" + req + ")");
 		}
-		if constexpr (std::is_fundamental_v<T>)
+		if constexpr (std::is_same_v<bool, T>)
+		{
+			int value;
+			dbus_message_iter_get_basic(&item, &value);
+			data = (value == 1);
+		}
+		else if constexpr (std::is_fundamental_v<T>)
 		{
 			dbus_message_iter_get_basic(&item, &data);
 		}
