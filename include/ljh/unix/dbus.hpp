@@ -88,6 +88,8 @@ namespace ljh::unix::dbus
 			return DBUS_TYPE_STRUCT;
 		else if constexpr (ljh::is_instance_v<T, std::map>)
 			return DBUS_TYPE_ARRAY;
+		else if constexpr (std::is_same_v<bool, T>)
+			return DBUS_TYPE_BOOLEAN;
 		else
 			return 0.1;
 	}
@@ -149,6 +151,8 @@ namespace ljh::unix::dbus
 			return compile_time_string{DBUS_STRUCT_BEGIN_CHAR_AS_STRING} + _i_gen_sig_s<T, std::tuple>()() + compile_time_string{DBUS_STRUCT_END_CHAR_AS_STRING};
 		else if constexpr (ljh::is_instance_v<T, std::map>)
 			return compile_time_string{DBUS_TYPE_ARRAY_AS_STRING} + compile_time_string{DBUS_DICT_ENTRY_BEGIN_CHAR_AS_STRING} + _i_gen_sig_f<typename T::key_type>() + _i_gen_sig_f<typename T::mapped_type>() + compile_time_string{DBUS_DICT_ENTRY_END_CHAR_AS_STRING};
+		else if constexpr (std::is_same_v<bool, T>)
+			return compile_time_string{DBUS_TYPE_BOOLEAN_AS_STRING};
 	}
 
 	template <template <typename...> typename U, typename...Ts>
