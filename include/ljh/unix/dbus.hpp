@@ -348,7 +348,7 @@ namespace ljh::unix::dbus
 			else if constexpr (ljh::is_instance_v<T, std::vector>)
 			{
 				DBusMessageIter sub;
-				dbus_message_iter_open_container(&item, _i_type_value<T>, gen_sig<typename T::value_type>.data(), &sub);
+				dbus_message_iter_open_container(&item, _i_type_value<T>, gen_sig<typename std::decay_t<T>::value_type>.data(), &sub);
 				for (int a = 0; a < data.size(); add(sub, data[a++]));
 				dbus_message_iter_close_container(&item, &sub);
 			}
