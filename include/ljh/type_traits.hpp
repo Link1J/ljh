@@ -29,6 +29,10 @@
 #include "cpp_version.hpp"
 #include <type_traits>
 
+#if LJH_CPP_VERSION >= LJH_CPP17_VERSION
+#include <string_view>
+#endif
+
 namespace ljh
 {
 	template <typename T, bool = std::is_enum<T>::value>
@@ -131,5 +135,4 @@ namespace ljh
 	inline constexpr bool is_bounded_array_v = is_bounded_array<T>::value;
 #endif
 #endif
-
 }
