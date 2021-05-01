@@ -52,6 +52,17 @@ namespace ljh
 				}
 			}
 		}
+
+		[[nodiscard]] constexpr compile_time_string(const char_type (input)[Size + 1]) noexcept
+		{
+			LJH_IF_CONSTEXPR (Size != 0)
+			{
+				for (std::size_t i{0}; i < Size + 1; ++i)
+				{
+					content[i] = input[i];
+				}
+			}
+		}
 		
 		[[nodiscard]] constexpr compile_time_string(const compile_time_string& other) noexcept
 		{
@@ -109,11 +120,43 @@ namespace ljh
 				hash = ((hash << 5) + hash) + c;
 			return hash;
 		}
+
+		template<std::size_t S2>
+		[[nodiscard]] constexpr compile_time_string<Char, Size - S2> remove_prefix() const noexcept
+		{
+			return compile_time_string<Char, Size - S2>(data() + S2);
+		}
+
+		template<std::size_t S2>
+		[[nodiscard]] constexpr compile_time_string<Char, Size - S2> remove_suffix() const noexcept
+		{
+			return compile_time_string<Char, Size - S2>(data());
+		}
+
+		template<std::size_t S2>
+		[[nodiscard]] constexpr bool starts_with(const char_type (input)[S2 + 1]) const noexcept
+		{
+			LJH_IF_CONSTEXPR (Size != 0)
+			{
+				for (std::size_t i{0}; i < S2 + 1; ++i)
+				{
+					if (content[i] != input[i])
+						return false;
+				}
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
 	};
 
 #if __cpp_deduction_guides >= 201703L
 	template<typename Char, std::size_t Size>
 	compile_time_string(const Char (&)[Size]) -> compile_time_string<Char, Size - 1>;
+	template<typename Char, std::size_t Size>
+	compile_time_string(const Char [Size]) -> compile_time_string<Char, Size - 1>;
 	template<typename Char, std::size_t Size>
 	compile_time_string(const compile_time_string<Char, Size>&) -> compile_time_string<Char, Size>;
 #endif
