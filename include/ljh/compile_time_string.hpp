@@ -52,17 +52,6 @@ namespace ljh
 				}
 			}
 		}
-
-		[[nodiscard]] constexpr compile_time_string(const char_type (input)[Size + 1]) noexcept
-		{
-			LJH_IF_CONSTEXPR (Size != 0)
-			{
-				for (std::size_t i{0}; i < Size + 1; ++i)
-				{
-					content[i] = input[i];
-				}
-			}
-		}
 		
 		[[nodiscard]] constexpr compile_time_string(const compile_time_string& other) noexcept
 		{
@@ -155,8 +144,6 @@ namespace ljh
 #if __cpp_deduction_guides >= 201703L
 	template<typename Char, std::size_t Size>
 	compile_time_string(const Char (&)[Size]) -> compile_time_string<Char, Size - 1>;
-	template<typename Char, std::size_t Size>
-	compile_time_string(const Char [Size]) -> compile_time_string<Char, Size - 1>;
 	template<typename Char, std::size_t Size>
 	compile_time_string(const compile_time_string<Char, Size>&) -> compile_time_string<Char, Size>;
 #endif
