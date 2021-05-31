@@ -25,7 +25,17 @@ namespace ljh
 bool ljh::_load_dll(const char* dll_name, const char* function_name, void** function, u32* error)
 {
 	*function = nullptr;
-#if defined(LJH_TARGET_Windows)
+#if defined(LJH_TARGET_Windows_UWP)
+	static HMODULE (*LoadLibraryA)(LPCSTR lpLibFileName);
+	if (LoadLibraryA == nullptr)
+	{
+		MEMORY_BASIC_INFORMATION info = {};
+		if (!VirtualQuery(VirtualQuery, &info, sizeof(info)))
+			throw 1;
+		LoadLibraryA = (decltype(LoadLibraryA))GetProcAddress((HMODULE)info.AllocationBase, "LoadLibraryA");
+	}
+	auto loaded_dll = LoadLibraryA(dll_name);
+#elif defined(LJH_TARGET_Windows)
 	auto loaded_dll = LoadLibraryA(dll_name);
 #else
 	auto loaded_dll = dlopen(dll_name, RTLD_LAZY);

@@ -7,6 +7,7 @@
 #include "ljh/memory_mapped_file.hpp"
 #include "ljh/system_info.hpp"
 
+#if !defined(LJH_TARGET_Windows_UWP)
 #if defined(LJH_TARGET_Windows)
 #    define WIN32_LEAN_AND_MEAN
 #    define NOMINMAX
@@ -279,3 +280,91 @@ const char* ljh::memory_mapped::io_error::error_string() const noexcept
 	return strerror(_error_code);
 #endif
 }
+#else
+ljh::memory_mapped::file::file(std::filesystem::path&& filename, permissions permissions)
+{
+}
+
+ljh::memory_mapped::file::~file()
+{
+}
+
+ljh::memory_mapped::file::file(file&& other)
+{
+}
+
+ljh::memory_mapped::file& ljh::memory_mapped::file::operator=(file&& other)
+{
+	return *this;
+}
+
+size_t ljh::memory_mapped::file::size() const noexcept
+{
+	return 0;
+}
+
+bool ljh::memory_mapped::file::is_open() const noexcept
+{
+	return false;
+}
+
+ljh::memory_mapped::view::view(file& fd, permissions permissions, size_t start, size_t length)
+{
+}
+
+ljh::memory_mapped::view::~view()
+{
+}
+
+ljh::memory_mapped::view::view(view&& other)
+{
+}
+
+ljh::memory_mapped::view& ljh::memory_mapped::view::operator=(view&& other)
+{
+	return *this;
+}
+
+void ljh::memory_mapped::view::flush() noexcept
+{
+}
+
+bool ljh::memory_mapped::view::valid() const noexcept
+{
+	return false;
+}
+
+ljh::memory_mapped::io_error::io_error()
+{
+}
+
+const uint32_t ljh::memory_mapped::io_error::error_code() const noexcept
+{
+	return _error_code;
+}
+
+const char* ljh::memory_mapped::io_error::what() const noexcept
+{
+	return "unknown io_error";
+}
+
+const char* ljh::memory_mapped::invalid_position::what() const noexcept
+{
+	return "invalid_position: index into file, out of bounds";
+}
+
+const char* ljh::memory_mapped::invalid_file::what() const noexcept
+{
+	return "invalid_file: could not open file";
+}
+
+const char* ljh::memory_mapped::invalid_permissions::what() const noexcept
+{
+	return "invalid_permissions";
+}
+
+const char* ljh::memory_mapped::io_error::error_string() const noexcept
+{
+	return ""
+}
+#endif

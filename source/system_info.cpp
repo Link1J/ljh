@@ -22,6 +22,9 @@
 #    include "ljh/char_convertions.hpp"
 #    include "ljh/function_pointer.hpp"
 #    undef MessageBox
+#    if defined(LJH_TARGET_Windows_UWP)
+using NTSTATUS = unsigned int;
+#    endif
 static ljh::function_pointer<NTSTATUS WINAPI(POSVERSIONINFOW            )> RtlGetVersion        ;
 static ljh::function_pointer<const char*    (                           )> wine_get_version     ;
 static ljh::function_pointer<const char*    (                           )> wine_get_build_id    ;
@@ -55,8 +58,19 @@ static void init_static()
 	setup = true;
 
 #if defined(LJH_TARGET_Windows)
-	HMODULE ntdll  = LoadLibrary(TEXT("ntdll.dll" ));
-	HMODULE user32 = LoadLibrary(TEXT("user32.dll"));
+#if defined(LJH_TARGET_Windows_UWP)
+	static HMODULE (*LoadLibraryA)(LPCSTR lpLibFileName);
+	if (LoadLibraryA == nullptr)
+	{
+		MEMORY_BASIC_INFORMATION info = {};
+		if (!VirtualQuery(VirtualQuery, &info, sizeof(info)))
+			throw 1;
+		LoadLibraryA = (decltype(LoadLibraryA))GetProcAddress((HMODULE)info.AllocationBase, "LoadLibraryA");
+	}
+#endif
+
+	HMODULE ntdll  = LoadLibraryA("ntdll.dll" );
+	HMODULE user32 = LoadLibraryA("user32.dll");
 
 	RtlGetVersion         = GetProcAddress(ntdll , "RtlGetVersion"        );
 	wine_get_version      = GetProcAddress(ntdll , "wine_get_version"     );

@@ -7,7 +7,14 @@
 #include "ljh/system_directories.hpp"
 #include "ljh/system_info.hpp"
 
-#if defined(LJH_TARGET_Windows)
+#if defined(LJH_TARGET_Windows_UWP)
+#    define WIN32_LEAN_AND_MEAN
+#    define NOMINMAX
+#    include <windows.h>
+#    include <roapi.h>
+#    include <winrt/base.h>
+#    include <winrt/Windows.Storage.h>
+#elif defined(LJH_TARGET_Windows)
 #    define WIN32_LEAN_AND_MEAN
 #    define NOMINMAX
 #    include <windows.h>
@@ -30,7 +37,103 @@ namespace ljh
 {
 	namespace system_directories
 	{
-#if defined(LJH_TARGET_Windows)
+#if defined(LJH_TARGET_Windows_UWP)
+		using namespace Microsoft::WRL;
+
+		class com_deinit
+		{
+			bool cleanup;
+
+		public:
+			explicit com_deinit(bool cleanup)
+				: cleanup(cleanup)
+			{
+				if (cleanup)
+					RoInitialize(RO_INIT_MULTITHREADED);
+			}
+			~com_deinit()
+			{
+				if (cleanup)
+					RoUninitialize();
+			}
+		}
+
+		[[nodiscard]] com_deinit init_com()
+		{
+			UINT64 data;
+			auto status = RoGetApartmentIdentifier(data);
+			if (status != S_OK)
+				return com_deinit{true};
+			return com_deinit{false};
+		}
+
+		std::string home()
+		{
+			auto com = init_com();
+			return winrt::to_string(winrt::Windows::Storage::UserDataPaths::GetDefault().Profile());
+		}
+
+		std::string cache()
+		{
+			auto com = init_com();
+			return winrt::to_string(winrt::Windows::Storage::UserDataPaths::GetDefault().LocalAppData());
+		}
+
+		std::string config()
+		{
+			auto com = init_com();
+			return winrt::to_string(winrt::Windows::Storage::UserDataPaths::GetDefault().RoamingAppData());
+		}
+
+		std::string data()
+		{
+			auto com = init_com();
+			return winrt::to_string(winrt::Windows::Storage::UserDataPaths::GetDefault().RoamingAppData());
+		}
+
+		std::string documents()
+		{
+			auto com = init_com();
+			return winrt::to_string(winrt::Windows::Storage::UserDataPaths::GetDefault().Documents());
+		}
+
+		std::string desktop()
+		{
+			auto com = init_com();
+			return winrt::to_string(winrt::Windows::Storage::UserDataPaths::GetDefault().Desktop());
+		}
+
+		std::string pictures()
+		{
+			auto com = init_com();
+			return winrt::to_string(winrt::Windows::Storage::UserDataPaths::GetDefault().Pictures());
+		}
+
+		std::string music()
+		{
+			auto com = init_com();
+			return winrt::to_string(winrt::Windows::Storage::UserDataPaths::GetDefault().Music());
+		}
+
+		std::string videos()
+		{
+			auto com = init_com();
+			return winrt::to_string(winrt::Windows::Storage::UserDataPaths::GetDefault().Videos());
+		}
+
+		std::string downloads()
+		{
+			auto com = init_com();
+			return winrt::to_string(winrt::Windows::Storage::UserDataPaths::GetDefault().Downloads());
+		}
+
+		std::string save_games()
+		{
+			return documents() + "My Games\\";
+		}
+
+
+#elif defined(LJH_TARGET_Windows)
 		template<typename T>
 		class co_task_free
 		{
