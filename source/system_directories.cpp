@@ -54,12 +54,12 @@ namespace ljh
 				if (cleanup)
 					RoUninitialize();
 			}
-		}
+		};
 
 		[[nodiscard]] com_deinit init_com()
 		{
 			UINT64 data;
-			auto status = RoGetApartmentIdentifier(data);
+			auto status = RoGetApartmentIdentifier(&data);
 			if (status != S_OK)
 				return com_deinit{true};
 			return com_deinit{false};
