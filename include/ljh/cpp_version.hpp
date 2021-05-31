@@ -27,6 +27,10 @@
 #	define LJH_CPP_VERSION __cplusplus
 #endif
 
+#ifndef __has_include
+#define __has_include(...) 0
+#endif
+
 #define LJH_CPP11_VERSION 201103L
 #define LJH_CPP14_VERSION 201402L
 #define LJH_CPP17_VERSION 201703L

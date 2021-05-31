@@ -131,5 +131,4 @@ namespace ljh
 	inline constexpr bool is_bounded_array_v = is_bounded_array<T>::value;
 #endif
 #endif
-
 }
