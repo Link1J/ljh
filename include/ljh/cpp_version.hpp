@@ -31,6 +31,12 @@
 #define __has_include(...) 0
 #endif
 
+#ifdef _MSVC_LANG
+#	define LJH_PRETTY_FUNCTION __FUNCSIG__
+#else
+#	define LJH_PRETTY_FUNCTION __PRETTY_FUNCTION__
+#endif
+
 #define LJH_CPP11_VERSION 201103L
 #define LJH_CPP14_VERSION 201402L
 #define LJH_CPP17_VERSION 201703L

@@ -201,16 +201,20 @@ ljh::memory_mapped::view::view(view&& other)
 {
 	data   = other.data   ;
 	length = other.length ;
+	offset = other.offset ;
 	other.data   = nullptr;
 	other.length = 0      ;
+	other.offset = 0      ;
 }
 
 ljh::memory_mapped::view& ljh::memory_mapped::view::operator=(view&& other)
 {
 	data   = other.data   ;
 	length = other.length ;
+	offset = other.offset ;
 	other.data   = nullptr;
 	other.length = 0      ;
+	other.offset = 0      ;
 	return *this;
 }
 

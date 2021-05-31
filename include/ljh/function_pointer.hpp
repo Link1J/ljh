@@ -122,6 +122,10 @@ namespace ljh
 	POINTERS_INTERALS(CC, false)
 #endif
 
+#ifdef cdecl
+#undef cdecl
+#endif
+
 	MAKE_POINTERS(cdecl             );
 	MAKE_POINTERS(stdcall           );
 	MAKE_POINTERS(fastcall          );

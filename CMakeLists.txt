@@ -30,6 +30,7 @@ add_library(ljh STATIC
 		source/unix/dbus.cpp
 	>
 )
+add_library(ljh::ljh ALIAS ljh)
 set_target_properties(ljh PROPERTIES 
 	CXX_STANDARD 20
 	CXX_STANDARD_REQUIRED YES
