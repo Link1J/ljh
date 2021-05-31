@@ -66,6 +66,7 @@ target_compile_options(ljh
 		$<$<PLATFORM_ID:Windows,WindowsStore>:
 			/await
 			/D_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
+			/Zc:twoPhase-
 		>
 )
 
