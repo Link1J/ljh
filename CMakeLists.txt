@@ -63,7 +63,7 @@ endif()
 
 target_compile_options(ljh
 	PRIVATE
-		$<$<PLATFORM_ID:Windows>:
+		$<$<PLATFORM_ID:Windows,WindowsStore>:
 			/await
 		>
 )
