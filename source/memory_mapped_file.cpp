@@ -365,6 +365,6 @@ const char* ljh::memory_mapped::invalid_permissions::what() const noexcept
 
 const char* ljh::memory_mapped::io_error::error_string() const noexcept
 {
-	return ""
+	return "";
 }
 #endif

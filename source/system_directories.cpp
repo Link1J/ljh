@@ -38,8 +38,6 @@ namespace ljh
 	namespace system_directories
 	{
 #if defined(LJH_TARGET_Windows_UWP)
-		using namespace Microsoft::WRL;
-
 		class com_deinit
 		{
 			bool cleanup;
