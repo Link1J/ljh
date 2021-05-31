@@ -1,5 +1,5 @@
 
-//          Copyright Jared Irwin 2021
+//          Copyright Jared Irwin 2020-2021
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -35,15 +35,20 @@ namespace ljh
 	template<>
 	struct co::extra_await_data<token_bucket_state>
 	{
-		extra_await_data(uint64_t tokens)
+		extra_await_data(token_bucket* bucket, uint64_t tokens)
 			: tokens(tokens)
+			, bucket(bucket)
 		{}
 
+		token_bucket* bucket;
 		uint64_t tokens;
 	};
 #endif
 
 	class token_bucket
+#if __cpp_impl_coroutine >= 201902L && __cpp_lib_coroutine >= 201902L
+		: public co::sync_object<token_bucket_state>
+#endif
 	{
 	public:
 		token_bucket() {}
@@ -54,13 +59,13 @@ namespace ljh
 			timePerBurst_ = burstSize * timePerToken_;
 		}
 
-		token_bucket(const token_bucket &other)
+		token_bucket(const token_bucket& other)
 		{
 			timePerToken_ = other.timePerToken_.load();
 			timePerBurst_ = other.timePerBurst_.load();
 		}
 
-		token_bucket &operator=(const token_bucket &other)
+		token_bucket& operator=(const token_bucket& other)
 		{
 			timePerToken_ = other.timePerToken_.load();
 			timePerBurst_ = other.timePerBurst_.load();
@@ -98,7 +103,7 @@ namespace ljh
 #if __cpp_impl_coroutine >= 201902L && __cpp_lib_coroutine >= 201902L
 		[[nodiscard]] auto consume_async(const uint64_t tokens) noexcept
 		{
-			return co::sync_object<token_bucket_state>{*this}.make_awaiter(tokens);
+			return make_awaiter(co::extra_await_data<token_bucket_state>{ this, tokens });
 		}
 
 		auto operator co_await()
@@ -108,28 +113,25 @@ namespace ljh
 #endif
 
 	private:
-		std::atomic<uint64_t> time_ = {0};
-		std::atomic<uint64_t> timePerToken_ = {0};
-		std::atomic<uint64_t> timePerBurst_ = {0};
+		std::atomic<uint64_t> time_ = { 0 };
+		std::atomic<uint64_t> timePerToken_ = { 0 };
+		std::atomic<uint64_t> timePerBurst_ = { 0 };
 	};
 
 #if __cpp_impl_coroutine >= 201902L && __cpp_lib_coroutine >= 201902L
 	struct token_bucket_state : co::state<token_bucket_state>
 	{
-		token_bucket& bucket;
-
-		token_bucket_state(token_bucket& bucket)
-			: bucket(bucket)
+		token_bucket_state()
 		{}
 
 		bool fast_claim(extra_await_data const& e) noexcept
 		{
-			return bucket.consume(e.tokens);
+			return e.bucket->consume(e.tokens);
 		}
 
 		bool claim(extra_await_data const& e) noexcept
 		{
-			return bucket.consume(e.tokens);
+			return e.bucket->consume(e.tokens);
 		}
 	};
 #endif
