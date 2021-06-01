@@ -10,7 +10,7 @@
 
 namespace ljh::co
 {
-	struct fire_and_forget;
+	struct fire_and_forget {};
 
 	template <typename T>
 	fire_and_forget no_await(T t)
