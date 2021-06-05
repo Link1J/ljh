@@ -27,7 +27,7 @@ struct std::coroutine_traits<ljh::co::fire_and_forget, Args...>
 {
 	struct promise_type
 	{
-		winrt::fire_and_forget get_return_object() const noexcept
+		ljh::co::fire_and_forget get_return_object() const noexcept
 		{
 			return {};
 		}
@@ -48,7 +48,7 @@ struct std::coroutine_traits<ljh::co::fire_and_forget, Args...>
 
 		void unhandled_exception() const noexcept
 		{
-			winrt::terminate();
+			std::terminate();
 		}
 	};
 };
