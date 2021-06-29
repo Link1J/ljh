@@ -94,7 +94,7 @@ static void init_static()
 	{
 		std::string message_text = 
 			"Windows Vista's pre-reset builds are buggy and broken.\n"
-			"Please install install version of Windows that works correctly.";
+			"Please install version of Windows that works correctly.";
 		MessageBox(NULL, message_text.c_str(), "Not Windows Vista", MB_OK | MB_TASKMODAL | MB_DEFAULT_DESKTOP_ONLY | MB_ICONERROR);
 	}
 	try
@@ -113,9 +113,18 @@ static void init_static()
 	if (version.major() < 6 && version.build() >= 5000)
 	{
 		std::string message_text = 
-			"Windows Vista's pre-reset builds are buggy and broken.\n"
-			"Please install install version of Windows that works correctly.";
-		MessageBox(NULL, message_text.c_str(), "Not Windows Vista", MB_OK | MB_TASKMODAL | MB_DEFAULT_DESKTOP_ONLY | MB_ICONERROR);
+			"Windows Neptune is not a version of Windows that should be used.\n"
+			"Please install version of Windows that works correctly.";
+		MessageBox(NULL, message_text.c_str(), "Windows Neptune", MB_OK | MB_TASKMODAL | MB_DEFAULT_DESKTOP_ONLY | MB_ICONERROR);
+	}
+
+	// Windows 11 Leak
+	if (version.major() == 10 && version.build() > 21390 && version.build() < 22000)
+	{
+		std::string message_text = 
+			"Why are you using a leaked version of Windows 11 still?\n"
+			"Please just install Windows 11 itself.";
+		MessageBox(NULL, message_text.c_str(), "No Windows 11 Leaks", MB_OK | MB_TASKMODAL | MB_DEFAULT_DESKTOP_ONLY | MB_ICONERROR);
 	}
 
 #elif defined(LJH_TARGET_MacOS)
@@ -237,8 +246,14 @@ ljh::expected<std::string, ljh::system_info::error> ljh::system_info::get_string
 	auto os_name = to_utf8((std::wstring)key(L"ProductName"));
 	if (os_name.find("Microsoft ") == 0)
 		os_name = os_name.substr(10);
-	if (auto line = os_name.find("Windows 10"); line != std::string::npos)
+	auto version = *ljh::system_info::get_version();
+	if (auto line = os_name.find("Windows"); version.major() >= 10)
 	{
+		if (auto index_10 = os_name.find("10"); version.build() > 22000 && index != std::string::npos)
+		{
+		     os_name.replace(index_10, 2, "11");
+		}
+		
 		line += 10;
 		if (auto version_display = key.get_value(L"DisplayVersion"); version_display.has_value())
 			os_name = os_name.substr(0, line + 1) + to_utf8(version_display->get<std::wstring>()) + os_name.substr(line);
