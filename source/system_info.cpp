@@ -249,7 +249,7 @@ ljh::expected<std::string, ljh::system_info::error> ljh::system_info::get_string
 	auto version = *ljh::system_info::get_version();
 	if (auto line = os_name.find("Windows"); version.major() >= 10)
 	{
-		if (auto index_10 = os_name.find("10"); version.build() > 22000 && index != std::string::npos)
+		if (auto index_10 = os_name.find("10"); version.build() > 22000 && index_10 != std::string::npos)
 		{
 		     os_name.replace(index_10, 2, "11");
 		}
