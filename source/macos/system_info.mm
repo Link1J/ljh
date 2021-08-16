@@ -74,6 +74,7 @@ ljh::expected<ljh::version, ljh::system_info::error> ljh::system_info::get_versi
 ljh::expected<std::string, ljh::system_info::error> ljh::system_info::get_string()
 {
 	std::string string;
+	auto ver = *get_version();
 	if ([[NSProcessInfo processInfo] respondsToSelector:@selector(operatingSystemVersionString)])
 	{
 		NSString* text = [[NSProcessInfo processInfo] operatingSystemVersionString];
@@ -82,7 +83,7 @@ ljh::expected<std::string, ljh::system_info::error> ljh::system_info::get_string
 	}
 	else
 	{
-		string = *get_version();
+		string = ver;
 	}
 
 #if defined(LJH_TARGET_MacOS)

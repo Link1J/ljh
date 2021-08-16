@@ -46,8 +46,13 @@ target_include_directories(ljh
 )
 
 if (WIN32)
-	execute_process(COMMAND "cppwinrt.exe" "-help" OUTPUT_VARIABLE CPPWINRT_VERSION)
-	string(SUBSTRING ${CPPWINRT_VERSION} 16 6 CPPWINRT_VERSION)
+	try_compile(AWAIT_NOT_NEEDED
+		"${PROJECT_BINARY_DIR}/_build_tests"
+		"${PROJECT_SOURCE_DIR}/tests/cmake.cppwinrt_await.cpp"
+		CXX_STANDARD 20
+		CXX_STANDARD_REQUIRED YES
+		CXX_EXTENSIONS NO
+	)
 endif()
 
 if (WIN32)
@@ -73,9 +78,7 @@ target_compile_options(ljh
 		$<$<PLATFORM_ID:Windows,WindowsStore>:
 			/D_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
 			/Zc:twoPhase-
-			$<$<VERSION_LESS:${CPPWINRT_VERSION},200921>:
-				/await
-			>
+			$<$<NOT:$<BOOL:${AWAIT_NOT_NEEDED}>>:/await>
 		>
 )
 
