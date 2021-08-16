@@ -147,6 +147,7 @@ namespace ljh::system_info
 		                                        extern const info_data Windows_10_1909          ;
 		                                        extern const info_data Windows_10_2004          ;
 		                                        extern const info_data Windows_10_20H2          ;
+		                                        extern const info_data Windows_10_21H1          ;
 		extern const info_data Android_API_1  ; extern const info_data Android_1                ;
 		extern const info_data Android_API_2  ; extern const info_data Android_1_1              ;
 		extern const info_data Android_API_3  ; extern const info_data Android_1_5              ; extern const info_data Android_Cupcake           ;

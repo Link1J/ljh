@@ -528,6 +528,7 @@ namespace ljh::system_info::inline versions
 	const info_data Windows_10_1909             { platform::WindowsNT , {10,  0, 18363 /*,   418*/},  18363};
 	const info_data Windows_10_2004             { platform::WindowsNT , {10,  0, 19041 /*,     1*/},  19041};
 	const info_data Windows_10_20H2             { platform::WindowsNT , {10,  0, 19042 /*,   508*/},  19042};
+	const info_data Windows_10_21H1             { platform::WindowsNT , {10,  0, 19043 /*,   928*/},  19043};
 	const info_data Android_API_1               { platform::Android   , { 1                       },      1};
 	const info_data Android_API_2               { platform::Android   , { 1,  1                   },      2};
 	const info_data Android_API_3               { platform::Android   , { 1,  5                   },      3};
