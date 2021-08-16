@@ -38,15 +38,6 @@
 #define _string_type std::string
 #endif
 
-#ifdef LJH_FUNCTION_POINTERS_LOAD_RETURNS_EXPECTED
-#if LJH_CPP_VERSION < LJH_CPP17_VERSION
-#error "LJH_FUNCTION_POINTERS_LOAD_RETURNS_EXPECTED needs C++17 or newer"
-#undef LJH_FUNCTION_POINTERS_LOAD_RETURNS_EXPECTED
-#else
-#include "expected.hpp"
-#endif
-#endif
-
 namespace ljh
 {
 	template<typename T, int = 0>
@@ -139,42 +130,6 @@ namespace ljh
 
 #undef MAKE_POINTERS
 #undef POINTERS_INTERALS
-
-	bool _load_dll(const char* dll_name, const char* function_name, void** function, u32* error);
-
-#ifndef LJH_FUNCTION_POINTERS_LOAD_RETURNS_EXPECTED
-	template<typename function_type>
-	function_pointer<function_type> load_function(_string_type dll_name, _string_type function_name)
-	{
-		void* function; u32 error;
-		_load_dll(dll_name.data(), function_name.data(), &function, &error);
-		return function_pointer<function_type>{function};
-	}
-	template<typename function_type>
-	function_pointer<function_type> load_function(_string_type dll_name, u16 ordinal)
-	{
-		void* function; u32 error;
-		_load_dll(dll_name.data(), (const char*)(uintptr_t)(ordinal), &function, &error);
-		return function_pointer<function_type>{function};
-	}
-#else
-	template<typename function_type, typename _char = char>
-	expected<function_pointer<function_type>,u32> load_function(_string_type dll_name, _string_type function_name)
-	{
-		void* function; u32 error;
-		if (!_load_dll(dll_name.data(), function_name.data(), &function, &error))
-			return unexpected{error};
-		return function_pointer<function_type>{function};
-	}
-	template<typename function_type, typename _char = char>
-	expected<function_pointer<function_type>,u32> load_function(_string_type dll_name, u16 ordinal)
-	{
-		void* function; u32 error;
-		if (!_load_dll(dll_name.data(), (const char*)(uintptr_t)(ordinal), &function, &error))
-			return unexpected{error};
-		return function_pointer<function_type>{function};
-	}
-#endif
 }
 
 #if defined(__GNUC__) || defined(__clang__)

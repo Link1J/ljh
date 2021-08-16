@@ -149,7 +149,7 @@ ljh::memory_mapped::view::view(file& fd, permissions permissions, size_t start, 
 	GetSystemInfo(&sys_info);
 
 	offset = start % sys_info.dwAllocationGranularity;
-	start = floor(start / sys_info.dwAllocationGranularity) * sys_info.dwAllocationGranularity;
+	start = (size_t)floor(start / sys_info.dwAllocationGranularity) * sys_info.dwAllocationGranularity;
 	length += offset;
 
 	data = MapViewOfFile(fd.file_descriptor, access, start >> 32, start & 0xFFFFFFFF, length);

@@ -25,7 +25,7 @@
 #include <type_traits>
 #include <string>
 #include <cmath>
-#if LJH_CPP_VERSION >= LJH_CPP17_VERSION
+#if __cpp_lib_string_view >= 201606L
 #include <string_view>
 #endif
 
@@ -69,11 +69,13 @@ namespace _ljh
 
 namespace ljh
 {
+#if __cpp_lib_string_view >= 201606L
 	template<typename _conv, class _char, class _traits = std::char_traits<_char>>
 	typename std::enable_if<std::is_integral<_conv>::value>::type from_string(_conv& value, std::basic_string_view<_char, _traits> text)
 	{
 		_ljh::from_string(value, text.data(), text.size());
 	}
+#endif
 
 	template<typename _conv, class _char, class _traits = std::char_traits<_char>, class _alloc = std::allocator<_char>>
 	typename std::enable_if<std::is_integral<_conv>::value>::type from_string(_conv& value, std::basic_string<_char, _traits, _alloc> text)

@@ -195,6 +195,11 @@ namespace ljh::system_info
 		extern const info_data    macOS_10_14 ; extern const info_data    macOS_Mojave          ;
 		extern const info_data    macOS_10_15 ; extern const info_data    macOS_Catalina        ;
 		extern const info_data    macOS_11    ; extern const info_data    macOS_Big_Sur         ;
+		extern const info_data    macOS_11_1  ;
+		extern const info_data    macOS_11_2  ;
+		extern const info_data    macOS_11_3  ;
+		extern const info_data    macOS_11_4  ;
+		extern const info_data    macOS_11_5  ;
 		extern const info_data iPhone_OS_1_0  ;
 		extern const info_data iPhone_OS_1_1  ;
 		extern const info_data iPhone_OS_2_0  ;
@@ -243,6 +248,10 @@ namespace ljh::system_info
 		extern const info_data       iOS_14_1 ; extern const info_data iPadOS_14_1              ;
 		extern const info_data       iOS_14_2 ; extern const info_data iPadOS_14_2              ;
 		extern const info_data       iOS_14_3 ; extern const info_data iPadOS_14_3              ;
+		extern const info_data       iOS_14_4 ; extern const info_data iPadOS_14_4              ;
+		extern const info_data       iOS_14_5 ; extern const info_data iPadOS_14_5              ;
+		extern const info_data       iOS_14_6 ; extern const info_data iPadOS_14_6              ;
+		extern const info_data       iOS_14_7 ; extern const info_data iPadOS_14_7              ;
 	}
 };
 

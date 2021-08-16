@@ -30,6 +30,9 @@
 #ifndef __has_include
 #define __has_include(...) 0
 #endif
+#ifndef __has_cpp_attribute
+#define __has_cpp_attribute(...) 0
+#endif
 
 #ifdef _MSVC_LANG
 #	define LJH_PRETTY_FUNCTION __FUNCSIG__
@@ -495,4 +498,16 @@
 #define LJH_CPP20_EXPLICIT explicit
 #else
 #define LJH_CPP20_EXPLICIT(...)
+#endif
+
+#if __has_cpp_attribute(noreturn)
+#define LJH_NORETURN [[noreturn]]
+#elif defined(LJH_COMPILER_CLANG)
+#define LJH_NORETURN __attribute__((noreturn))
+#elif defined(LJH_COMPILER_GCC)
+#define LJH_NORETURN __attribute__((noreturn))
+#elif defined(LJH_COMPILER_MSVC)
+#define LJH_NORETURN __declspec(noreturn)
+#else
+#define LJH_NORETURN
 #endif

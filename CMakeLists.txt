@@ -17,21 +17,23 @@ endif()
 add_library(ljh STATIC
 	source/system_directories.cpp
 	source/memory_mapped_file.cpp
-	source/system_info.cpp
-	source/function_pointer.cpp
+	source/os_versions.cpp
+	source/dummy_system_info.cpp
 	$<$<PLATFORM_ID:Darwin>:
-		source/system_info.mm
+		source/macos/system_info.mm
 	>
 	$<$<PLATFORM_ID:Windows>:
+		source/windows/system_info.cpp
 		source/windows/registry.cpp
 		source/windows/wmi.cpp
 	>
 	$<$<PLATFORM_ID:Linux>:
+		source/unix/system_info.cpp
 		source/unix/dbus.cpp
 	>
 )
 add_library(ljh::ljh ALIAS ljh)
-set_target_properties(ljh PROPERTIES 
+set_target_properties(ljh PROPERTIES
 	CXX_STANDARD 20
 	CXX_STANDARD_REQUIRED YES
 	CXX_EXTENSIONS NO
@@ -46,7 +48,7 @@ target_include_directories(ljh
 if (WIN32)
 	target_link_libraries(ljh PUBLIC
 		wbemuuid
-		windowsapp
+		#windowsapp
 	)
 elseif (APPLE)
 	target_link_libraries(ljh PUBLIC
@@ -64,7 +66,6 @@ endif()
 target_compile_options(ljh
 	PRIVATE
 		$<$<PLATFORM_ID:Windows,WindowsStore>:
-			/await
 			/D_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
 			/Zc:twoPhase-
 		>

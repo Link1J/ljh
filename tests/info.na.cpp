@@ -5,6 +5,7 @@
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include <ljh/cpp_version.hpp>
+#include <ljh/system_info.hpp>
 #include <catch2/catch_test_macros.hpp>
 
 #include <algorithm>
@@ -42,14 +43,14 @@ static struct PrintOptions
 	constexpr static bool cxx20                = 1;
 	constexpr static bool cxx23                = 1;
 } print;
- 
+
 struct CompilerFeature
 {
 	CompilerFeature(const char* name = nullptr, const char* value = nullptr)
 		: name(name), value(value) {}
 	const char* name; const char* value;
 };
- 
+
 static CompilerFeature cxx[] =
 {
 	// { "__cplusplus", COMPILER_FEATURE_VALUE(LJH_CPP_VERSION) },
@@ -117,7 +118,7 @@ COMPILER_FEATURE_ENTRY(__cpp_lib_transparent_operators)
 COMPILER_FEATURE_ENTRY(__cpp_lib_tuple_element_t)
 COMPILER_FEATURE_ENTRY(__cpp_lib_tuples_by_type)
 };
- 
+
 static CompilerFeature cxx17[] =
 {
 COMPILER_FEATURE_ENTRY(__cpp_aggregate_bases)
@@ -194,7 +195,7 @@ COMPILER_FEATURE_ENTRY(__cpp_lib_unordered_map_try_emplace)
 COMPILER_FEATURE_ENTRY(__cpp_lib_variant)
 COMPILER_FEATURE_ENTRY(__cpp_lib_void_t)
 };
- 
+
 static CompilerFeature cxx20[] =
 {
 COMPILER_FEATURE_ENTRY(__cpp_aggregate_paren_init)
@@ -285,21 +286,32 @@ COMPILER_FEATURE_ENTRY(__cpp_lib_to_array)
 COMPILER_FEATURE_ENTRY(__cpp_lib_type_identity)
 COMPILER_FEATURE_ENTRY(__cpp_lib_unwrap_ref)
 };
- 
-static CompilerFeature cxx23[] =
-{
+
+static CompilerFeature cxx23[] = {
 //< Continue to Populate
+COMPILER_FEATURE_ENTRY(__cpp_if_consteval)
 COMPILER_FEATURE_ENTRY(__cpp_size_t_suffix)
 };
-static CompilerFeature cxx23lib[] =
-{
+static CompilerFeature cxx23lib[] = {
 //< Continue to Populate
+COMPILER_FEATURE_ENTRY(__cpp_lib_adaptor_iterator_pair_constructor)
+COMPILER_FEATURE_ENTRY(__cpp_lib_allocate_at_least)
+COMPILER_FEATURE_ENTRY(__cpp_lib_constexpr_typeinfo)
+COMPILER_FEATURE_ENTRY(__cpp_lib_format)
+COMPILER_FEATURE_ENTRY(__cpp_lib_invoke_r)
 COMPILER_FEATURE_ENTRY(__cpp_lib_is_scoped_enum)
+COMPILER_FEATURE_ENTRY(__cpp_lib_optional)
+COMPILER_FEATURE_ENTRY(__cpp_lib_out_ptr)
+COMPILER_FEATURE_ENTRY(__cpp_lib_ranges)
+COMPILER_FEATURE_ENTRY(__cpp_lib_ranges_starts_ends_with)
+COMPILER_FEATURE_ENTRY(__cpp_lib_spanstream)
 COMPILER_FEATURE_ENTRY(__cpp_lib_stacktrace)
 COMPILER_FEATURE_ENTRY(__cpp_lib_stdatomic_h)
 COMPILER_FEATURE_ENTRY(__cpp_lib_string_contains)
+COMPILER_FEATURE_ENTRY(__cpp_lib_to_underlying)
+COMPILER_FEATURE_ENTRY(__cpp_lib_variant)
 };
- 
+
 static CompilerFeature attributes[] =
 {
 COMPILER_ATTRIBUTE_ENTRY(carries_dependency)
@@ -312,10 +324,10 @@ COMPILER_ATTRIBUTE_ENTRY(noreturn)
 COMPILER_ATTRIBUTE_ENTRY(no_unique_address)
 COMPILER_ATTRIBUTE_ENTRY(unlikely)
 };
- 
+
 constexpr bool is_feature_supported(const CompilerFeature& x)
 {
-	return x.value[0] != '_' && x.value[0] != '0' ;
+	return x.value[0] != '_' && x.value[0] != '0';
 }
 
 inline void print_compiler_feature_formated(const std::string& name, const std::string& value)
@@ -334,7 +346,7 @@ inline void print_compiler_feature(const CompilerFeature& x)
 		print_compiler_feature_formated(x.name, value);
 	}
 }
- 
+
 template<size_t N>
 inline void show(char const* title, CompilerFeature (&features)[N])
 {
@@ -364,7 +376,9 @@ inline void show(char const* title, CompilerFeature (&features)[N])
 // COMPILER_FEATURE_ENTRY(_MSVC_LANG)
 // COMPILER_FEATURE_ENTRY(_MSVC_TRADITIONAL)
 
-TEST_CASE("Compiler Info", "[test_info]" )
+//TEST_CASE("Compiler Info", "[test_info]" )
+
+int main()
 {
 	std::cout << "COMPILER ";
 #if defined(LJH_COMPILER_MSVC)
@@ -376,7 +390,9 @@ TEST_CASE("Compiler Info", "[test_info]" )
 #elif defined(LJH_COMPILER_CLANG)
 	std::cout << "(Clang " << __clang_major__ << '.' << __clang_minor__ << '.' << __clang_patchlevel__ << ")\n";
 #endif
-	
+
+	std::cout << "SYSTEM (" << *ljh::system_info::get_string() << ")\n";
+
 	if (print.general_features) show("C++ GENERAL", cxx);
 	if (print.cxx11 && print.core_features) show("C++11 CORE", cxx11);
 	if (print.cxx14 && print.core_features) show("C++14 CORE", cxx14);

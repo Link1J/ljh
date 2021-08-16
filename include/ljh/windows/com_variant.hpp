@@ -25,6 +25,7 @@
 #include <winrt/base.h>
 #include <ljh/type_traits.hpp>
 #include <ljh/string_utils.hpp>
+#include <ljh/unreachable.hpp>
 #include <ljh/windows/com_bstr.hpp>
 #include <ljh/windows/com_safe_array.hpp>
 
@@ -248,7 +249,7 @@ namespace ljh::windows
 			{
 				static_assert(std::is_same_v<std::void_t<T>, int>, "Invalid Type");
 			}
-			WINRT_ASSERT(false);
+			unreachable();
 		}
 
 		bool empty()

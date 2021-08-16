@@ -33,6 +33,7 @@ target_compile_definitions(tests_11 PRIVATE CATCH_CONFIG_CONSOLE_WIDTH=500)
 
 add_executable(tests_14
 	compile_time_string.14.cpp
+	char_convertions.14.cpp
 )
 set_target_properties(tests_14 PROPERTIES CXX_STANDARD 14 CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)
 target_link_libraries(tests_14 Catch2::Catch2WithMain ljh)
@@ -71,7 +72,7 @@ add_executable(tests_info
 	info.na.cpp
 )
 set_target_properties(tests_info PROPERTIES CXX_STANDARD 20 CXX_STANDARD_REQUIRED NO CXX_EXTENSIONS NO)
-target_link_libraries(tests_info Catch2::Catch2WithMain ljh)
+target_link_libraries(tests_info Catch2::Catch2 ljh)
 target_compile_definitions(tests_info PRIVATE CATCH_CONFIG_CONSOLE_WIDTH=500)
 
 include(CTest)

@@ -53,7 +53,7 @@ namespace ljh::windows
 
 		explicit com_bstr(const std::wstring_view& string) noexcept
 		{
-			this->string = SysAllocStringLen(string.data(), string.size());
+			this->string = SysAllocStringLen(string.data(), (UINT)string.size());
 		}
 
 		~com_bstr() noexcept

@@ -6,6 +6,7 @@
 
 #include <catch2/catch_test_macros.hpp>
 #include "ljh/system_info.hpp"
+#include <iostream>
 
 TEST_CASE("system_info::get_platform()", "[test_17][system_info]")
 {

@@ -3,3 +3,5 @@
 /build_linux/
 /cmake-build-debug/
 /.idea/
+/out/
+/.vs/
