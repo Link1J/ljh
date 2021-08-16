@@ -8,6 +8,7 @@
 
 #if defined(__GNUC__) || defined(__clang__)
 #pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #endif
 
 #import <Foundation/Foundation.h>
@@ -59,15 +60,15 @@ ljh::expected<ljh::version, ljh::system_info::error> ljh::system_info::get_versi
 		Gestalt(gestaltSystemVersionMajor , &major);
 		Gestalt(gestaltSystemVersionMinor , &minor);
 		Gestalt(gestaltSystemVersionBugFix, &patch);
-		return ljh::version{(version::value_type)major, (version::value_type)minor, (version::value_type)patch};
+		number = {(version::value_type)major, (version::value_type)minor, (version::value_type)patch};
 	}
 
 #if defined(LJH_TARGET_MacOS)
-	if (version > macOS_10_15 && version < macOS_11)
-		version = macOS_11.version;
+	if (number > macOS_10_15 && number < macOS_11)
+		number = macOS_11.version;
 #endif
 
-	return version;
+	return number;
 }
 
 ljh::expected<std::string, ljh::system_info::error> ljh::system_info::get_string()
@@ -107,7 +108,7 @@ ljh::expected<std::string, ljh::system_info::error> ljh::system_info::get_string
 
 ljh::expected<ljh::u32, ljh::system_info::error> ljh::system_info::get_sdk()
 {
-	auto version = get_version();
+	auto version = *get_version();
 	return version.major() << 16 | version.minor() << 8  | version.build();
 }
 

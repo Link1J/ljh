@@ -46,6 +46,11 @@ target_include_directories(ljh
 )
 
 if (WIN32)
+	execute_process(COMMAND "cppwinrt.exe" "-help" OUTPUT_VARIABLE CPPWINRT_VERSION)
+	string(SUBSTRING ${CPPWINRT_VERSION} 16 6 CPPWINRT_VERSION)
+endif()
+
+if (WIN32)
 	target_link_libraries(ljh PUBLIC
 		wbemuuid
 		#windowsapp
@@ -68,6 +73,9 @@ target_compile_options(ljh
 		$<$<PLATFORM_ID:Windows,WindowsStore>:
 			/D_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
 			/Zc:twoPhase-
+			$<$<VERSION_LESS:${CPPWINRT_VERSION},200921>:
+				/await
+			>
 		>
 )
 
