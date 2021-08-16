@@ -21,12 +21,14 @@ TEST_CASE("system_info::get_version()", "[test_17][system_info]")
 	REQUIRE(test.value() != "0");
 }
 
+#if 0
 TEST_CASE("system_info::get_string()", "[test_17][system_info]")
 {
 	auto test = ljh::system_info::get_string();
 	REQUIRE(test.has_value());
 	REQUIRE(!test.value().empty());
 }
+#endif
 
 TEST_CASE("system_info::get_sdk()", "[test_17][system_info]")
 {
