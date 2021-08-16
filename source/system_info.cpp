@@ -249,16 +249,18 @@ ljh::expected<std::string, ljh::system_info::error> ljh::system_info::get_string
 	auto version = *ljh::system_info::get_version();
 	if (auto line = os_name.find("Windows"); version.major() >= 10)
 	{
-		if (auto index_10 = os_name.find("10"); version.build() > 22000 && index_10 != std::string::npos)
+		if (auto index_10 = os_name.find("10"); version.build() > 21390 && index_10 != std::string::npos)
 		{
-		     os_name.replace(index_10, 2, "11");
+			os_name.replace(index_10, 2, "11");
 		}
-		
-		line += 10;
-		if (auto version_display = key.get_value(L"DisplayVersion"); version_display.has_value())
-			os_name = os_name.substr(0, line + 1) + to_utf8(version_display->get<std::wstring>()) + os_name.substr(line);
-		else if (version_display = key.get_value(L"ReleaseId"); version_display.has_value())
-			os_name = os_name.substr(0, line + 1) + to_utf8(version_display->get<std::wstring>()) + os_name.substr(line);
+		if (version.build() != 22000)
+		{
+			line += 10;
+			if (auto version_display = key.get_value(L"DisplayVersion"); version_display.has_value())
+				os_name = os_name.substr(0, line + 1) + to_utf8(version_display->get<std::wstring>()) + os_name.substr(line);
+			else if (version_display = key.get_value(L"ReleaseId"); version_display.has_value())
+				os_name = os_name.substr(0, line + 1) + to_utf8(version_display->get<std::wstring>()) + os_name.substr(line);
+		}
 	}
 	else
 	{
