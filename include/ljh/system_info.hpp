@@ -253,18 +253,18 @@ namespace ljh::system_info
 		extern const info_data       iOS_14_6 ; extern const info_data iPadOS_14_6              ;
 		extern const info_data       iOS_14_7 ; extern const info_data iPadOS_14_7              ;
 	}
-};
 
-bool operator==(const ljh::system_info::platform&, const ljh::system_info::info_data&);
-bool operator==(const ljh::version              &, const ljh::system_info::info_data&);
-bool operator!=(const ljh::version              &, const ljh::system_info::info_data&);
-bool operator< (const ljh::version              &, const ljh::system_info::info_data&);
-bool operator> (const ljh::version              &, const ljh::system_info::info_data&);
-bool operator>=(const ljh::version              &, const ljh::system_info::info_data&);
-bool operator<=(const ljh::version              &, const ljh::system_info::info_data&);
-bool operator==(const ljh::u32                  &, const ljh::system_info::info_data&);
-bool operator!=(const ljh::u32                  &, const ljh::system_info::info_data&);
-bool operator< (const ljh::u32                  &, const ljh::system_info::info_data&);
-bool operator> (const ljh::u32                  &, const ljh::system_info::info_data&);
-bool operator>=(const ljh::u32                  &, const ljh::system_info::info_data&);
-bool operator<=(const ljh::u32                  &, const ljh::system_info::info_data&);
+	bool operator==(const ljh::system_info::platform&, const ljh::system_info::info_data&);
+	bool operator==(const ljh::version              &, const ljh::system_info::info_data&);
+	bool operator!=(const ljh::version              &, const ljh::system_info::info_data&);
+	bool operator< (const ljh::version              &, const ljh::system_info::info_data&);
+	bool operator> (const ljh::version              &, const ljh::system_info::info_data&);
+	bool operator>=(const ljh::version              &, const ljh::system_info::info_data&);
+	bool operator<=(const ljh::version              &, const ljh::system_info::info_data&);
+	bool operator==(const ljh::u32                  &, const ljh::system_info::info_data&);
+	bool operator!=(const ljh::u32                  &, const ljh::system_info::info_data&);
+	bool operator< (const ljh::u32                  &, const ljh::system_info::info_data&);
+	bool operator> (const ljh::u32                  &, const ljh::system_info::info_data&);
+	bool operator>=(const ljh::u32                  &, const ljh::system_info::info_data&);
+	bool operator<=(const ljh::u32                  &, const ljh::system_info::info_data&);
+};

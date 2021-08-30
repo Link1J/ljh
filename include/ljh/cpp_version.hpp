@@ -33,6 +33,9 @@
 #ifndef __has_cpp_attribute
 #define __has_cpp_attribute(...) 0
 #endif
+#ifndef __has_builtin
+#define __has_builtin(...) 0
+#endif
 
 #ifdef _MSVC_LANG
 #	define LJH_PRETTY_FUNCTION __FUNCSIG__
@@ -371,7 +374,7 @@
 
 #	if !defined(__cpp_static_assert)
 #		if defined(_MSC_VER)
-/	/#		if LJH_CPP_VERSION >= LJH_CPP11_VERSION  // MSVC has no flags for C++11
+#			if LJH_CPP_VERSION >= LJH_CPP11_VERSION  // MSVC has no flags for C++11
 #				if _MSC_VER >= 1600
 #					define __cpp_static_assert 200410L
 #					define __cpp_lambdas 200907L
@@ -400,7 +403,7 @@
 #					define __cpp_user_defined_literals 200809L
 #					define __cpp_inheriting_constructors 200802L
 #				endif
-/	/#		endif
+#			endif
 #			if LJH_CPP_VERSION >= LJH_CPP14_VERSION
 #				if _MSC_VER >= 1900
 #				endif

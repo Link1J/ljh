@@ -80,18 +80,32 @@ namespace ljh::delay_load
 	{
 		template<compile_time_string dll_name, compile_time_string function_name, function_type type>
 		friend struct function;
+#if defined(LJH_TARGET_Windows)
+		template<compile_time_string dll_name, uint16_t ordinal_number, function_type type>
+		friend struct ordinal;
+#endif
 
 		inline static void* dll = nullptr;
 		
-		static void* function(std::string_view function) noexcept
+		static void* function(std::string_view func_name) noexcept
 		{
-			auto a = _os::LJH_OS_GetModuleHandleA;
 			if (dll == nullptr)
 				dll = LOADED_LIB(name.data());
 			if (dll == nullptr)
 				dll = LOAD_LIB(name.data());
-			return GET_FUNC(dll, function.data());
+			return GET_FUNC(dll, func_name.data());
 		}
+		
+#if defined(LJH_TARGET_Windows)
+		static void* function(uint16_t func_name) noexcept
+		{
+			if (dll == nullptr)
+				dll = LOADED_LIB(name.data());
+			if (dll == nullptr)
+				dll = LOAD_LIB(name.data());
+			return GET_FUNC(dll, (_os::LPCSTR)func_name);
+		}
+#endif
 
 	public:
 		static void unload() noexcept
@@ -125,6 +139,32 @@ namespace ljh::delay_load
 			return is_loadable();
 		}
 	};
+
+#if defined(LJH_TARGET_Windows)
+	template<compile_time_string dll_name, uint16_t ordinal_number, function_type type>
+	struct ordinal
+	{
+		using dll = library<dll_name>;
+		using traits = function_traits<type>;
+
+		template<typename... argument_types>
+		std::enable_if_t<std::is_invocable_v<type, argument_types...>, typename traits::return_type>
+		operator()(argument_types... args) noexcept(traits::is::no_exceptions)
+		{
+			return ((traits::as::function_pointer)(dll::function(ordinal_number)))(args...);
+		}
+
+		bool is_loadable() const noexcept
+		{
+			return dll::function(ordinal_number) != nullptr;
+		}
+
+		operator bool() const noexcept
+		{
+			return is_loadable();
+		}
+	};
+#endif
 }
 
 #undef LOAD_LIB

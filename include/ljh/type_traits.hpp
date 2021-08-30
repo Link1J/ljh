@@ -4,7 +4,7 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-// type_traits.hpp - v1.3
+// type_traits.hpp - v1.4
 // SPDX-License-Identifier: BSL-1.0
 //
 // Requires C++11
@@ -12,6 +12,7 @@
 //
 // Based on code from https://stackoverflow.com/a/10724828/13155694
 // Based on code from https://stackoverflow.com/a/15396757/7932993
+// Based on code from https://devblogs.microsoft.com/oldnewthing/20190711-00/?p=102682
 //
 // ABOUT
 //     Adds extra type traits
@@ -23,6 +24,7 @@
 //     1.1 Add is_char and rename to type_traits.hpp
 //     1.2 Change is_char to is_char_type
 //     1.3 Add is_callable and is_function_pointer
+//     1.4 Add is_type_complete
 
 #pragma once
 
@@ -87,6 +89,12 @@ namespace ljh
 
 	template <typename T, template <typename ...> typename U>
 	using is_instance = _is_instance_impl<std::decay_t<T>, U>;
+
+	template<typename, typename = void>
+	struct is_type_complete : std::false_type {};
+
+	template<typename T>
+	struct is_type_complete<T, std::void_t<decltype(sizeof(T))>> : public std::true_type {};
 	
 #if LJH_CPP_VERSION >= LJH_CPP17_VERSION
 	template <typename T>
@@ -103,6 +111,9 @@ namespace ljh
 
 	template <typename T, template <typename ...> typename U>
 	inline constexpr bool is_instance_v = is_instance<T, U>::value;
+
+	template <typename T>
+	inline constexpr bool is_type_complete_v = is_type_complete<T>::value;
 #endif
 
 #if __cpp_lib_remove_cvref >= 201711L
