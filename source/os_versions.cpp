@@ -19,19 +19,19 @@ bool ljh::system_info::info_data::operator< (const ljh::u32                  & o
 bool ljh::system_info::info_data::operator> (const ljh::u32                  & other) const { return sdk      >  other; }
 bool ljh::system_info::info_data::operator>=(const ljh::u32                  & other) const { return sdk      >= other; }
 bool ljh::system_info::info_data::operator<=(const ljh::u32                  & other) const { return sdk      <= other; }
-bool operator==(const ljh::system_info::platform& lhs, const ljh::system_info::info_data& rhs) { return rhs == lhs; }
-bool operator==(const ljh::version              & lhs, const ljh::system_info::info_data& rhs) { return rhs == lhs; }
-bool operator!=(const ljh::version              & lhs, const ljh::system_info::info_data& rhs) { return rhs != lhs; }
-bool operator< (const ljh::version              & lhs, const ljh::system_info::info_data& rhs) { return rhs >  lhs; }
-bool operator> (const ljh::version              & lhs, const ljh::system_info::info_data& rhs) { return rhs <  lhs; }
-bool operator>=(const ljh::version              & lhs, const ljh::system_info::info_data& rhs) { return rhs <= lhs; }
-bool operator<=(const ljh::version              & lhs, const ljh::system_info::info_data& rhs) { return rhs >= lhs; }
-bool operator==(const ljh::u32                  & lhs, const ljh::system_info::info_data& rhs) { return rhs == lhs; }
-bool operator!=(const ljh::u32                  & lhs, const ljh::system_info::info_data& rhs) { return rhs != lhs; }
-bool operator< (const ljh::u32                  & lhs, const ljh::system_info::info_data& rhs) { return rhs >  lhs; }
-bool operator> (const ljh::u32                  & lhs, const ljh::system_info::info_data& rhs) { return rhs <  lhs; }
-bool operator>=(const ljh::u32                  & lhs, const ljh::system_info::info_data& rhs) { return rhs <= lhs; }
-bool operator<=(const ljh::u32                  & lhs, const ljh::system_info::info_data& rhs) { return rhs >= lhs; }
+bool ljh::system_info::operator==(const ljh::system_info::platform& lhs, const ljh::system_info::info_data& rhs) { return rhs == lhs; }
+bool ljh::system_info::operator==(const ljh::version              & lhs, const ljh::system_info::info_data& rhs) { return rhs == lhs; }
+bool ljh::system_info::operator!=(const ljh::version              & lhs, const ljh::system_info::info_data& rhs) { return rhs != lhs; }
+bool ljh::system_info::operator< (const ljh::version              & lhs, const ljh::system_info::info_data& rhs) { return rhs >  lhs; }
+bool ljh::system_info::operator> (const ljh::version              & lhs, const ljh::system_info::info_data& rhs) { return rhs <  lhs; }
+bool ljh::system_info::operator>=(const ljh::version              & lhs, const ljh::system_info::info_data& rhs) { return rhs <= lhs; }
+bool ljh::system_info::operator<=(const ljh::version              & lhs, const ljh::system_info::info_data& rhs) { return rhs >= lhs; }
+bool ljh::system_info::operator==(const ljh::u32                  & lhs, const ljh::system_info::info_data& rhs) { return rhs == lhs; }
+bool ljh::system_info::operator!=(const ljh::u32                  & lhs, const ljh::system_info::info_data& rhs) { return rhs != lhs; }
+bool ljh::system_info::operator< (const ljh::u32                  & lhs, const ljh::system_info::info_data& rhs) { return rhs >  lhs; }
+bool ljh::system_info::operator> (const ljh::u32                  & lhs, const ljh::system_info::info_data& rhs) { return rhs <  lhs; }
+bool ljh::system_info::operator>=(const ljh::u32                  & lhs, const ljh::system_info::info_data& rhs) { return rhs <= lhs; }
+bool ljh::system_info::operator<=(const ljh::u32                  & lhs, const ljh::system_info::info_data& rhs) { return rhs >= lhs; }
 
 // apple_version_to_sdk
 constexpr ljh::u32 avs(ljh::u32 major, ljh::u32 minor)
