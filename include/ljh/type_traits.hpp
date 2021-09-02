@@ -81,20 +81,23 @@ namespace ljh
 	template<typename T> 
 	struct is_function_pointer : std::integral_constant<bool, std::is_pointer<T>::value && std::is_function<typename std::remove_pointer<T>::type>::value> {};
 
-	template <typename, template <typename...> typename>
+	template <typename, template <typename...> class>
 	struct _is_instance_impl : public std::false_type {};
 
-	template <template <typename...> typename U, typename...Ts>
+	template <template <typename...> class U, typename...Ts>
 	struct _is_instance_impl<U<Ts...>, U> : public std::true_type {};
 
-	template <typename T, template <typename ...> typename U>
+	template <typename T, template <typename ...> class U>
 	using is_instance = _is_instance_impl<std::decay_t<T>, U>;
 
 	template<typename, typename = void>
 	struct is_type_complete : std::false_type {};
 
+	template<typename ...>
+	using void_t = void;
+
 	template<typename T>
-	struct is_type_complete<T, std::void_t<decltype(sizeof(T))>> : public std::true_type {};
+	struct is_type_complete<T, void_t<decltype(sizeof(T))>> : public std::true_type {};
 	
 #if LJH_CPP_VERSION >= LJH_CPP17_VERSION
 	template <typename T>
