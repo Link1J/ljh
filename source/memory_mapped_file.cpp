@@ -10,7 +10,9 @@
 #if !defined(LJH_TARGET_Windows_UWP)
 #if defined(LJH_TARGET_Windows)
 #    define WIN32_LEAN_AND_MEAN
+#    ifndef NOMINMAX
 #    define NOMINMAX
+#    endif
 #    include <windows.h>
 #    include <memoryapi.h>
 #    include <cstring>

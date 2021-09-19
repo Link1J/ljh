@@ -17,7 +17,9 @@
 //     1.0 Inital Version
 
 #pragma once
+#ifndef NOMINMAX
 #define NOMINMAX
+#endif
 #include <windows.h>
 #include <limits>
 

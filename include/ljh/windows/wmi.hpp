@@ -19,7 +19,9 @@
 //     1.0 Inital Version
 
 #pragma once
+#ifndef NOMINMAX
 #define NOMINMAX
+#endif
 #define _WIN32_DCOM
 #include <OAIdl.h>
 #include <wbemidl.h>

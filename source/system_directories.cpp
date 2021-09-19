@@ -9,7 +9,9 @@
 
 #if defined(LJH_TARGET_Windows_UWP)
 #    define WIN32_LEAN_AND_MEAN
+#    ifndef NOMINMAX
 #    define NOMINMAX
+#    endif
 #    include <windows.h>
 #    include <roapi.h>
 #    include <winrt/base.h>
@@ -17,7 +19,9 @@
 #    include <winrt/Windows.Storage.h>
 #elif defined(LJH_TARGET_Windows)
 #    define WIN32_LEAN_AND_MEAN
+#    ifndef NOMINMAX
 #    define NOMINMAX
+#    endif
 #    include <windows.h>
 #    include <stringapiset.h>
 #    include <shlobj.h>
