@@ -39,6 +39,7 @@ static ljh::function_pointer<HMODULE WINAPI(LPCSTR)> LoadLibraryA = []{
 #endif
 
 static ljh::windows::registry::key CurrentVersion;
+static ljh::windows::registry::key ReactOS;
 
 using namespace ljh::int_types;
 
@@ -56,7 +57,14 @@ static void init_static()
 	wine_get_build_id     = GetProcAddress(ntdll , "wine_get_build_id"    );
 	wine_get_host_version = GetProcAddress(ntdll , "wine_get_host_version");
 
-	CurrentVersion = ljh::windows::registry::key::LOCAL_MACHINE[L"SOFTWARE"][L"Microsoft"][L"Windows NT"][L"CurrentVersion"];
+	try 
+	{
+		CurrentVersion = ljh::windows::registry::key::LOCAL_MACHINE[L"SOFTWARE"][L"Microsoft"][L"Windows NT"][L"CurrentVersion"];
+		ReactOS = ljh::windows::registry::key::LOCAL_MACHINE[L"SYSTEM"][L"CurrentControlSet"][L"Control"][L"ReactOS"];
+	} 
+	catch(...)
+	{
+	}
 
 	system_alerts();
 }
@@ -104,21 +112,17 @@ ljh::expected<std::string, ljh::system_info::error> ljh::system_info::get_string
 		wine_get_host_version(&sysname, &release);
 		string = std::string{wine_get_build_id()} + " on " + sysname + " " + release;
 	}
-
-	if (auto SYSTEM = windows::registry::key::LOCAL_MACHINE.get_key(L"SYSTEM"); SYSTEM.has_value())
-		if (auto CurrentControlSet = SYSTEM->get_key(L"CurrentControlSet"); CurrentControlSet.has_value())
-			if (auto Control = CurrentControlSet->get_key(L"Control"); Control.has_value())
-				if (auto ReactOS = Control->get_key(L"ReactOS"); ReactOS.has_value())
-				{
-					// This works in some versions
-					OSVERSIONINFOA osinfo;
-					osinfo.dwOSVersionInfoSize = sizeof(osinfo);
-					GetVersionExA(&osinfo);
-					if (osinfo.szCSDVersion[strlen(osinfo.szCSDVersion) + 1] == L'R')
-						string = &osinfo.szCSDVersion[strlen(osinfo.szCSDVersion) + 1 + 8];
-					else
-						string = "Unknown ReactOS Version";
-				}
+	if (ReactOS.has_value())
+	{
+		// This works in some versions
+		OSVERSIONINFOA osinfo;
+		osinfo.dwOSVersionInfoSize = sizeof(osinfo);
+		GetVersionExA(&osinfo);
+		if (osinfo.szCSDVersion[strlen(osinfo.szCSDVersion) + 1] == L'R')
+			string = &osinfo.szCSDVersion[strlen(osinfo.szCSDVersion) + 1 + 8];
+		else
+			string = "Unknown ReactOS Version";
+	}
 
 	if (!string.empty()) { string += " mimicking "; }
 
@@ -215,11 +219,13 @@ static void system_alerts()
 		MessageBox(NULL, message_text.c_str(), "Not Windows Vista", MB_OK | MB_TASKMODAL | MB_DEFAULT_DESKTOP_ONLY | MB_ICONERROR);
 	}
 	[[likely]] if (auto build_lab = CurrentVersion.get_value(L"BuildLab"); build_lab.has_value())
+	{
 		[[unlikely]] if (build_lab->get<std::wstring>() == L"5.2.3790.1232.winmain.040819-1629")
 		{
 			MessageBox(NULL, "Why are you using this build?", "Really?", MB_OK | MB_TASKMODAL | MB_DEFAULT_DESKTOP_ONLY | MB_ICONERROR);
 			ExitProcess(1);
 		}
+	}
 
 	// Windows Neptune
 	[[unlikely]] if (version.major() < 6 && version.build() >= 5000)

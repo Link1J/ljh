@@ -148,6 +148,9 @@ namespace ljh::system_info
 		                                        extern const info_data Windows_10_2004          ;
 		                                        extern const info_data Windows_10_20H2          ;
 		                                        extern const info_data Windows_10_21H1          ;
+		                                        extern const info_data Windows_10_21H2          ;
+		                                        extern const info_data Windows_11               ; extern const info_data Windows_11_21H2           ;
+
 		extern const info_data Android_API_1  ; extern const info_data Android_1                ;
 		extern const info_data Android_API_2  ; extern const info_data Android_1_1              ;
 		extern const info_data Android_API_3  ; extern const info_data Android_1_5              ; extern const info_data Android_Cupcake           ;
@@ -178,6 +181,8 @@ namespace ljh::system_info
 		extern const info_data Android_API_28 ; extern const info_data Android_9                ; extern const info_data Android_Pie               ;
 		extern const info_data Android_API_29 ; extern const info_data Android_10               ;
 		extern const info_data Android_API_30 ; extern const info_data Android_11               ;
+		extern const info_data Android_API_31 ; extern const info_data Android_12               ;
+
 		extern const info_data Mac_OS_X_10_0  ;
 		extern const info_data Mac_OS_X_10_1  ;
 		extern const info_data Mac_OS_X_10_2  ; extern const info_data Mac_OS_X_Jaguar          ;
@@ -200,6 +205,8 @@ namespace ljh::system_info
 		extern const info_data    macOS_11_3  ;
 		extern const info_data    macOS_11_4  ;
 		extern const info_data    macOS_11_5  ;
+		extern const info_data    macOS_11_6  ;
+
 		extern const info_data iPhone_OS_1_0  ;
 		extern const info_data iPhone_OS_1_1  ;
 		extern const info_data iPhone_OS_2_0  ;
@@ -252,6 +259,8 @@ namespace ljh::system_info
 		extern const info_data       iOS_14_5 ; extern const info_data iPadOS_14_5              ;
 		extern const info_data       iOS_14_6 ; extern const info_data iPadOS_14_6              ;
 		extern const info_data       iOS_14_7 ; extern const info_data iPadOS_14_7              ;
+		extern const info_data       iOS_14_8 ; extern const info_data iPadOS_14_8              ;
+		extern const info_data       iOS_15_0 ; extern const info_data iPadOS_15_0              ;
 	}
 
 	bool operator==(const ljh::system_info::platform&, const ljh::system_info::info_data&);

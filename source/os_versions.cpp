@@ -108,6 +108,9 @@ namespace ljh::system_info::inline versions
 	const info_data Windows_10_2004             { platform::WindowsNT , {10,  0, 19041 /*,     1*/},       19041};
 	const info_data Windows_10_20H2             { platform::WindowsNT , {10,  0, 19042 /*,   508*/},       19042};
 	const info_data Windows_10_21H1             { platform::WindowsNT , {10,  0, 19043 /*,   928*/},       19043};
+	const info_data Windows_10_21H2             { platform::WindowsNT , {10,  0, 19044 /*,  1266*/},       19044};
+	const info_data Windows_11_21H2             { platform::WindowsNT , {10,  0, 22000 /*,   194*/},       22000};
+
 	const info_data Android_API_1               { platform::Android   , { 1                       },           1};
 	const info_data Android_API_2               { platform::Android   , { 1,  1                   },           2};
 	const info_data Android_API_3               { platform::Android   , { 1,  5                   },           3};
@@ -138,6 +141,8 @@ namespace ljh::system_info::inline versions
 	const info_data Android_API_28              { platform::Android   , { 9                       },          28};
 	const info_data Android_API_29              { platform::Android   , {10                       },          29};
 	const info_data Android_API_30              { platform::Android   , {11                       },          30};
+	const info_data Android_API_31              { platform::Android   , {12                       },          31};
+
 	const info_data Mac_OS_X_10_0               { platform::macOS     , {10,  0                   }, avs(10,  0)};
 	const info_data Mac_OS_X_10_1               { platform::macOS     , {10,  1                   }, avs(10,  1)};
 	const info_data Mac_OS_X_10_2               { platform::macOS     , {10,  2                   }, avs(10,  2)};
@@ -160,6 +165,8 @@ namespace ljh::system_info::inline versions
 	const info_data    macOS_11_3               { platform::macOS     , {11,  3                   }, avs(11,  3)};
 	const info_data    macOS_11_4               { platform::macOS     , {11,  4                   }, avs(11,  4)};
 	const info_data    macOS_11_5               { platform::macOS     , {11,  5                   }, avs(11,  5)};
+	const info_data    macOS_11_6               { platform::macOS     , {11,  6                   }, avs(11,  6)};
+
 	const info_data iPhone_OS_1_0               { platform::iOS       , { 1,  0                   }, avs( 1,  0)};
 	const info_data iPhone_OS_1_1               { platform::iOS       , { 1,  1                   }, avs( 1,  1)};
 	const info_data iPhone_OS_2_0               { platform::iOS       , { 2,  0                   }, avs( 2,  0)};
@@ -212,6 +219,9 @@ namespace ljh::system_info::inline versions
 	const info_data       iOS_14_5              { platform::iOS       , {14,  5                   }, avs(14,  5)};
 	const info_data       iOS_14_6              { platform::iOS       , {14,  6                   }, avs(14,  6)};
 	const info_data       iOS_14_7              { platform::iOS       , {14,  7                   }, avs(14,  7)};
+	const info_data       iOS_14_8              { platform::iOS       , {14,  8                   }, avs(14,  8)};
+	const info_data       iOS_15_0              { platform::iOS       , {15,  0                   }, avs(15,  0)};
+
 	const info_data Windows_1_0                 = Windows_1_01   ;
 	const info_data Windows_2_0                 = Windows_2_03   ;
 	const info_data Windows_2000                = Windows_NT_5_0 ;
@@ -223,6 +233,8 @@ namespace ljh::system_info::inline versions
 	const info_data Windows_8_1                 = Windows_NT_6_3 ;
 	const info_data Windows_10                  = Windows_NT_10_0;
 	const info_data Windows_10_1507             = Windows_NT_10_0;
+	const info_data Windows_11                  = Windows_11_21H2;
+
 	const info_data Android_1                   = Android_API_1  ;
 	const info_data Android_1_1                 = Android_API_2  ;
 	const info_data Android_1_5                 = Android_API_3  ;
@@ -253,6 +265,7 @@ namespace ljh::system_info::inline versions
 	const info_data Android_9                   = Android_API_28 ;
 	const info_data Android_10                  = Android_API_29 ;
 	const info_data Android_11                  = Android_API_30 ;
+	const info_data Android_12                  = Android_API_31 ;
 	const info_data Android_Cupcake             = Android_API_3  ;
 	const info_data Android_Donut               = Android_API_4  ;
 	const info_data Android_Eclair              = Android_API_5  ;
@@ -267,6 +280,7 @@ namespace ljh::system_info::inline versions
 	const info_data Android_Nougat              = Android_API_24 ;
 	const info_data Android_Oreo                = Android_API_26 ;
 	const info_data Android_Pie                 = Android_API_28 ;
+
 	const info_data Mac_OS_X_Jaguar             = Mac_OS_X_10_2  ;
 	const info_data Mac_OS_X_Panther            = Mac_OS_X_10_3  ;
 	const info_data Mac_OS_X_Tiger              = Mac_OS_X_10_4  ;
@@ -282,6 +296,7 @@ namespace ljh::system_info::inline versions
 	const info_data    macOS_Mojave             =    macOS_10_14 ;
 	const info_data    macOS_Catalina           =    macOS_10_15 ;
 	const info_data    macOS_Big_Sur            =    macOS_11    ;
+	
 	const info_data iPadOS_13_1                 = iOS_13_1       ;
 	const info_data iPadOS_13_2                 = iOS_13_2       ;
 	const info_data iPadOS_13_3                 = iOS_13_3       ;
@@ -297,4 +312,6 @@ namespace ljh::system_info::inline versions
 	const info_data iPadOS_14_5                 = iOS_14_5       ;
 	const info_data iPadOS_14_6                 = iOS_14_6       ;
 	const info_data iPadOS_14_7                 = iOS_14_7       ;
+	const info_data iPadOS_14_8                 = iOS_14_8       ;
+	const info_data iPadOS_15_0                 = iOS_15_0       ;
 }
