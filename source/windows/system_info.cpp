@@ -112,7 +112,7 @@ ljh::expected<std::string, ljh::system_info::error> ljh::system_info::get_string
 		wine_get_host_version(&sysname, &release);
 		string = std::string{wine_get_build_id()} + " on " + sysname + " " + release;
 	}
-	if (ReactOS.has_value())
+	if (ReactOS.is_valid())
 	{
 		// This works in some versions
 		OSVERSIONINFOA osinfo;
@@ -121,7 +121,7 @@ ljh::expected<std::string, ljh::system_info::error> ljh::system_info::get_string
 		if (osinfo.szCSDVersion[strlen(osinfo.szCSDVersion) + 1] == L'R')
 			string = &osinfo.szCSDVersion[strlen(osinfo.szCSDVersion) + 1 + 8];
 		else
-			string = "Unknown ReactOS Version";
+			string = "ReactOS";
 	}
 
 	if (!string.empty()) { string += " mimicking "; }

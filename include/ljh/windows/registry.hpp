@@ -148,6 +148,8 @@ namespace ljh::windows::registry
 
 		operator HKEY() const;
 
+		bool is_valid() const;
+
 		iterator               begin  ()      ;
 		const_iterator         begin  () const;
 		const_iterator         cbegin () const;

@@ -44,7 +44,10 @@ namespace ljh::windows::registry
 
 	key::~key()
 	{
-		RegCloseKey(hkey);
+		if (hkey != (HKEY)-1)
+			RegCloseKey(hkey);
+		hkey = (HKEY)-1;
+		max = 0;
 	}
 
 	key::key(const key& other)
@@ -75,6 +78,11 @@ namespace ljh::windows::registry
 	key::operator HKEY() const
 	{
 		return hkey;
+	}
+
+	bool key::is_valid() const
+	{
+		return hkey != (HKEY)-1;
 	}
 
 	key::iterator               key::begin  ()       { return                            {*this,   0}; }
