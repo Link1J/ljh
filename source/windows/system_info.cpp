@@ -39,7 +39,6 @@ static ljh::function_pointer<HMODULE WINAPI(LPCSTR)> LoadLibraryA = []{
 #endif
 
 static ljh::windows::registry::key CurrentVersion;
-static ljh::windows::registry::key ReactOS;
 
 using namespace ljh::int_types;
 
@@ -57,16 +56,21 @@ static void init_static()
 	wine_get_build_id     = GetProcAddress(ntdll , "wine_get_build_id"    );
 	wine_get_host_version = GetProcAddress(ntdll , "wine_get_host_version");
 
-	try 
-	{
-		CurrentVersion = ljh::windows::registry::key::LOCAL_MACHINE[L"SOFTWARE"][L"Microsoft"][L"Windows NT"][L"CurrentVersion"];
-		ReactOS = ljh::windows::registry::key::LOCAL_MACHINE[L"SYSTEM"][L"CurrentControlSet"][L"Control"][L"ReactOS"];
-	} 
-	catch(...)
-	{
-	}
+	CurrentVersion = ljh::windows::registry::key::LOCAL_MACHINE[L"SOFTWARE"][L"Microsoft"][L"Windows NT"][L"CurrentVersion"];
 
 	system_alerts();
+}
+
+static bool is_wine()
+{
+	init_static();
+	return wine_get_version;
+}
+
+static bool is_reactos()
+{
+	init_static();
+	return (std::wstring)CurrentVersion(L"ProductName") == L"ReactOS";
 }
 
 static std::string to_utf8(std::wstring_view string)
@@ -103,58 +107,55 @@ ljh::expected<ljh::version, ljh::system_info::error> ljh::system_info::get_versi
 
 ljh::expected<std::string, ljh::system_info::error> ljh::system_info::get_string()
 {
-	init_static();
 	std::string string = "";
 
-	if (wine_get_version)
+	if (is_reactos())
 	{
-		const char* sysname,* release;
-		wine_get_host_version(&sysname, &release);
-		string = std::string{wine_get_build_id()} + " on " + sysname + " " + release;
+		string = "ReactOS ";
+		if (auto key = CurrentVersion.get_value(L"BuildLab"); key.has_value())
+			string += to_utf8(key->get<std::wstring>()) + " ";
+		string += "mimicking";
+
+		if (auto key = CurrentVersion.get_value(L"CurrentVersion"); key.has_value())
+			string += " NT " + to_utf8(key->get<std::wstring>());
+		if (auto key = CurrentVersion.get_value(L"CSDVersion"); key.has_value())
+			string += " " + to_utf8(key->get<std::wstring>());
 	}
-	if (ReactOS.is_valid())
+	else
 	{
-		// This works in some versions
-		OSVERSIONINFOA osinfo;
-		osinfo.dwOSVersionInfoSize = sizeof(osinfo);
-		GetVersionExA(&osinfo);
-		if (osinfo.szCSDVersion[strlen(osinfo.szCSDVersion) + 1] == L'R')
-			string = &osinfo.szCSDVersion[strlen(osinfo.szCSDVersion) + 1 + 8];
-		else
-			string = "ReactOS";
-	}
-
-	if (!string.empty()) { string += " mimicking "; }
-
-	auto os_name = to_utf8((std::wstring)CurrentVersion(L"ProductName"));
-
-	if (os_name.starts_with("Microsoft "))
-		os_name = os_name.substr(10);
-
-	auto version = *ljh::system_info::get_version();
-	auto line = os_name.find("Windows ") + 8;
-	if (version.major() >= 10)
-	{
-		if (version.build() > 21390 && line != std::string::npos)
+		if (is_wine())
 		{
-			os_name.replace(line, 2, "11");
+			const char* sysname,* release;
+			wine_get_host_version(&sysname, &release);
+			string = std::string{wine_get_build_id()} + " on " + sysname + " " + release + " mimicking ";
 		}
-		if (version.build() != 22000)
+
+		auto os_name = to_utf8((std::wstring)CurrentVersion(L"ProductName"));
+
+		if (os_name.starts_with("Microsoft "))
+			os_name = os_name.substr(10);
+
+		auto version = *ljh::system_info::get_version();
+		auto line = os_name.find("Windows ") + 8;
+		if (version.major() >= 10)
 		{
+			if (version.build() > 21390 && line != std::string::npos)
+				os_name.replace(line, 2, "11");
+
 			line += 2;
 			if (auto version_display = CurrentVersion.get_value(L"DisplayVersion"); version_display.has_value())
 				os_name = os_name.substr(0, line + 1) + to_utf8(version_display->get<std::wstring>()) + os_name.substr(line);
 			else if (version_display = CurrentVersion.get_value(L"ReleaseId"); version_display.has_value())
 				os_name = os_name.substr(0, line + 1) + to_utf8(version_display->get<std::wstring>()) + os_name.substr(line);
 		}
+		else
+		{
+			line = os_name.find_first_of(' ', line + 1);
+			if (auto version_display = CurrentVersion.get_value(L"CSDVersion"); version_display.has_value())
+				os_name = os_name.substr(0, line + 1) + to_utf8(version_display->get<std::wstring>()) + os_name.substr(line);
+		}
+		string += os_name;
 	}
-	else
-	{
-		line = os_name.find_first_of(' ', line + 1);
-		if (auto version_display = CurrentVersion.get_value(L"CSDVersion"); version_display.has_value())
-			os_name = os_name.substr(0, line + 1) + to_utf8(version_display->get<std::wstring>()) + os_name.substr(line);
-	}
-	string += os_name;
 
 	return string;
 }
@@ -178,7 +179,9 @@ static auto system_info_reg()
 
 ljh::expected<std::string, ljh::system_info::error> ljh::system_info::get_model()
 {
-	init_static();
+	if (is_wine() || is_reactos())
+		return unexpected{error::no_info};
+
 	std::string string;
 	auto key = system_info_reg();
 	if (auto info = key.get_value(L"SystemFamily"); info.has_value())
@@ -188,14 +191,18 @@ ljh::expected<std::string, ljh::system_info::error> ljh::system_info::get_model(
 
 ljh::expected<std::string, ljh::system_info::error> ljh::system_info::get_manufacturer()
 {
-	init_static();
+	if (is_wine() || is_reactos())
+		return unexpected{error::no_info};
+
 	return to_utf8((std::wstring)system_info_reg()(L"SystemManufacturer"));
 }
 
 static void system_alerts()
 {
-#undef MessageBox
+	if (is_wine() || is_reactos())
+		return;
 
+#undef MessageBox
 	auto MessageBox = ljh::function_pointer<int WINAPI(HWND, LPCSTR, LPCSTR, UINT)>(GetProcAddress(LoadLibraryA("user32.dll"), "MessageBoxA"));
 	[[unlikely]] if (MessageBox.empty()) return; // It isn't really a thing in UWP. But we don't care, so this should never happen.
 
