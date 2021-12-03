@@ -66,24 +66,20 @@ namespace ljh
 #if __cpp_lib_constexpr_string >= 201907L
 		for (std::size_t a = 0; a < name.size(); a++) {
 			auto part = name.substr(a);
-			if (part.starts_with("class ") || name.starts_with("struct "))
-			{
+			if (part.starts_with("struct "))
+				name.erase(a, 7);
+			else if (part.starts_with("class "))
 				name.erase(a, 6);
-			}
 			else if (part.starts_with("enum "))
-			{
 				name.erase(a, 5);
-			}
 		}
 #elif __cpp_lib_string_view >= 201606L
-		if (name.starts_with("class ") || name.starts_with("struct "))
-		{
+		if (part.starts_with("struct "))
+			name.remove_prefix(7);
+		else if (part.starts_with("class "))
 			name.remove_prefix(6);
-		}
-		else if (name.starts_with("enum "))
-		{
+		else if (part.starts_with("enum "))
 			name.remove_prefix(5);
-		}
 #endif
 #endif
 
