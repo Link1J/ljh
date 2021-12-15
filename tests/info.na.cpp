@@ -14,35 +14,12 @@
 #include <iostream>
 #include <string>
 
-#define COMPILER_FEATURE_VALUE_(value) #value
-#define COMPILER_FEATURE_VALUE(value) COMPILER_FEATURE_VALUE_(value)
-#define COMPILER_FEATURE_ENTRY(name) { #name, COMPILER_FEATURE_VALUE_(name) },
+#define COMPILER_FEATURE_VALUE(value) #value
+#define COMPILER_FEATURE_ENTRY(name) CompilerFeature{ #name, COMPILER_FEATURE_VALUE(name) },
 
-#ifdef __has_cpp_attribute
 #define COMPILER_ATTRIBUTE_VALUE_AS_STRING(s) #s
 #define COMPILER_ATTRIBUTE_AS_NUMBER(x) COMPILER_ATTRIBUTE_VALUE_AS_STRING(x)
-#define COMPILER_ATTRIBUTE_ENTRY(attr) { #attr, COMPILER_ATTRIBUTE_AS_NUMBER(__has_cpp_attribute(attr)) },
-#else
-#define COMPILER_ATTRIBUTE_ENTRY(attr) { #attr, "_" },
-#endif
-
-// Change these options to print out only necessary info.
-static struct PrintOptions
-{
-	constexpr static bool titles               = 1;
-	constexpr static bool attributes           = 1;
-	constexpr static bool general_features     = 1;
-	constexpr static bool core_features        = 1;
-	constexpr static bool lib_features         = 1;
-	constexpr static bool supported_features   = 1;
-	constexpr static bool unsupported_features = 1;
-	constexpr static bool sorted_by_value      = 0;
-	constexpr static bool cxx11                = 1;
-	constexpr static bool cxx14                = 1;
-	constexpr static bool cxx17                = 1;
-	constexpr static bool cxx20                = 1;
-	constexpr static bool cxx23                = 1;
-} print;
+#define COMPILER_ATTRIBUTE_ENTRY(attr) CompilerFeature{ #attr, COMPILER_ATTRIBUTE_AS_NUMBER(__has_cpp_attribute(attr)) },
 
 struct CompilerFeature
 {
@@ -53,7 +30,6 @@ struct CompilerFeature
 
 static CompilerFeature cxx[] =
 {
-	// { "__cplusplus", COMPILER_FEATURE_VALUE(LJH_CPP_VERSION) },
 COMPILER_FEATURE_ENTRY(__cplusplus)
 COMPILER_FEATURE_ENTRY(__cpp_exceptions)
 COMPILER_FEATURE_ENTRY(__cpp_rtti)
@@ -289,25 +265,34 @@ COMPILER_FEATURE_ENTRY(__cpp_lib_unwrap_ref)
 
 static CompilerFeature cxx23[] = {
 //< Continue to Populate
+COMPILER_FEATURE_ENTRY(__cpp_constexpr)
+COMPILER_FEATURE_ENTRY(__cpp_explicit_this_parameter)
 COMPILER_FEATURE_ENTRY(__cpp_if_consteval)
+COMPILER_FEATURE_ENTRY(__cpp_multidimensional_subscript)
 COMPILER_FEATURE_ENTRY(__cpp_size_t_suffix)
 };
 static CompilerFeature cxx23lib[] = {
 //< Continue to Populate
 COMPILER_FEATURE_ENTRY(__cpp_lib_adaptor_iterator_pair_constructor)
 COMPILER_FEATURE_ENTRY(__cpp_lib_allocate_at_least)
+COMPILER_FEATURE_ENTRY(__cpp_lib_associative_heterogeneous_erasure)
+COMPILER_FEATURE_ENTRY(__cpp_lib_byteswap)
 COMPILER_FEATURE_ENTRY(__cpp_lib_constexpr_typeinfo)
 COMPILER_FEATURE_ENTRY(__cpp_lib_format)
 COMPILER_FEATURE_ENTRY(__cpp_lib_invoke_r)
 COMPILER_FEATURE_ENTRY(__cpp_lib_is_scoped_enum)
+COMPILER_FEATURE_ENTRY(__cpp_lib_monadic_optional)
+COMPILER_FEATURE_ENTRY(__cpp_lib_move_only_function)
 COMPILER_FEATURE_ENTRY(__cpp_lib_optional)
 COMPILER_FEATURE_ENTRY(__cpp_lib_out_ptr)
 COMPILER_FEATURE_ENTRY(__cpp_lib_ranges)
 COMPILER_FEATURE_ENTRY(__cpp_lib_ranges_starts_ends_with)
+COMPILER_FEATURE_ENTRY(__cpp_lib_ranges_zip)
 COMPILER_FEATURE_ENTRY(__cpp_lib_spanstream)
 COMPILER_FEATURE_ENTRY(__cpp_lib_stacktrace)
 COMPILER_FEATURE_ENTRY(__cpp_lib_stdatomic_h)
 COMPILER_FEATURE_ENTRY(__cpp_lib_string_contains)
+COMPILER_FEATURE_ENTRY(__cpp_lib_string_resize_and_overwrite)
 COMPILER_FEATURE_ENTRY(__cpp_lib_to_underlying)
 COMPILER_FEATURE_ENTRY(__cpp_lib_variant)
 };
@@ -325,58 +310,19 @@ COMPILER_ATTRIBUTE_ENTRY(no_unique_address)
 COMPILER_ATTRIBUTE_ENTRY(unlikely)
 };
 
-constexpr bool is_feature_supported(const CompilerFeature& x)
-{
-	return x.value[0] != '_' && x.value[0] != '0';
-}
-
-inline void print_compiler_feature_formated(const std::string& name, const std::string& value)
-{
-	constexpr static int max_name_length = 44; //< Update if necessary
-	std::cout << std::left << std::setw(max_name_length) << name << " " << value << '\n';
-}
-
-inline void print_compiler_feature(const CompilerFeature& x)
-{
-	std::string value{ is_feature_supported(x) ? x.value : "------" };
-	if (value.back() == 'L') value.pop_back(); //~ 201603L -> 201603
-	value.insert(4, 1, '-'); //~ 201603 -> 2016-03
-	if ((print.supported_features && is_feature_supported(x)) || (print.unsupported_features && !is_feature_supported(x)))
-	{
-		print_compiler_feature_formated(x.name, value);
-	}
-}
-
 template<size_t N>
 inline void show(char const* title, CompilerFeature (&features)[N])
 {
-	if (print.titles)
-		std::cout << '\n' << std::left << title << '\n';
-
-	if (print.sorted_by_value)
-		std::sort(std::begin(features), std::end(features),
-			[](CompilerFeature const& lhs, CompilerFeature const& rhs) {
-				return std::strcmp(lhs.value, rhs.value) < 0;
-			});
-
+	constexpr static int max_name_length = 44; //< Update if necessary
+	std::cout << '\n' << std::left << title << '\n';
 	for (const CompilerFeature& x : features)
-		print_compiler_feature(x);
+	{
+		std::string value{ (x.value[0] != '_' && x.value[0] != '0') ? x.value : "------_" };
+		value.pop_back();
+		value.insert(4, 1, '-');
+		std::cout << std::left << std::setw(max_name_length) << x.name << " " << value << '\n';
+	}
 }
-
-// COMPILER_FEATURE_ENTRY(__GNUC__)
-// COMPILER_FEATURE_ENTRY(__GNUC_MINOR__)
-// COMPILER_FEATURE_ENTRY(__GNUC_PATCHLEVEL__)
-// COMPILER_FEATURE_ENTRY(__GNUG__)
-// COMPILER_FEATURE_ENTRY(__clang__)
-// COMPILER_FEATURE_ENTRY(__clang_major__)
-// COMPILER_FEATURE_ENTRY(__clang_minor__)
-// COMPILER_FEATURE_ENTRY(__clang_patchlevel__)
-// COMPILER_FEATURE_ENTRY(_MSC_VER)
-// COMPILER_FEATURE_ENTRY(_MSC_FULL_VER)
-// COMPILER_FEATURE_ENTRY(_MSVC_LANG)
-// COMPILER_FEATURE_ENTRY(_MSVC_TRADITIONAL)
-
-//TEST_CASE("Compiler Info", "[test_info]" )
 
 int main()
 {
@@ -393,15 +339,15 @@ int main()
 
 	std::cout << "SYSTEM (" << *ljh::system_info::get_string() << ")\n";
 
-	if (print.general_features) show("C++ GENERAL", cxx);
-	if (print.cxx11 && print.core_features) show("C++11 CORE", cxx11);
-	if (print.cxx14 && print.core_features) show("C++14 CORE", cxx14);
-	if (print.cxx14 && print.lib_features ) show("C++14 LIB" , cxx14lib);
-	if (print.cxx17 && print.core_features) show("C++17 CORE", cxx17);
-	if (print.cxx17 && print.lib_features ) show("C++17 LIB" , cxx17lib);
-	if (print.cxx20 && print.core_features) show("C++20 CORE", cxx20);
-	if (print.cxx20 && print.lib_features ) show("C++20 LIB" , cxx20lib);
-	if (print.cxx23 && print.core_features) show("C++23 CORE", cxx23);
-	if (print.cxx23 && print.lib_features ) show("C++23 LIB" , cxx23lib);
-	if (print.attributes) show("ATTRIBUTES", attributes);
+	show("C++ GENERAL", cxx       );
+	show("C++11 CORE" , cxx11     );
+	show("C++14 CORE" , cxx14     );
+	show("C++14 LIB"  , cxx14lib  );
+	show("C++17 CORE" , cxx17     );
+	show("C++17 LIB"  , cxx17lib  );
+	show("C++20 CORE" , cxx20     );
+	show("C++20 LIB"  , cxx20lib  );
+	show("C++23 CORE" , cxx23     );
+	show("C++23 LIB"  , cxx23lib  );
+	show("ATTRIBUTES" , attributes);
 }

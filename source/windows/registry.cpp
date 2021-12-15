@@ -6,8 +6,6 @@
 
 #include "ljh/cpp_version.hpp"
 
-#if !defined(LJH_COMPILER_CLANG)
-
 #include "ljh/windows/registry.hpp"
 #include "ljh/function_pointer.hpp"
 #include "ljh/casting.hpp"
@@ -391,5 +389,3 @@ namespace ljh::windows::_registry
 	_values_container::const_reverse_iterator _values_container::rend   () const { return _values_container::const_reverse_iterator{begin () }; }
 	_values_container::const_reverse_iterator _values_container::crend  () const { return _values_container::const_reverse_iterator{cbegin() }; }
 }
-
-#endif

@@ -485,6 +485,12 @@
 #define LJH_CPP20_CONSTEXPR
 #endif
 
+#if __cpp_constexpr_dynamic_alloc >= 201907L
+#define LJH_CPP20_CONSTEXPR_ALLOC constexpr
+#else
+#define LJH_CPP20_CONSTEXPR_ALLOC
+#endif
+
 #if __cpp_if_constexpr >= 201606L
 #define LJH_IF_CONSTEXPR if constexpr
 #else

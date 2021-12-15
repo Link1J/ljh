@@ -49,5 +49,4 @@ namespace ljh
 			return 0;
 		}
 	};
-
 }

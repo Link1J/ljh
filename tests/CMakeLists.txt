@@ -71,7 +71,7 @@ target_compile_definitions(tests_20 PRIVATE CATCH_CONFIG_CONSOLE_WIDTH=500)
 add_executable(tests_info
 	info.na.cpp
 )
-set_target_properties(tests_info PROPERTIES CXX_STANDARD 20 CXX_STANDARD_REQUIRED NO CXX_EXTENSIONS NO)
+set_target_properties(tests_info PROPERTIES CXX_STANDARD 23 CXX_STANDARD_REQUIRED NO CXX_EXTENSIONS NO)
 target_link_libraries(tests_info Catch2::Catch2 ljh)
 target_compile_definitions(tests_info PRIVATE CATCH_CONFIG_CONSOLE_WIDTH=500)
 
