@@ -93,7 +93,7 @@ namespace ljh::delay_load
 				dll = LOADED_LIB(name.data());
 			if (dll == nullptr)
 				dll = LOAD_LIB(name.data());
-			return GET_FUNC(dll, func_name.data());
+			return (void*)(GET_FUNC(dll, func_name.data()));
 		}
 		
 #if defined(LJH_TARGET_Windows)
@@ -103,7 +103,7 @@ namespace ljh::delay_load
 				dll = LOADED_LIB(name.data());
 			if (dll == nullptr)
 				dll = LOAD_LIB(name.data());
-			return GET_FUNC(dll, (_os::LPCSTR)func_name);
+			return (void*)(GET_FUNC(dll, (_os::LPCSTR)func_name));
 		}
 #endif
 
@@ -126,7 +126,7 @@ namespace ljh::delay_load
 		std::enable_if_t<std::is_invocable_v<type, argument_types...>, typename traits::return_type>
 		operator()(argument_types... args) noexcept(traits::is::no_exceptions)
 		{
-			return ((traits::as::function_pointer)(dll::function(function_name)))(args...);
+			return ((typename traits::as::function_pointer)(dll::function(function_name)))(args...);
 		}
 
 		bool is_loadable() const noexcept
