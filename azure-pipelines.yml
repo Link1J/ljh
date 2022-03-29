@@ -35,22 +35,22 @@ stages:
           OS: 'Windows'
           imageName: 'windows-latest'
           BuildConfiguration: 'Debug'
-          Generator: '-G "Visual Studio 16 2019" -A Win32'
+          Generator: '-A Win32'
         Windows_32bit_Release:
           OS: 'Windows'
           imageName: 'windows-latest'
           BuildConfiguration: 'RelWithDebInfo'
-          Generator: '-G "Visual Studio 16 2019" -A Win32'
+          Generator: '-A Win32'
         Windows_64bit_Debug:
           OS: 'Windows'
           imageName: 'windows-latest'
           BuildConfiguration: 'Debug'
-          Generator: '-G "Visual Studio 16 2019" -A x64'
+          Generator: '-A x64'
         Windows_64bit_Release:
           OS: 'Windows'
           imageName: 'windows-latest'
           BuildConfiguration: 'RelWithDebInfo'
-          Generator: '-G "Visual Studio 16 2019" -A x64'
+          Generator: '-A x64'
 
     pool:
       vmImage: $(imageName)
