@@ -143,20 +143,26 @@ ljh::expected<std::string, ljh::system_info::error> ljh::system_info::get_string
 		auto line = os_name.find("Windows ") + 8;
 		if (version.major() >= 10)
 		{
-			if (version.build() > 21390 && line != std::string::npos)
-				os_name.replace(line, 2, "11");
+			std::string version;
+			if (auto version_display = CurrentVersion.get_value(L"DisplayVersion"); version_display.has_value())
+				version = to_utf8(version_display->get<std::wstring>());
+			else if (version_display = CurrentVersion.get_value(L"ReleaseId"); version_display.has_value())
+				os_name = to_utf8(version_display->get<std::wstring>());
 
-			line += 2;
-			if (os_name.find("Server") != std::string::npos)
+			if (auto server = os_name.find("Server "); server != std::string::npos)
 			{
-				os_name += ' ';
-				line = os_name.size();
+				if (version.empty())
+					version = '(' + version + ')';
+				line = server + 8 + 4;
+			}
+			else
+			{
+				if (version.build() > 21390 && line != std::string::npos)
+					os_name.replace(line, 2, "11");
+				line += 2;
 			}
 
-			if (auto version_display = CurrentVersion.get_value(L"DisplayVersion"); version_display.has_value())
-				os_name = os_name.substr(0, line + 1) + to_utf8(version_display->get<std::wstring>()) + os_name.substr(line);
-			else if (version_display = CurrentVersion.get_value(L"ReleaseId"); version_display.has_value())
-				os_name = os_name.substr(0, line + 1) + to_utf8(version_display->get<std::wstring>()) + os_name.substr(line);
+			os_name = os_name.substr(0, line + 1) + version + os_name.substr(line);
 		}
 		else
 		{
@@ -164,7 +170,7 @@ ljh::expected<std::string, ljh::system_info::error> ljh::system_info::get_string
 			if (auto version_display = CurrentVersion.get_value(L"CSDVersion"); version_display.has_value())
 				os_name = os_name.substr(0, line + 1) + to_utf8(version_display->get<std::wstring>()) + os_name.substr(line);
 		}
-		string += ljh::trim_copy(os_name);
+		string += os_name;
 	}
 
 	return string;
