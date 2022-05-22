@@ -18,6 +18,7 @@
 #define NOMINMAX
 #endif
 #include "ljh/function_pointer.hpp"
+#include "ljh/string_utils.hpp"
 #include "ljh/windows/registry.hpp"
 #include <windows.h>
 #include <winternl.h>
@@ -147,7 +148,10 @@ ljh::expected<std::string, ljh::system_info::error> ljh::system_info::get_string
 
 			line += 2;
 			if (os_name.find("Server") != std::string::npos)
+			{
+				os_name += ' ';
 				line = os_name.size();
+			}
 
 			if (auto version_display = CurrentVersion.get_value(L"DisplayVersion"); version_display.has_value())
 				os_name = os_name.substr(0, line + 1) + to_utf8(version_display->get<std::wstring>()) + os_name.substr(line);
@@ -160,7 +164,7 @@ ljh::expected<std::string, ljh::system_info::error> ljh::system_info::get_string
 			if (auto version_display = CurrentVersion.get_value(L"CSDVersion"); version_display.has_value())
 				os_name = os_name.substr(0, line + 1) + to_utf8(version_display->get<std::wstring>()) + os_name.substr(line);
 		}
-		string += os_name;
+		string += ljh::trim_copy(os_name);
 	}
 
 	return string;
