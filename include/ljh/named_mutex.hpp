@@ -37,7 +37,7 @@ namespace ljh
 	template <ljh::compile_time_string name> 
 	struct named_mutex
 	{
-		static_assert(std::is_same_v<decltype(name)::char_type, char>, "`name` must be a string of type char");
+		static_assert(std::is_same_v<typename decltype(name)::char_type, char>, "`name` must be a string of type char");
 
 		named_mutex() noexcept
 		{

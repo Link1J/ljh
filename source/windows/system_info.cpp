@@ -17,21 +17,21 @@
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif
+#include "ljh/function_pointer.hpp"
+#include "ljh/windows/registry.hpp"
 #include <windows.h>
 #include <winternl.h>
-#include "ljh/windows/registry.hpp"
-#include "ljh/function_pointer.hpp"
 #if defined(LJH_TARGET_Windows_UWP)
 using NTSTATUS = unsigned int;
 #endif
 
-static ljh::function_pointer<NTSTATUS WINAPI(POSVERSIONINFOW            )> RtlGetVersion        ;
-static ljh::function_pointer<const char*    (                           )> wine_get_version     ;
-static ljh::function_pointer<const char*    (                           )> wine_get_build_id    ;
-static ljh::function_pointer<void           (const char**, const char **)> wine_get_host_version;
+static ljh::function_pointer<NTSTATUS WINAPI(POSVERSIONINFOW)> RtlGetVersion;
+static ljh::function_pointer<const char *()> wine_get_version;
+static ljh::function_pointer<const char *()> wine_get_build_id;
+static ljh::function_pointer<void(const char **, const char **)> wine_get_host_version;
 
 #if defined(LJH_TARGET_Windows_UWP)
-static ljh::function_pointer<HMODULE WINAPI(LPCSTR)> LoadLibraryA = []{
+static ljh::function_pointer<HMODULE WINAPI(LPCSTR)> LoadLibraryA = [] {
 	MEMORY_BASIC_INFORMATION info = {};
 	VirtualQuery(VirtualQuery, &info, sizeof(info));
 	return (decltype(LoadLibraryA)::type)GetProcAddress((HMODULE)info.AllocationBase, "LoadLibraryA");
@@ -46,15 +46,16 @@ static void system_alerts();
 static void init_static()
 {
 	static bool setup = false;
-	if (setup) { return; }
+	if (setup)
+		return;
 	setup = true;
 
-	HMODULE ntdll  = LoadLibraryA("ntdll.dll");
+	HMODULE ntdll = LoadLibraryA("ntdll.dll");
 
-	RtlGetVersion         = GetProcAddress(ntdll , "RtlGetVersion"        );
-	wine_get_version      = GetProcAddress(ntdll , "wine_get_version"     );
-	wine_get_build_id     = GetProcAddress(ntdll , "wine_get_build_id"    );
-	wine_get_host_version = GetProcAddress(ntdll , "wine_get_host_version");
+	RtlGetVersion = GetProcAddress(ntdll, "RtlGetVersion");
+	wine_get_version = GetProcAddress(ntdll, "wine_get_version");
+	wine_get_build_id = GetProcAddress(ntdll, "wine_get_build_id");
+	wine_get_host_version = GetProcAddress(ntdll, "wine_get_host_version");
 
 	CurrentVersion = ljh::windows::registry::key::LOCAL_MACHINE[L"SOFTWARE"][L"Microsoft"][L"Windows NT"][L"CurrentVersion"];
 
@@ -78,7 +79,7 @@ static std::string to_utf8(std::wstring_view string)
 	std::string output;
 	int size = WideCharToMultiByte(CP_UTF8, 0, string.data(), -1, NULL, 0, NULL, NULL);
 	output.resize(size);
-	WideCharToMultiByte(CP_UTF8, 0, string.data(), -1, (char*)output.data(), size, NULL, NULL);
+	WideCharToMultiByte(CP_UTF8, 0, string.data(), -1, (char *)output.data(), size, NULL, NULL);
 	output.resize(size - 1);
 	return output;
 }
@@ -93,14 +94,16 @@ ljh::expected<ljh::version, ljh::system_info::error> ljh::system_info::get_versi
 {
 	init_static();
 	version::value_type v_patch = 0;
-	
+
 	if (auto UBR = CurrentVersion.get_value(L"UBR"); UBR.has_value())
 		v_patch = (version::value_type)UBR->get<DWORD>();
 
 	OSVERSIONINFOW osinfo;
 	osinfo.dwOSVersionInfoSize = sizeof(osinfo);
-	if (RtlGetVersion) { RtlGetVersion(&osinfo); }
-	else               { GetVersionExW(&osinfo); }
+	if (RtlGetVersion)
+		RtlGetVersion(&osinfo);
+	else
+		GetVersionExW(&osinfo);
 
 	return version{osinfo.dwMajorVersion, osinfo.dwMinorVersion, osinfo.dwBuildNumber, v_patch};
 }
@@ -125,7 +128,7 @@ ljh::expected<std::string, ljh::system_info::error> ljh::system_info::get_string
 	{
 		if (is_wine())
 		{
-			const char* sysname,* release;
+			const char *sysname, *release;
 			wine_get_host_version(&sysname, &release);
 			string = std::string{wine_get_build_id()} + " on " + sysname + " " + release + " mimicking ";
 		}
@@ -143,6 +146,9 @@ ljh::expected<std::string, ljh::system_info::error> ljh::system_info::get_string
 				os_name.replace(line, 2, "11");
 
 			line += 2;
+			if (os_name.find("Server") != std::string::npos)
+				line = os_name.size();
+
 			if (auto version_display = CurrentVersion.get_value(L"DisplayVersion"); version_display.has_value())
 				os_name = os_name.substr(0, line + 1) + to_utf8(version_display->get<std::wstring>()) + os_name.substr(line);
 			else if (version_display = CurrentVersion.get_value(L"ReleaseId"); version_display.has_value())
@@ -210,19 +216,14 @@ static void system_alerts()
 	auto version = *ljh::system_info::get_version();
 	[[unlikely]] if (version.major() < 10 && version.build() > 9600)
 	{
-		std::string message_text = 
-			"Windows " + std::string{version} + 
-			" is not a version of Windows that should be used."
-			" Please install a real version of Windows 10.";
+		std::string message_text = "Windows " + std::string{version} + " is not a version of Windows that should be used. Please install a real version of Windows 10.";
 		MessageBox(NULL, message_text.c_str(), "Not Windows 10", MB_OK | MB_TASKMODAL | MB_DEFAULT_DESKTOP_ONLY | MB_ICONERROR);
 	}
 
 	// Windows Longhorn
 	[[unlikely]] if (version.major() >= 6 && version.minor() == 0 && version.build() < 5000)
 	{
-		std::string message_text = 
-			"Windows Vista's pre-reset builds are buggy and broken.\n"
-			"Please install version of Windows that works correctly.";
+		std::string message_text = "Windows Vista's pre-reset builds are buggy and broken.\nPlease install version of Windows that works correctly.";
 		MessageBox(NULL, message_text.c_str(), "Not Windows Vista", MB_OK | MB_TASKMODAL | MB_DEFAULT_DESKTOP_ONLY | MB_ICONERROR);
 	}
 	[[likely]] if (auto build_lab = CurrentVersion.get_value(L"BuildLab"); build_lab.has_value())
@@ -237,18 +238,14 @@ static void system_alerts()
 	// Windows Neptune
 	[[unlikely]] if (version.major() < 6 && version.build() >= 5000)
 	{
-		std::string message_text = 
-			"Windows Neptune is not a version of Windows that should be used.\n"
-			"Please install version of Windows that works correctly.";
+		std::string message_text = "Windows Neptune is not a version of Windows that should be used.\nPlease install version of Windows that works correctly.";
 		MessageBox(NULL, message_text.c_str(), "Windows Neptune", MB_OK | MB_TASKMODAL | MB_DEFAULT_DESKTOP_ONLY | MB_ICONERROR);
 	}
 
 	// Windows 11 Leak
 	[[unlikely]] if (version.major() == 10 && version.build() > 21390 && version.build() < 22000)
 	{
-		std::string message_text = 
-			"Why are you using a leaked version of Windows 11 still?\n"
-			"Please just install Windows 11 itself.";
+		std::string message_text = "Why are you using a leaked version of Windows 11 still?\nPlease just install Windows 11 itself.";
 		MessageBox(NULL, message_text.c_str(), "No Windows 11 Leaks", MB_OK | MB_TASKMODAL | MB_DEFAULT_DESKTOP_ONLY | MB_ICONERROR);
 	}
 }

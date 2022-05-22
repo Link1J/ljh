@@ -15,7 +15,7 @@ namespace ljh::__
 	void* create_mutex(char const* name)
 	{
 		using namespace std::string_literals;
-		return sem_open(("/"s + name).data(), O_CREAT, S_IRUSR | S_IWUSR | S_IRGSR | S_IWGSR | S_IROSR | S_IWOSR, 1);
+		return sem_open(("/"s + name).data(), O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH, 1);
 	}
 
 	void release_mutex(void* object)
