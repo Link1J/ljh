@@ -151,7 +151,7 @@ ljh::expected<std::string, ljh::system_info::error> ljh::system_info::get_string
 
 			if (auto server = os_name.find("Server "); server != std::string::npos)
 			{
-				if (version.empty())
+				if (verion_tag.empty())
 					verion_tag = '(' + verion_tag + ')';
 				line = server + 8 + 4;
 			}
