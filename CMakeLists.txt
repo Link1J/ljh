@@ -21,15 +21,18 @@ add_library(ljh STATIC
 	source/dummy_system_info.cpp
 	$<$<PLATFORM_ID:Darwin>:
 		source/macos/system_info.mm
+		source/unix/named_mutex.cpp
 	>
 	$<$<PLATFORM_ID:Windows>:
 		source/windows/system_info.cpp
 		source/windows/registry.cpp
 		source/windows/wmi.cpp
+		source/windows/named_mutex.cpp
 	>
 	$<$<PLATFORM_ID:Linux>:
 		source/unix/system_info.cpp
 		source/unix/dbus.cpp
+		source/unix/named_mutex.cpp
 	>
 )
 add_library(ljh::ljh ALIAS ljh)
@@ -60,15 +63,21 @@ if (WIN32)
 		#windowsapp
 	)
 elseif (APPLE)
+	set(THREADS_PREFER_PTHREAD_FLAG ON)
+	find_package(Threads REQUIRED)
 	target_link_libraries(ljh PUBLIC
 		"-framework CoreFoundation"
 		"-framework Foundation"
 		"-framework CoreServices"
+		Threads::Threads
 	)
 elseif (UNIX)
+	set(THREADS_PREFER_PTHREAD_FLAG ON)
+	find_package(Threads REQUIRED)
 	target_link_libraries(ljh PUBLIC
 		dl
 		PkgConfig::DBUS
+		Threads::Threads
 	)
 endif()
 
