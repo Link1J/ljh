@@ -1,5 +1,5 @@
 
-//          Copyright Jared Irwin 2020-2021
+//          Copyright Jared Irwin 2020-2022
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -507,6 +507,17 @@
 #define LJH_CPP20_EXPLICIT explicit
 #else
 #define LJH_CPP20_EXPLICIT(...)
+#endif
+
+#ifndef LJH_COMPILER_APPLE_CLANG
+// Apple Clang is dumb.
+#if __cpp_lib_three_way_comparison >= 201907L
+#define LJH_HAS_CPP20_COMPARISON
+#elif __cpp_lib_three_way_comparison >= 201907L && __has_include(<compare>)
+// I think STL was at one point not defining `__cpp_lib_three_way_comparison`
+// even though it had support.
+#define LJH_HAS_CPP20_COMPARISON
+#endif
 #endif
 
 #if __has_cpp_attribute(noreturn)

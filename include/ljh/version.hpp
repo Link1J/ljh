@@ -1,5 +1,5 @@
 
-//          Copyright Jared Irwin 2020-2021
+//          Copyright Jared Irwin 2020-2022
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -108,8 +108,7 @@ namespace ljh
 		{
 		}
 
-// Apple Clang is dumb, so don't use <=> with it
-#if __cpp_impl_three_way_comparison >= 201907L && __has_include(<compare>) && !defined(__apple_build_version__)
+#ifdef LJH_HAS_CPP20_COMPARISON
 		std::strong_ordering operator<=>(const version& rhs) const 
 		{
 			if (auto cmp = _major <=> rhs._major; cmp != std::strong_ordering::equal) { return cmp; }
