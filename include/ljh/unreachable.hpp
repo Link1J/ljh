@@ -24,7 +24,7 @@
 
 namespace ljh
 {
-	LJH_NORETURN void unreachable()
+	LJH_NORETURN inline void unreachable()
 	{
 #if defined(LJH_COMPILER_CLANG)
 		__builtin_unreachable();
