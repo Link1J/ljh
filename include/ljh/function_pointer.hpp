@@ -25,6 +25,7 @@
 #if defined(__GNUC__) || defined(__clang__)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wattributes"
+#pragma GCC diagnostic ignored "-Wreserved-macro-identifier"
 #elif defined(_MSC_VER)
 #pragma warning(push)
 #pragma warning(disable : 4348)
@@ -82,17 +83,19 @@ namespace ljh
 		template<typename T> typename enable_function_pointer<T>::ref \
 		                  operator=(T         other) noexcept { function = reinterpret_cast<type>(other); return *this; }\
 \
-		bool operator==(type      other) const noexcept { return function ==                        other ; }\
-		bool operator==(uintptr_t other) const noexcept { return function == reinterpret_cast<type>(other); }\
-		bool operator==(void*     other) const noexcept { return function == reinterpret_cast<type>(other); }\
+		bool operator==(type           other) const noexcept { return function ==                        other ; }\
+		bool operator==(uintptr_t      other) const noexcept { return function == reinterpret_cast<type>(other); }\
+		bool operator==(void*          other) const noexcept { return function == reinterpret_cast<type>(other); }\
+		bool operator==(std::nullptr_t      ) const noexcept { return function == nullptr                      ; }\
 		template<typename T> typename enable_function_pointer<T>::boo \
-		     operator==(T         other) const noexcept { return function == reinterpret_cast<type>(other); }\
+		     operator==(T              other) const noexcept { return function == reinterpret_cast<type>(other); }\
 \
-		bool operator!=(type      other) const noexcept { return !(*this == other); }\
-		bool operator!=(uintptr_t other) const noexcept { return !(*this == other); }\
-		bool operator!=(void*     other) const noexcept { return !(*this == other); }\
+		bool operator!=(type           other) const noexcept { return !(*this == other  ); }\
+		bool operator!=(uintptr_t      other) const noexcept { return !(*this == other  ); }\
+		bool operator!=(void*          other) const noexcept { return !(*this == other  ); }\
+		bool operator!=(std::nullptr_t      ) const noexcept { return !(*this == nullptr); }\
 		template<typename T> typename enable_function_pointer<T>::boo \
-		     operator!=(T         other) const noexcept { return !(*this == other); }\
+		     operator!=(T              other) const noexcept { return !(*this == other  ); }\
 \
 		R operator()(Args... args) const LJH_NOEXCEPT_FUNCTION_TYPE(Noexcept) { return function(args...); }\
 		type get() const noexcept { return function; }\
@@ -130,7 +133,12 @@ namespace ljh
 
 #undef MAKE_POINTERS
 #undef POINTERS_INTERALS
+
+	template<typename T>
+	using funcptr = function_pointer<T>;
 }
+
+#undef _string_type
 
 #if defined(__GNUC__) || defined(__clang__)
 #pragma GCC diagnostic pop
@@ -138,6 +146,5 @@ namespace ljh
 #pragma warning(pop)
 #endif
 
-#undef _string_type
-
 static_assert(sizeof(ljh::function_pointer<void()>) == sizeof(void(*)()), "ljh::function_pointer and a function pointer must be the same size");
+static_assert(std::is_convertible_v<decltype(std::declval<ljh::function_pointer<void()>>() != nullptr), bool>, "ljh::function_pointer must be comparable to nullptr");
