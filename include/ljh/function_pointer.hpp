@@ -147,4 +147,4 @@ namespace ljh
 #endif
 
 static_assert(sizeof(ljh::function_pointer<void()>) == sizeof(void(*)()), "ljh::function_pointer and a function pointer must be the same size");
-static_assert(std::is_convertible_v<decltype(std::declval<ljh::function_pointer<void()>>() != nullptr), bool>, "ljh::function_pointer must be comparable to nullptr");
+static_assert(std::is_convertible<decltype(std::declval<ljh::function_pointer<void()>>() != nullptr), bool>::value, "ljh::function_pointer must be comparable to nullptr");
