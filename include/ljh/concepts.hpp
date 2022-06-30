@@ -49,4 +49,7 @@ namespace ljh
 
 	template<typename T>
 	concept function_type = std::is_function_v<T>;
+
+	template<typename L, typename R, typename T>
+	concept either_same_as = std::same_as<L, T> || std::same_as<R, T>;
 }
