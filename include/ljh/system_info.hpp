@@ -149,7 +149,9 @@ namespace ljh::system_info
 		                                        extern const info_data Windows_10_20H2          ;
 		                                        extern const info_data Windows_10_21H1          ;
 		                                        extern const info_data Windows_10_21H2          ;
+		                                        //extern const info_data Windows_10_22H2          ;
 		                                        extern const info_data Windows_11               ; extern const info_data Windows_11_21H2           ;
+		                                        extern const info_data Windows_11_22H2          ;
 
 		extern const info_data Android_API_1  ; extern const info_data Android_1                ;
 		extern const info_data Android_API_2  ; extern const info_data Android_1_1              ;
@@ -182,6 +184,8 @@ namespace ljh::system_info
 		extern const info_data Android_API_29 ; extern const info_data Android_10               ;
 		extern const info_data Android_API_30 ; extern const info_data Android_11               ;
 		extern const info_data Android_API_31 ; extern const info_data Android_12               ;
+		extern const info_data Android_API_32 ; extern const info_data Android_12L              ;
+		extern const info_data Android_API_33 ; extern const info_data Android_13               ;
 
 		extern const info_data Mac_OS_X_10_0  ;
 		extern const info_data Mac_OS_X_10_1  ;

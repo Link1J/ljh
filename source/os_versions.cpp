@@ -56,8 +56,8 @@ namespace ljh::system_info::inline versions
 	const info_data Windows_98SE                { platform::WindowsDOS, { 4, 10,  2222            },        2222};
 	const info_data Windows_ME                  { platform::WindowsDOS, { 4, 90,  3000            },        3000};
 	const info_data Windows_NT_3_1              { platform::WindowsNT , { 3,  1,   511 /*,     1*/},         511};
-	const info_data Windows_NT_3_1_SP_1         { platform::WindowsNT , { 3,  1,   511 /*,     1*/},         511};
-	const info_data Windows_NT_3_1_SP_2         { platform::WindowsNT , { 3,  1,   511 /*,     1*/},         511};
+	const info_data Windows_NT_3_1_SP_1         { platform::WindowsNT , { 3,  1,   528 /*,     1*/},         528};
+	const info_data Windows_NT_3_1_SP_2         { platform::WindowsNT , { 3,  1,   528 /*,     1*/},         528};
 	const info_data Windows_NT_3_1_SP_3         { platform::WindowsNT , { 3,  1,   528 /*,     1*/},         528};
 	const info_data Windows_NT_3_5              { platform::WindowsNT , { 3,  5,   807 /*,     1*/},         807};
 	const info_data Windows_NT_3_5_SP_1         { platform::WindowsNT , { 3,  5,   807 /*,     1*/},         807};
@@ -108,8 +108,10 @@ namespace ljh::system_info::inline versions
 	const info_data Windows_10_2004             { platform::WindowsNT , {10,  0, 19041 /*,     1*/},       19041};
 	const info_data Windows_10_20H2             { platform::WindowsNT , {10,  0, 19042 /*,   508*/},       19042};
 	const info_data Windows_10_21H1             { platform::WindowsNT , {10,  0, 19043 /*,   928*/},       19043};
-	const info_data Windows_10_21H2             { platform::WindowsNT , {10,  0, 19044 /*,  1266*/},       19044};
+	const info_data Windows_10_21H2             { platform::WindowsNT , {10,  0, 19044 /*,  1348*/},       19044};
+	//const info_data Windows_10_22H2             { platform::WindowsNT , {10,  0, 19045 /*, N/A  */},       19045};
 	const info_data Windows_11_21H2             { platform::WindowsNT , {10,  0, 22000 /*,   194*/},       22000};
+	const info_data Windows_11_21H2             { platform::WindowsNT , {10,  0, 22621 /*,   160*/},       22621};
 
 	const info_data Android_API_1               { platform::Android   , { 1                       },           1};
 	const info_data Android_API_2               { platform::Android   , { 1,  1                   },           2};
@@ -142,6 +144,8 @@ namespace ljh::system_info::inline versions
 	const info_data Android_API_29              { platform::Android   , {10                       },          29};
 	const info_data Android_API_30              { platform::Android   , {11                       },          30};
 	const info_data Android_API_31              { platform::Android   , {12                       },          31};
+	const info_data Android_API_32              { platform::Android   , {12,  1                   },          32};
+	const info_data Android_API_33              { platform::Android   , {13                       },          33};
 
 	const info_data Mac_OS_X_10_0               { platform::macOS     , {10,  0                   }, avs(10,  0)};
 	const info_data Mac_OS_X_10_1               { platform::macOS     , {10,  1                   }, avs(10,  1)};
@@ -266,6 +270,8 @@ namespace ljh::system_info::inline versions
 	const info_data Android_10                  = Android_API_29 ;
 	const info_data Android_11                  = Android_API_30 ;
 	const info_data Android_12                  = Android_API_31 ;
+	const info_data Android_12L                 = Android_API_32 ;
+	const info_data Android_13                  = Android_API_33 ;
 	const info_data Android_Cupcake             = Android_API_3  ;
 	const info_data Android_Donut               = Android_API_4  ;
 	const info_data Android_Eclair              = Android_API_5  ;
