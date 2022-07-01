@@ -111,7 +111,7 @@ namespace ljh::system_info::inline versions
 	const info_data Windows_10_21H2             { platform::WindowsNT , {10,  0, 19044 /*,  1348*/},       19044};
 	//const info_data Windows_10_22H2             { platform::WindowsNT , {10,  0, 19045 /*, N/A  */},       19045};
 	const info_data Windows_11_21H2             { platform::WindowsNT , {10,  0, 22000 /*,   194*/},       22000};
-	const info_data Windows_11_21H2             { platform::WindowsNT , {10,  0, 22621 /*,   160*/},       22621};
+	const info_data Windows_11_22H2             { platform::WindowsNT , {10,  0, 22621 /*,   160*/},       22621};
 
 	const info_data Android_API_1               { platform::Android   , { 1                       },           1};
 	const info_data Android_API_2               { platform::Android   , { 1,  1                   },           2};
