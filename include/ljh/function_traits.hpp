@@ -234,8 +234,10 @@ namespace ljh
 #undef TRAIT_INTERALS
 #undef TRAIT_INTERALS_MEMBER
 
+#if LJH_CPP_VERSION > LJH_CPP17_VERSION
 	template<typename T, auto F>
 	inline constexpr bool matches_return_type = std::same_as<ljh::function_traits<decltype(F)>::return_type, T>;
+#endif
 }
 
 #if defined(__GNUC__) || defined(__clang__)
