@@ -109,9 +109,9 @@ namespace ljh::system_info::inline versions
 	const info_data Windows_10_20H2             { platform::WindowsNT , {10,  0, 19042 /*,   508*/},       19042};
 	const info_data Windows_10_21H1             { platform::WindowsNT , {10,  0, 19043 /*,   928*/},       19043};
 	const info_data Windows_10_21H2             { platform::WindowsNT , {10,  0, 19044 /*,  1348*/},       19044};
-	//const info_data Windows_10_22H2             { platform::WindowsNT , {10,  0, 19045 /*, N/A  */},       19045};
+	const info_data Windows_10_22H2             { platform::WindowsNT , {10,  0, 19045 /*,  1949*/},       19045};
 	const info_data Windows_11_21H2             { platform::WindowsNT , {10,  0, 22000 /*,   194*/},       22000};
-	const info_data Windows_11_22H2             { platform::WindowsNT , {10,  0, 22621 /*,   160*/},       22621};
+	const info_data Windows_11_22H2             { platform::WindowsNT , {10,  0, 22621 /*,   586*/},       22621};
 
 	const info_data Android_API_1               { platform::Android   , { 1                       },           1};
 	const info_data Android_API_2               { platform::Android   , { 1,  1                   },           2};
@@ -170,6 +170,12 @@ namespace ljh::system_info::inline versions
 	const info_data    macOS_11_4               { platform::macOS     , {11,  4                   }, avs(11,  4)};
 	const info_data    macOS_11_5               { platform::macOS     , {11,  5                   }, avs(11,  5)};
 	const info_data    macOS_11_6               { platform::macOS     , {11,  6                   }, avs(11,  6)};
+	const info_data    macOS_12                 { platform::macOS     , {12                       }, avs(12,  0)};
+	const info_data    macOS_12_1               { platform::macOS     , {12,  1                   }, avs(12,  1)};
+	const info_data    macOS_12_2               { platform::macOS     , {12,  2                   }, avs(12,  2)};
+	const info_data    macOS_12_3               { platform::macOS     , {12,  3                   }, avs(12,  3)};
+	const info_data    macOS_12_4               { platform::macOS     , {12,  4                   }, avs(12,  4)};
+	const info_data    macOS_12_5               { platform::macOS     , {12,  5                   }, avs(12,  5)};
 
 	const info_data iPhone_OS_1_0               { platform::iOS       , { 1,  0                   }, avs( 1,  0)};
 	const info_data iPhone_OS_1_1               { platform::iOS       , { 1,  1                   }, avs( 1,  1)};
@@ -225,6 +231,12 @@ namespace ljh::system_info::inline versions
 	const info_data       iOS_14_7              { platform::iOS       , {14,  7                   }, avs(14,  7)};
 	const info_data       iOS_14_8              { platform::iOS       , {14,  8                   }, avs(14,  8)};
 	const info_data       iOS_15_0              { platform::iOS       , {15,  0                   }, avs(15,  0)};
+	const info_data       iOS_15_1              { platform::iOS       , {15,  1                   }, avs(15,  1)};
+	const info_data       iOS_15_2              { platform::iOS       , {15,  2                   }, avs(15,  2)};
+	const info_data       iOS_15_3              { platform::iOS       , {15,  3                   }, avs(15,  3)};
+	const info_data       iOS_15_4              { platform::iOS       , {15,  4                   }, avs(15,  4)};
+	const info_data       iOS_15_5              { platform::iOS       , {15,  5                   }, avs(15,  5)};
+	const info_data       iOS_15_6              { platform::iOS       , {15,  6                   }, avs(15,  6)};
 
 	const info_data Windows_1_0                 = Windows_1_01   ;
 	const info_data Windows_2_0                 = Windows_2_03   ;
@@ -302,6 +314,7 @@ namespace ljh::system_info::inline versions
 	const info_data    macOS_Mojave             =    macOS_10_14 ;
 	const info_data    macOS_Catalina           =    macOS_10_15 ;
 	const info_data    macOS_Big_Sur            =    macOS_11    ;
+	const info_data    macOS_Monterey           =    macOS_12    ;
 	
 	const info_data iPadOS_13_1                 = iOS_13_1       ;
 	const info_data iPadOS_13_2                 = iOS_13_2       ;
@@ -320,4 +333,10 @@ namespace ljh::system_info::inline versions
 	const info_data iPadOS_14_7                 = iOS_14_7       ;
 	const info_data iPadOS_14_8                 = iOS_14_8       ;
 	const info_data iPadOS_15_0                 = iOS_15_0       ;
+	const info_data iPadOS_15_1                 = iOS_15_1       ;
+	const info_data iPadOS_15_2                 = iOS_15_2       ;
+	const info_data iPadOS_15_3                 = iOS_15_3       ;
+	const info_data iPadOS_15_4                 = iOS_15_4       ;
+	const info_data iPadOS_15_5                 = iOS_15_5       ;
+	const info_data iPadOS_15_6                 = iOS_15_6       ;
 }

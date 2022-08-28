@@ -30,63 +30,50 @@
 #endif
 
 #if defined(__clang__)
-#define LJH_CALLING_CONVENTION_cdecl              __attribute__((cdecl             ))
-#define LJH_CALLING_CONVENTION_stdcall            __attribute__((stdcall           ))
-#define LJH_CALLING_CONVENTION_fastcall           __attribute__((fastcall          ))
-#define LJH_CALLING_CONVENTION_vectorcall         __attribute__((vectorcall        ))
-#define LJH_CALLING_CONVENTION_ms_abi             __attribute__((ms_abi            ))
-#define LJH_CALLING_CONVENTION_preserve_all       __attribute__((preserve_all      ))
-#define LJH_CALLING_CONVENTION_preserve_most      __attribute__((preserve_most     ))
-#define LJH_CALLING_CONVENTION_regcall            __attribute__((regcall           ))
-#define LJH_CALLING_CONVENTION_thiscall           __attribute__((thiscall          ))
-#define LJH_CALLING_CONVENTION_aarch64_vector_pcs __attribute__((aarch64_vector_pcs))
-#elif defined(__GNUC__)
-#define LJH_CALLING_CONVENTION_cdecl              __attribute__((cdecl             ))
-#define LJH_CALLING_CONVENTION_stdcall            __attribute__((stdcall           ))
-#define LJH_CALLING_CONVENTION_fastcall           __attribute__((fastcall          ))
-#define LJH_CALLING_CONVENTION_vectorcall         __attribute__((vectorcall        ))
-#define LJH_CALLING_CONVENTION_preserve_all       __attribute__((preserve_all      ))
-#define LJH_CALLING_CONVENTION_preserve_most      __attribute__((preserve_most     ))
-#define LJH_CALLING_CONVENTION_regcall            __attribute__((regcall           ))
-#define LJH_CALLING_CONVENTION_thiscall           __attribute__((thiscall          ))
-#define LJH_CALLING_CONVENTION_aarch64_vector_pcs __attribute__((aarch64_vector_pcs))
-#if !defined(_WIN32)
-#undef  LJH_CALLING_CONVENTION_ms_abi             
-#define LJH_CALLING_CONVENTION_ms_abi             __attribute__((cdecl             ))
-#endif
-#elif defined(_MSC_VER)
-#define LJH_CALLING_CONVENTION_cdecl              __cdecl     
-#define LJH_CALLING_CONVENTION_stdcall            __stdcall   
-#define LJH_CALLING_CONVENTION_fastcall           __fastcall  
-#define LJH_CALLING_CONVENTION_vectorcall         __vectorcall
-#define LJH_CALLING_CONVENTION_ms_abi             __cdecl     
-#define LJH_CALLING_CONVENTION_preserve_all       __cdecl     
-#define LJH_CALLING_CONVENTION_preserve_most      __cdecl     
-#define LJH_CALLING_CONVENTION_regcall            __cdecl     
-#define LJH_CALLING_CONVENTION_thiscall           __thiscall  
-#define LJH_CALLING_CONVENTION_aarch64_vector_pcs __cdecl     
+#define LJH_CALLING_CONVENTION_cdecl      __attribute__((cdecl     ))
+#define LJH_CALLING_CONVENTION_stdcall    __attribute__((stdcall   ))
+#define LJH_CALLING_CONVENTION_fastcall   __attribute__((fastcall  ))
+#define LJH_CALLING_CONVENTION_vectorcall __attribute__((vectorcall))
+#define LJH_CALLING_CONVENTION_ms_abi     __attribute__((ms_abi    ))
+#define LJH_CALLING_CONVENTION_sysv_abi   __attribute__((sysv_abi  ))
+#define LJH_CALLING_CONVENTION_regcall    __attribute__((regcall   ))
+#define LJH_CALLING_CONVENTION_thiscall   __attribute__((thiscall  ))
 #elif defined(__INTEL_COMPILER)
-#define LJH_CALLING_CONVENTION_cdecl              __cdecl             
-#define LJH_CALLING_CONVENTION_stdcall            __stdcall           
-#define LJH_CALLING_CONVENTION_fastcall           __fastcall          
-#define LJH_CALLING_CONVENTION_vectorcall         __vectorcall        
-#define LJH_CALLING_CONVENTION_ms_abi             __ms_abi            
-#define LJH_CALLING_CONVENTION_preserve_all       __preserve_all      
-#define LJH_CALLING_CONVENTION_preserve_most      __preserve_most     
-#define LJH_CALLING_CONVENTION_regcall            __regcall           
-#define LJH_CALLING_CONVENTION_thiscall           __thiscall          
-#define LJH_CALLING_CONVENTION_aarch64_vector_pcs __aarch64_vector_pcs
+#define LJH_CALLING_CONVENTION_cdecl      __cdecl     
+#define LJH_CALLING_CONVENTION_stdcall    __stdcall   
+#define LJH_CALLING_CONVENTION_fastcall   __fastcall  
+#define LJH_CALLING_CONVENTION_vectorcall __vectorcall
+#define LJH_CALLING_CONVENTION_ms_abi     __cdecl     
+#define LJH_CALLING_CONVENTION_sysv_abi   __cdecl     
+#define LJH_CALLING_CONVENTION_regcall    __regcall   
+#define LJH_CALLING_CONVENTION_thiscall   __thiscall  
+#elif defined(__GNUC__)
+#define LJH_CALLING_CONVENTION_cdecl      __attribute__((cdecl     ))
+#define LJH_CALLING_CONVENTION_stdcall    __attribute__((stdcall   ))
+#define LJH_CALLING_CONVENTION_fastcall   __attribute__((fastcall  ))
+#define LJH_CALLING_CONVENTION_vectorcall __attribute__((vectorcall))
+#define LJH_CALLING_CONVENTION_ms_abi     __attribute__((ms_abi    ))
+#define LJH_CALLING_CONVENTION_sysv_abi   __attribute__((sysv_abi  ))
+#define LJH_CALLING_CONVENTION_regcall    __attribute__((regcall   ))
+#define LJH_CALLING_CONVENTION_thiscall   __attribute__((thiscall  ))
+#elif defined(_MSC_VER)
+#define LJH_CALLING_CONVENTION_cdecl      __cdecl     
+#define LJH_CALLING_CONVENTION_stdcall    __stdcall   
+#define LJH_CALLING_CONVENTION_fastcall   __fastcall  
+#define LJH_CALLING_CONVENTION_vectorcall __vectorcall
+#define LJH_CALLING_CONVENTION_ms_abi     __cdecl     
+#define LJH_CALLING_CONVENTION_sysv_abi   __cdecl     
+#define LJH_CALLING_CONVENTION_regcall    __cdecl     
+#define LJH_CALLING_CONVENTION_thiscall   __thiscall  
 #else
-#define LJH_CALLING_CONVENTION_cdecl              
-#define LJH_CALLING_CONVENTION_stdcall            
-#define LJH_CALLING_CONVENTION_fastcall           
-#define LJH_CALLING_CONVENTION_vectorcall         
-#define LJH_CALLING_CONVENTION_ms_abi             
-#define LJH_CALLING_CONVENTION_preserve_all       
-#define LJH_CALLING_CONVENTION_preserve_most      
-#define LJH_CALLING_CONVENTION_regcall            
-#define LJH_CALLING_CONVENTION_thiscall           
-#define LJH_CALLING_CONVENTION_aarch64_vector_pcs 
+#define LJH_CALLING_CONVENTION_cdecl      
+#define LJH_CALLING_CONVENTION_stdcall    
+#define LJH_CALLING_CONVENTION_fastcall   
+#define LJH_CALLING_CONVENTION_vectorcall 
+#define LJH_CALLING_CONVENTION_ms_abi     
+#define LJH_CALLING_CONVENTION_sysv_abi   
+#define LJH_CALLING_CONVENTION_regcall    
+#define LJH_CALLING_CONVENTION_thiscall   
 #endif
 
 #if defined(cdecl)
@@ -97,16 +84,14 @@ namespace ljh
 {
 	namespace calling_conventions
 	{
-		namespace cdecl_              { using type = void(LJH_CALLING_CONVENTION_cdecl             *)(); const int id = 0; }
-		namespace stdcall_            { using type = void(LJH_CALLING_CONVENTION_stdcall           *)(); const int id = 1; }
-		namespace fastcall_           { using type = void(LJH_CALLING_CONVENTION_fastcall          *)(); const int id = 2; }
-		namespace vectorcall_         { using type = void(LJH_CALLING_CONVENTION_vectorcall        *)(); const int id = 3; }
-		namespace ms_abi_             { using type = void(LJH_CALLING_CONVENTION_ms_abi            *)(); const int id = 4; }
-		namespace preserve_all_       { using type = void(LJH_CALLING_CONVENTION_preserve_all      *)(); const int id = 5; }
-		namespace preserve_most_      { using type = void(LJH_CALLING_CONVENTION_preserve_most     *)(); const int id = 6; }
-		namespace regcall_            { using type = void(LJH_CALLING_CONVENTION_regcall           *)(); const int id = 7; }
-		namespace thiscall_           { using type = void(LJH_CALLING_CONVENTION_thiscall          *)(); const int id = 8; }
-		namespace aarch64_vector_pcs_ { using type = void(LJH_CALLING_CONVENTION_aarch64_vector_pcs*)(); const int id = 9; }
+		namespace cdecl_      { using type = void(LJH_CALLING_CONVENTION_cdecl      *)(); const int id = 0; }
+		namespace stdcall_    { using type = void(LJH_CALLING_CONVENTION_stdcall    *)(); const int id = 1; }
+		namespace fastcall_   { using type = void(LJH_CALLING_CONVENTION_fastcall   *)(); const int id = 2; }
+		namespace vectorcall_ { using type = void(LJH_CALLING_CONVENTION_vectorcall *)(); const int id = 3; }
+		namespace ms_abi_     { using type = void(LJH_CALLING_CONVENTION_ms_abi     *)(); const int id = 4; }
+		namespace sysv_abi_   { using type = void(LJH_CALLING_CONVENTION_sysv_abi   *)(); const int id = 5; }
+		namespace regcall_    { using type = void(LJH_CALLING_CONVENTION_regcall    *)(); const int id = 6; }
+		namespace thiscall_   { using type = void(LJH_CALLING_CONVENTION_thiscall   *)(); const int id = 7; }
 	};
 
 	template<typename R, typename... Args>
@@ -208,26 +193,22 @@ namespace ljh
 		MAKE_ALL_TRAITS_M(CC, false, ArgList)
 #endif
 
-	MAKE_TRAITS  (cdecl             , (Args...)     );
-	MAKE_TRAITS  (cdecl             , (Args..., ...));
-	MAKE_TRAITS  (stdcall           , (Args...)     );
-//	MAKE_TRAITS  (stdcall           , (Args..., ...));
-	MAKE_TRAITS  (fastcall          , (Args...)     );
-//	MAKE_TRAITS  (fastcall          , (Args..., ...));
-	MAKE_TRAITS  (vectorcall        , (Args...)     );
-//	MAKE_TRAITS  (vectorcall        , (Args..., ...));
-	MAKE_TRAITS  (regcall           , (Args...)     );
-//	MAKE_TRAITS  (regcall           , (Args..., ...));
-	MAKE_TRAITS  (ms_abi            , (Args...)     );
-	MAKE_TRAITS  (ms_abi            , (Args..., ...));
-	MAKE_TRAITS  (preserve_all      , (Args...)     );
-	MAKE_TRAITS  (preserve_all      , (Args..., ...));
-	MAKE_TRAITS  (preserve_most     , (Args...)     );
-	MAKE_TRAITS  (preserve_most     , (Args..., ...));
-	MAKE_TRAITS_M(thiscall          , (Args...)     );
-//	MAKE_TRAITS_M(thiscall          , (Args..., ...));
-	MAKE_TRAITS  (aarch64_vector_pcs, (Args...)     );
-	MAKE_TRAITS  (aarch64_vector_pcs, (Args..., ...));
+	MAKE_TRAITS  (cdecl     , (Args...)     );
+	MAKE_TRAITS  (cdecl     , (Args..., ...));
+	MAKE_TRAITS  (stdcall   , (Args...)     );
+//	MAKE_TRAITS  (stdcall   , (Args..., ...));
+	MAKE_TRAITS  (fastcall  , (Args...)     );
+//	MAKE_TRAITS  (fastcall  , (Args..., ...));
+	MAKE_TRAITS  (vectorcall, (Args...)     );
+//	MAKE_TRAITS  (vectorcall, (Args..., ...));
+	MAKE_TRAITS  (regcall   , (Args...)     );
+//	MAKE_TRAITS  (regcall   , (Args..., ...));
+	MAKE_TRAITS  (ms_abi    , (Args...)     );
+	MAKE_TRAITS  (ms_abi    , (Args..., ...));
+	MAKE_TRAITS  (sysv_abi  , (Args...)     );
+	MAKE_TRAITS  (sysv_abi  , (Args..., ...));
+	MAKE_TRAITS_M(thiscall  , (Args...)     );
+//	MAKE_TRAITS_M(thiscall  , (Args..., ...));
 
 #undef MAKE_TRAITS
 #undef MAKE_ALL_TRAITS
