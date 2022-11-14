@@ -5,9 +5,16 @@
 #          https://www.boost.org/LICENSE_1_0.txt)
 
 cmake_minimum_required(VERSION 3.11.0)
-option(ljh_BUILD_TESTS "Build the Self Tests" OFF)
-option(ljh_INSTALL "Install" ON)
 project(ljh)
+
+if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
+set(LJH_SUB_PROJECT ON)
+else()
+set(LJH_SUB_PROJECT OFF)
+endif()
+
+option(ljh_BUILD_TESTS "Build the Self Tests" ${LJH_SUB_PROJECT})
+option(ljh_INSTALL "Install" ${LJH_SUB_PROJECT})
 
 if (UNIX AND NOT APPLE)
 	find_package(PkgConfig)
