@@ -109,7 +109,7 @@ namespace ljh
 	template<typename R, typename... Args>\
 	struct function_traits<\
 		FUNCTION,\
-		std::is_same<void(LJH_CALLING_CONVENTION_cdecl*)(ArgList) Noexcept, void(LJH_CALLING_CONVENTION_##CC*)(ArgList) Noexcept>::value\
+		std::is_same<calling_conventions::cdecl_::type, calling_conventions::CC##_::type>::value\
 			? calling_conventions::CC##_::id \
 			: 0 \
 	> : _function_traits_impl<R, Args...>\
@@ -138,7 +138,7 @@ namespace ljh
 	template<typename R, typename M, typename... Args>\
 	struct function_traits<\
 		FUNCTION,\
-		std::is_same<void(LJH_CALLING_CONVENTION_cdecl*)(ArgList) Noexcept, void(LJH_CALLING_CONVENTION_##CC*)(ArgList) Noexcept>::value\
+		std::is_same<void(LJH_CALLING_CONVENTION_cdecl*)(), void(LJH_CALLING_CONVENTION_##CC*)()>::value\
 			? calling_conventions::CC##_::id \
 			: 0 \
 	> : _function_traits_impl<R, Args...>\
@@ -203,8 +203,8 @@ namespace ljh
 //	MAKE_TRAITS  (vectorcall, (Args..., ...));
 	MAKE_TRAITS  (regcall   , (Args...)     );
 //	MAKE_TRAITS  (regcall   , (Args..., ...));
-	MAKE_TRAITS  (ms_abi    , (Args...)     );
-	MAKE_TRAITS  (ms_abi    , (Args..., ...));
+//	MAKE_TRAITS  (ms_abi    , (Args...)     );
+//	MAKE_TRAITS  (ms_abi    , (Args..., ...));
 	MAKE_TRAITS  (sysv_abi  , (Args...)     );
 	MAKE_TRAITS  (sysv_abi  , (Args..., ...));
 	MAKE_TRAITS_M(thiscall  , (Args...)     );

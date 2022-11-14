@@ -19,9 +19,9 @@
 
 #pragma once
 
+#include "cpp_version.hpp"
 #include "type_traits.hpp"
 #include "char_convertions.hpp"
-#include "cpp_version.hpp"
 
 #include <limits>
 #include <string>
@@ -59,27 +59,27 @@ namespace ljh
 			constexpr auto npos = std::basic_string_view<_char, _traits>::npos;
 
 			auto dot_pos = text.find('.');
-			if (dot_pos == npos) { from_string(_major, text); return; }
 			auto sub = text.substr(0, dot_pos);
 			from_string(_major, sub);
+			if (dot_pos == npos) return;
 			text = text.substr(dot_pos + 1);
 
 			dot_pos = text.find('.');
-			if (dot_pos == npos) { from_string(_minor, text); return; }
 			sub = text.substr(0, dot_pos);
 			from_string(_minor, sub);
+			if (dot_pos == npos) return;
 			text = text.substr(dot_pos + 1);
 
 			dot_pos = text.find('.');
-			if (dot_pos == npos) { from_string(_build, text); return; }
 			sub = text.substr(0, dot_pos);
 			from_string(_build, sub);
+			if (dot_pos == npos) return;
 			text = text.substr(dot_pos + 1);
 
 			dot_pos = text.find('.');
-			if (dot_pos == npos) { from_string(_revision, text); return; }
 			sub = text.substr(0, dot_pos);
 			from_string(_revision, sub);
+			if (dot_pos == npos) return;
 			text = text.substr(dot_pos + 1);
 		}
 
