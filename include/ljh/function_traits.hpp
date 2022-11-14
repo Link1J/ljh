@@ -215,9 +215,12 @@ namespace ljh
 #undef TRAIT_INTERALS
 #undef TRAIT_INTERALS_MEMBER
 
-#if LJH_CPP_VERSION > LJH_CPP17_VERSION
+#if __cpp_concepts >= 201907L && __cpp_lib_concepts >= 202002L
 	template<typename T, auto F>
-	inline constexpr bool matches_return_type = std::same_as<ljh::function_traits<decltype(F)>::return_type, T>;
+	concept matches_return_type = std::same_as<T, typename ljh::function_traits<decltype(F)>::return_type>;
+#elif LJH_CPP_VERSION > LJH_CPP17_VERSION
+	template<typename T, auto F>
+	inline constexpr bool matches_return_type = std::is_same_v<T, typename ljh::function_traits<decltype(F)>::return_type>;
 #endif
 }
 
