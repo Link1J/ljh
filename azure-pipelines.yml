@@ -13,12 +13,12 @@ stages:
       matrix:
         Linux_Debug:
           OS: 'Linux'
-          imageName: 'ubuntu-20.04'
+          imageName: 'ubuntu-latest'
           BuildConfiguration: 'Debug'
           Generator: ''
         Linux_Release:
           OS: 'Linux'
-          imageName: 'ubuntu-20.04'
+          imageName: 'ubuntu-latest'
           BuildConfiguration: 'RelWithDebInfo'
           Generator: ''
         MacOS_Debug:

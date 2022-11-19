@@ -181,7 +181,7 @@ namespace ljh::_co
 				promise_policies& policies;
 				auto await_resume() const noexcept
 				{
-					return task_policies(policies);
+					return co::task_policy(policies);
 				}
 			};
 			return awaiter{ {}, m_policies };

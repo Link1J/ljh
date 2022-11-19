@@ -126,10 +126,8 @@ namespace ljh
 	MAKE_POINTERS(vectorcall        );
 	MAKE_POINTERS(regcall           );
 	MAKE_POINTERS(ms_abi            );
-	MAKE_POINTERS(preserve_all      );
-	MAKE_POINTERS(preserve_most     );
+	MAKE_POINTERS(sysv_abi          );
 //	MAKE_POINTERS(thiscall          );
-	MAKE_POINTERS(aarch64_vector_pcs);
 
 #undef MAKE_POINTERS
 #undef POINTERS_INTERALS
