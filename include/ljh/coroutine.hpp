@@ -18,10 +18,15 @@
 
 #pragma once
 #include "cpp_version.hpp"
+#include "os_build_info.hpp"
 
 #include "coroutine/invoke_lambda.hpp"
 #include "coroutine/fire_and_forget.hpp"
 #include "coroutine/shared_mutex.hpp"
 #include "coroutine/task.hpp"
 #include "coroutine/cold_task.hpp"
-//#include "coroutine/com_aware_task.hpp"
+
+#if defined(LJH_TARGET_Windows)
+#include "coroutine/com_aware_task.hpp"
+#include "coroutine/winrt_task.hpp"
+#endif
