@@ -20,7 +20,7 @@
 #include "range_adaptor_closure.hpp"
 #include <optional>
 
-namespace ljh::ranges::action
+namespace ljh::ranges::actions
 {
 	namespace __
 	{
