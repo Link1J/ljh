@@ -16,30 +16,33 @@
 // Version History
 //     1.0 Inital Version
 
+#pragma once
+#include "range_adaptor_closure.hpp"
 #include <optional>
-#include <ranges>
 
 namespace ljh::ranges
 {
-	struct last_t{};
-	inline constexpr last_t last;
-
-	template<std::ranges::range R>
-	std::optional<std::ranges::range_value_t<R>> operator|(R&& range, last_t)
+	inline constexpr closure first = []<std::ranges::range R>(R&& range) -> std::optional<std::ranges::range_value_t<R>>
 	{
 		if (auto b = std::ranges::begin(range); b != std::ranges::end(range))
 			return *b;
 		return std::nullopt;
-	}
+	};
 
-	struct first_t{};
-	inline constexpr first_t first;
-
-	template<std::ranges::range R>
-	std::optional<std::ranges::range_value_t<R>> operator|(R&& range, first_t)
+	inline constexpr adaptor first_or = []<std::ranges::range R>(R&& range, std::ranges::range_value_t<R> default_value) -> std::ranges::range_value_t<R>
 	{
-		if (auto b = std::ranges::end(range); b != std::ranges::begin(range))
-			return *(b - 1);
+		return (range | first).value_or(default_value);
+	};
+
+	inline constexpr closure last = []<std::ranges::range R>(R&& range) -> std::optional<std::ranges::range_value_t<R>>
+	{
+		if (auto b = std::ranges::rbegin(range); b != std::ranges::rend(range))
+			return *b;
 		return std::nullopt;
-	}
+	};
+
+	inline constexpr adaptor last_or = []<std::ranges::range R>(R&& range, std::ranges::range_value_t<R> default_value) -> std::ranges::range_value_t<R>
+	{
+		return (range | last).value_or(default_value);
+	};
 }
