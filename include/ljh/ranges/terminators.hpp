@@ -19,34 +19,64 @@
 #pragma once
 #include "range_adaptor_closure.hpp"
 #include <optional>
+#include <span>
 
 namespace ljh::ranges
 {
-	template<std::ranges::range R>
-	std::optional<std::ranges::range_value_t<R>> first(R&& range)
+	inline constexpr closure first = []<std::ranges::range R>(R&& range) -> std::optional<std::ranges::range_value_t<R>>
 	{
 		if (auto b = std::ranges::begin(range); b != std::ranges::end(range))
 			return *b;
 		return std::nullopt;
-	}
+	};
 
-	template<std::ranges::range R>
-	std::ranges::range_value_t<R> first_or(R&& range, std::ranges::range_value_t<R> default_value)
+	inline constexpr adaptor first_or = []<std::ranges::range R>(R&& range, std::ranges::range_value_t<R> default_value) -> std::optional<std::ranges::range_value_t<R>>
 	{
 		return first(range).value_or(default_value);
-	}
-	
-	template<std::ranges::range R>
-	std::optional<std::ranges::range_value_t<R>> last(R&& range)
+	};
+
+	inline constexpr closure last = []<std::ranges::range R>(R&& range) -> std::optional<std::ranges::range_value_t<R>>
 	{
 		if (auto b = std::ranges::rbegin(range); b != std::ranges::rend(range))
 			return *b;
 		return std::nullopt;
-	}
-	
-	template <std::ranges::range R>
-	std::ranges::range_value_t<R> last_or(R&& range, std::ranges::range_value_t<R> default_value)
+	};
+
+	inline constexpr adaptor last_or = []<std::ranges::range R>(R&& range, std::ranges::range_value_t<R> default_value) -> std::optional<std::ranges::range_value_t<R>>
 	{
 		return last(range).value_or(default_value);
-	}
+	};
+
+	template<size_t offset, size_t count = std::dynamic_extent>
+	inline constexpr closure const_subspan = []<std::ranges::contiguous_range R>(R&& r)
+	{
+		return std::span{std::forward<R>(r)}.subspan<offset, count>();
+	};
+
+	inline constexpr adaptor subspan = []<std::ranges::contiguous_range R>(R&& r, size_t offset, size_t count = std::dynamic_extent)
+	{
+		return std::span{std::forward<R>(r)}.subspan(offset, count);
+	};
+
+	template<size_t count>
+	inline constexpr closure const_first_n = []<std::ranges::contiguous_range R>(R&& r)
+	{
+		return std::span{std::forward<R>(r)}.first<count>();
+	};
+
+	inline constexpr adaptor first_n = []<std::ranges::contiguous_range R>(R&& r, size_t count)
+	{
+		return std::span{std::forward<R>(r)}.first(count);
+	};
+
+	template<size_t count>
+	inline constexpr closure const_last_n = []<std::ranges::contiguous_range R>(R&& r)
+	{
+		return std::span{std::forward<R>(r)}.last<count>();
+	};
+
+	inline constexpr adaptor last_n = []<std::ranges::contiguous_range R>(R&& r, size_t count)
+	{
+		return std::span{std::forward<R>(r)}.last(count);
+	};
 }

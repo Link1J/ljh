@@ -22,6 +22,15 @@ FetchContent_MakeAvailable(Catch2)
 FetchContent_GetProperties(Catch2 SOURCE_DIR CATCH2_SOURCE)
 set(CMAKE_MODULE_PATH ${CATCH2_SOURCE}/extras ${CMAKE_MODULE_PATH})
 
+if (MSVC)
+	add_compile_options(
+		/D_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
+		/Zc:twoPhase-
+		$<$<NOT:$<BOOL:${AWAIT_NOT_NEEDED}>>:/await>
+		/Zf /utf-8 /permissive- /Zc:inline /Zc:__cplusplus /Zc:__STDC__ /bigobj /Y-
+	)
+endif()
+
 add_executable(tests_11
 	system_directories.98.cpp
 	function_pointer.11.cpp
@@ -63,6 +72,7 @@ add_executable(tests_20
 	compile_time_string.20.cpp
 	delay_loaded_functions.20.cpp
 	concepts.20.cpp
+	ranges.20.cpp
 )
 set_target_properties(tests_20 PROPERTIES CXX_STANDARD 20 CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)
 target_link_libraries(tests_20 Catch2::Catch2WithMain ljh)

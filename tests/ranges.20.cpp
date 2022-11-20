@@ -6,6 +6,8 @@
 
 #include <catch2/catch_test_macros.hpp>
 #include "ljh/ranges/terminators.hpp"
+#include "ljh/ranges/views.hpp"
+#include "ljh/ranges/actions.hpp"
 
 inline constexpr ljh::ranges::adaptor transform = []<std::ranges::viewable_range R, typename F>(R &&r, F &&f) {
 	return std::ranges::transform_view(std::forward<R>(r), std::forward<F>(f));
