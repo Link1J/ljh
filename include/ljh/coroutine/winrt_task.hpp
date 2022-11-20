@@ -70,15 +70,15 @@ namespace ljh::co::__
 	struct consume_task
 	{
 		template<typename T>
-		decltype(auto) cast_self() noexcept const
+		decltype(auto) cast_self() const noexcept
 		{
 			return static_cast<T const&>(static_cast<D const&>(*this));
 		}
 
 		template<typename T>
-		decltype(auto) shim() noexcept const
+		decltype(auto) shim() const noexcept
 		{
-			return (*(winrt::impl::abi_t<T>**)&this->cast_self<D, T>());
+			return (*(winrt::impl::abi_t<T>**)&(this->cast_self<T>()));
 		}
 
 		auto Completed(winrt_task_completed_handler<TResult> const& handler) const
