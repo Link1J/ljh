@@ -129,7 +129,7 @@ namespace ljh::ranges
 			if constexpr (std::invocable<F const&, Args...>)
 				return f(std::forward<Args>(args)...);
 			else
-				return closure(bind_back(f, std::forward<Args>(args)...));
+				return closure(ljh::bind_back(f, std::forward<Args>(args)...));
 		}
 	};
 }
