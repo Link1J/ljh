@@ -31,7 +31,7 @@ typedef struct tagTHREADNAME_INFO
 
 namespace ljh::thread_name
 {
-	ljh::delay_loaded::function<"KernelBase.dll", "SetThreadDescription", HRESULT(HANDLE hThread, PCWSTR lpThreadDescription)> SetThreadDescription;
+	ljh::delay_load::function<"KernelBase.dll", "SetThreadDescription", HRESULT(HANDLE hThread, PCWSTR lpThreadDescription)> SetThreadDescription;
 
 	void set_for_current(std::string const& name)
 	{
@@ -61,7 +61,7 @@ namespace ljh::thread_name
 		{
 			THREADNAME_INFO info;
 			info.dwType = 0x1000;
-			info.szName = name.get();
+			info.szName = name.c_str();
 			info.dwThreadID = GetThreadId(id);
 			info.dwFlags = 0;
 			ThrowThreadName(info);

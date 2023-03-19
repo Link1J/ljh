@@ -20,7 +20,7 @@
 #include "../cpp_version.hpp"
 #include "bind_back.hpp"
 
-#if __has_include(<ranges>)
+#if __has_include(<ranges>) && __cpp_lib_ranges
 #include <ranges>
 #include <functional>
 #include <concepts>
