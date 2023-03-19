@@ -29,17 +29,20 @@ add_library(ljh STATIC
 	$<$<PLATFORM_ID:Darwin>:
 		source/macos/system_info.mm
 		source/unix/named_mutex.cpp
+		source/macos/thread_name.cpp
 	>
 	$<$<PLATFORM_ID:Windows>:
 		source/windows/system_info.cpp
 		source/windows/registry.cpp
 		source/windows/wmi.cpp
 		source/windows/named_mutex.cpp
+		source/windows/thread_name.cpp
 	>
 	$<$<PLATFORM_ID:Linux>:
 		source/unix/system_info.cpp
 		source/unix/dbus.cpp
 		source/unix/named_mutex.cpp
+		source/unix/thread_name.cpp
 	>
 )
 add_library(ljh::ljh ALIAS ljh)
