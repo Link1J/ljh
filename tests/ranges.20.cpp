@@ -9,6 +9,8 @@
 #include "ljh/ranges/views.hpp"
 #include "ljh/ranges/actions.hpp"
 
+#if __cpp_lib_ranges
+
 inline constexpr ljh::ranges::adaptor transform = []<std::ranges::viewable_range R, typename F>(R &&r, F &&f) {
 	return std::ranges::transform_view(std::forward<R>(r), std::forward<F>(f));
 };
@@ -102,3 +104,5 @@ TEST_CASE("last", "[test_20][ranges][adaptor]")
 		REQUIRE(items == 10);
 	}
 }
+
+#endif
