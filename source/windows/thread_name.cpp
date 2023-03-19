@@ -31,11 +31,23 @@ typedef struct tagTHREADNAME_INFO
 
 namespace ljh::thread_name
 {
-	ljh::delay_loaded_function<"KernelBase.dll", "SetThreadDescription", HRESULT(HANDLE hThread, PCWSTR lpThreadDescription)> SetThreadDescription;
+	ljh::delay_loaded::function<"KernelBase.dll", "SetThreadDescription", HRESULT(HANDLE hThread, PCWSTR lpThreadDescription)> SetThreadDescription;
 
 	void set_for_current(std::string const& name)
 	{
 		set(GetCurrentThread(), name);
+	}
+
+	void ThrowThreadName(THREADNAME_INFO info)
+	{
+#pragma warning(push)
+#pragma warning(disable: 6320 6322)
+		__try{
+			RaiseException(MS_VC_EXCEPTION, 0, sizeof(info) / sizeof(ULONG_PTR), (ULONG_PTR*)&info);
+		}
+		__except (EXCEPTION_EXECUTE_HANDLER){
+		}
+#pragma warning(pop)
 	}
 
 	void set(std::thread::native_handle_type id, std::string const& name)
@@ -52,14 +64,7 @@ namespace ljh::thread_name
 			info.szName = name.get();
 			info.dwThreadID = GetThreadId(id);
 			info.dwFlags = 0;
-#pragma warning(push)
-#pragma warning(disable: 6320 6322)
-			__try{
-				RaiseException(MS_VC_EXCEPTION, 0, sizeof(info) / sizeof(ULONG_PTR), (ULONG_PTR*)&info);
-			}
-			__except (EXCEPTION_EXECUTE_HANDLER){
-			}
-#pragma warning(pop)
+			ThrowThreadName(info);
 		}
 	}
 }
