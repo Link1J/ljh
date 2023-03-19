@@ -1,10 +1,10 @@
 
-//          Copyright Jared Irwin 2020-2022
+//          Copyright Jared Irwin 2020-2023
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-// winrt_help.hpp - v1.0
+// unboxing.hpp - v1.0
 // SPDX-License-Identifier: BSL-1.0
 // 
 // Requires C++20
@@ -19,9 +19,14 @@
 
 #include <ljh/function_traits.hpp>
 #include <ljh/concepts.hpp>
-#include <winrt/Windows.Foundation.h>
-#include <Windows.Foundation.h>
 #include <variant>
+
+#if __has_include(<winrt/Windows.Foundation.h>)
+#include <winrt/Windows.Foundation.h>
+
+#if __has_include(<Windows.Foundation.h>)
+#include <Windows.Foundation.h>
+#endif
 
 namespace ljh::winrt
 {
@@ -56,6 +61,7 @@ namespace ljh::winrt
 			return unbox_value<T>(value);
 	}
 
+#if __has_include(<Windows.Foundation.h>)
 	template<typename T>
 	T unbox_any_or(::winrt::Windows::Foundation::IInspectable const& value, T default_value)
 	{
@@ -91,6 +97,7 @@ namespace ljh::winrt
 
 		return default_value;
 	}
+#endif
 
 	inline std::variant<double, std::uint64_t, std::int64_t, ::winrt::hstring, bool> as_variant(::winrt::Windows::Foundation::IPropertyValue const& value)
 	{
@@ -162,3 +169,4 @@ namespace ljh::winrt
 		return unbox_any<T>(plhs) == rhs;
 	}
 }
+#endif
