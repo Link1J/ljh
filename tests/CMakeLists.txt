@@ -1,5 +1,5 @@
 
-#          Copyright Jared Irwin 2020-2022
+#          Copyright Jared Irwin 2020-2023
 # Distributed under the Boost Software License, Version 1.0.
 #    (See accompanying file LICENSE_1_0.txt or copy at
 #          https://www.boost.org/LICENSE_1_0.txt)
@@ -15,7 +15,7 @@ set(CATCH_BUILD_TESTING OFF)
 
 FetchContent_Declare(Catch2
 	GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-	GIT_TAG        v3.0.0-preview3
+	GIT_TAG        v3.2.2
 )
 
 FetchContent_MakeAvailable(Catch2)
