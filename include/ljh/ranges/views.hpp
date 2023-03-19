@@ -32,6 +32,7 @@ namespace ljh
 	}();
 }
 
+#if __has_include(<ranges>) && __cpp_lib_ranges
 namespace ljh::ranges::views
 {
 	template<typename T>
@@ -102,3 +103,4 @@ namespace ljh::ranges::views
 	};
 #endif
 }
+#endif
