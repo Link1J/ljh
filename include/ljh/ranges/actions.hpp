@@ -20,6 +20,7 @@
 #include "range_adaptor_closure.hpp"
 #include <optional>
 
+#if __cpp_lib_ranges_zip >= 202110L
 namespace ljh::ranges::actions
 {
 	namespace __
@@ -37,3 +38,4 @@ namespace ljh::ranges::actions
 	template<size_t Length>
 	inline constexpr closure to_array = []<std::ranges::viewable_range R>(R&& r) { return __::to_array<Length>(r); };
 }
+#endif

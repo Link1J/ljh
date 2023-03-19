@@ -22,6 +22,7 @@
 
 #if __has_include(<ranges>)
 #include <ranges>
+#include <functional>
 #include <concepts>
 
 namespace ljh::ranges

@@ -21,7 +21,7 @@
 #include <optional>
 #include <span>
 
-#if __has_include(<ranges>)
+#if __has_include(<ranges>) && __cpp_lib_ranges
 namespace ljh::ranges
 {
 	inline constexpr closure first = []<std::ranges::range R>(R&& range) -> std::optional<std::ranges::range_value_t<R>>
@@ -51,7 +51,7 @@ namespace ljh::ranges
 	template<size_t offset, size_t count = std::dynamic_extent>
 	inline constexpr closure subspan_const = []<std::ranges::contiguous_range R>(R&& r)
 	{
-		return std::span{std::forward<R>(r)}.subspan<offset, count>();
+		return std::span{std::forward<R>(r)}.template subspan<offset, count>();
 	};
 
 	inline constexpr adaptor subspan = []<std::ranges::contiguous_range R>(R&& r, size_t offset, size_t count = std::dynamic_extent)
@@ -62,7 +62,7 @@ namespace ljh::ranges
 	template<size_t count>
 	inline constexpr closure first_n_const = []<std::ranges::contiguous_range R>(R&& r)
 	{
-		return std::span{std::forward<R>(r)}.first<count>();
+		return std::span{std::forward<R>(r)}.template first<count>();
 	};
 
 	inline constexpr adaptor first_n = []<std::ranges::contiguous_range R>(R&& r, size_t count)
@@ -73,7 +73,7 @@ namespace ljh::ranges
 	template<size_t count>
 	inline constexpr closure last_n_const = []<std::ranges::contiguous_range R>(R&& r)
 	{
-		return std::span{std::forward<R>(r)}.last<count>();
+		return std::span{std::forward<R>(r)}.template last<count>();
 	};
 
 	inline constexpr adaptor last_n = []<std::ranges::contiguous_range R>(R&& r, size_t count)
