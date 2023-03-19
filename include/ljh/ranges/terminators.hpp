@@ -1,5 +1,5 @@
 
-//          Copyright Jared Irwin 2020-2022
+//          Copyright Jared Irwin 2020-2023
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -21,6 +21,7 @@
 #include <optional>
 #include <span>
 
+#if __has_include(<ranges>)
 namespace ljh::ranges
 {
 	inline constexpr closure first = []<std::ranges::range R>(R&& range) -> std::optional<std::ranges::range_value_t<R>>
@@ -80,3 +81,4 @@ namespace ljh::ranges
 		return std::span{std::forward<R>(r)}.last(count);
 	};
 }
+#endif
