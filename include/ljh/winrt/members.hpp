@@ -17,6 +17,8 @@
 // Version History
 //     1.0 Inital Version
 
+#pragma once
+
 #include <winrt/base.h>
 #include <type_traits>
 

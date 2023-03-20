@@ -17,6 +17,8 @@
 // Version History
 //     1.0 Inital Version
 
+#pragma once
+
 #include <ljh/function_traits.hpp>
 #include <ljh/concepts.hpp>
 #include <variant>
