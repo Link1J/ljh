@@ -51,6 +51,6 @@ namespace ljh::winrt
 
 	    using ::winrt::event<D>::operator();
 	    auto operator()(D const& handler) { return this->add(handler); }
-	    void operator()(winrt::event_token const& token) { this->remove(token); }
+	    void operator()(::winrt::event_token const& token) { this->remove(token); }
 	};
 }
