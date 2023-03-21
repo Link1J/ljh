@@ -4,7 +4,7 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-// type_traits.hpp - v1.4
+// type_traits.hpp - v1.5
 // SPDX-License-Identifier: BSL-1.0
 //
 // Requires C++11
@@ -13,6 +13,7 @@
 // Based on code from https://stackoverflow.com/a/10724828/13155694
 // Based on code from https://stackoverflow.com/a/15396757/7932993
 // Based on code from https://devblogs.microsoft.com/oldnewthing/20190711-00/?p=102682
+// Based on code from https://devblogs.microsoft.com/oldnewthing/20190712-00/?p=102690
 //
 // ABOUT
 //     Adds extra type traits
@@ -25,6 +26,7 @@
 //     1.2 Change is_char to is_char_type
 //     1.3 Add is_callable and is_function_pointer
 //     1.4 Add is_type_complete
+//     1.5 Add type_if_defined
 
 #pragma once
 
@@ -98,7 +100,24 @@ namespace ljh
 
 	template<typename T>
 	struct is_type_complete<T, void_t<decltype(sizeof(T))>> : public std::true_type {};
-	
+
+	struct empty {};
+
+	template<typename T, typename = void>
+	struct type_or_empty
+	{
+		using type = empty;
+	};
+
+	template<typename T>
+	struct type_or_empty<T, void_t<decltype(sizeof(T))>>
+	{
+		using type = T;
+	};
+
+	template<typename T>
+	using type_if_defined = typename type_or_empty<T>::type;
+
 #if LJH_CPP_VERSION >= LJH_CPP17_VERSION
 	template <typename T>
 	inline constexpr bool is_scoped_enum_v = is_scoped_enum<T>::value;
