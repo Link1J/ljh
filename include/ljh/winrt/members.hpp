@@ -36,7 +36,7 @@ namespace ljh::winrt
 	template<typename T>
 	struct property
 	{
-		property(T const& initial = empty_value<T>()) 
+		property(T const& initial = empty_value<T>())
 			: value(initial) 
 		{}
 
@@ -44,6 +44,22 @@ namespace ljh::winrt
 		void operator()(T const& newValue) { value = newValue; }
 
 		T value;
+	};
+
+	template<typename T>
+	struct property<::winrt::com_array<T>>
+	{
+		property() = default;
+		property(::winrt::com_array<T>&& initial)
+			: value(std::move(initial)) 
+		{}
+
+		::winrt::com_array<T>& operator()() { return value; }
+		::winrt::com_array<T> const& operator()() const { return value; }
+		void operator()(::winrt::com_array<T> const& newValue) { value = newValue; }
+		void operator()(::winrt::array_view<const T> const& newValue) { value = ::winrt::com_array<T>{std::begin(newValue), std::end(newValue)}; }
+
+		::winrt::com_array<T> value;
 	};
 
 	template<typename D>
