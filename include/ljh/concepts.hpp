@@ -52,4 +52,7 @@ namespace ljh
 
 	template<typename L, typename R, typename T>
 	concept either_same_as = std::same_as<L, T> || std::same_as<R, T>;
+
+	template <typename T, template <typename ...> typename U>
+	concept instance = ljh::is_instance_v<T, U>;
 }
