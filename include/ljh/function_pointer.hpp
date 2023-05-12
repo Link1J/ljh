@@ -21,11 +21,14 @@
 
 #include "function_traits.hpp"
 #include "int_types.hpp"
+#include <stdint.h>
 
 #if defined(__GNUC__) || defined(__clang__)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wattributes"
+#if defined(__clang__)
 #pragma GCC diagnostic ignored "-Wreserved-macro-identifier"
+#endif
 #elif defined(_MSC_VER)
 #pragma warning(push)
 #pragma warning(disable : 4348)
