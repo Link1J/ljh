@@ -279,8 +279,8 @@ namespace ljh::unix::dbus
 
 	class message
 	{
-		friend interface;
-		friend object;
+		friend class interface;
+		friend class object;
 		connection _connection;
 		DBusMessage* _message = nullptr;
 		bool weak = false;
@@ -423,9 +423,9 @@ namespace ljh::unix::dbus
 
 	class message::iter
 	{
-		friend message;
-		friend object;
-		friend object::prop;
+		friend class message;
+		friend class object;
+		friend class object::prop;
 
 		DBusMessageIter item;
 
