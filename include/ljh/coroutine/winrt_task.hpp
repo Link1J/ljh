@@ -28,7 +28,7 @@ namespace ljh::co
 	}
 }
 
-namespace ljh::co::__
+namespace ljh::__::co
 {
 	template<typename TResult>
 	struct winrt_task_completed_handler : winrt::Windows::Foundation::IUnknown
@@ -135,25 +135,25 @@ template<typename TResult>
 struct winrt::impl::consume<ljh::co::winrt_task<TResult>>
 {
 	template<typename D>
-	using type = ljh::co::__::consume_task<D, TResult>;
+	using type = ljh::__::co::consume_task<D, TResult>;
 };
 template<typename TResult>
 struct winrt::impl::async_completed_handler<ljh::co::winrt_task<TResult>>
 {
-	using type = ljh::co::__::winrt_task_completed_handler<TResult>;
+	using type = ljh::__::co::winrt_task_completed_handler<TResult>;
 };
 
 template<typename TResult>
-struct winrt::impl::category<ljh::co::__::winrt_task_completed_handler<TResult>>
+struct winrt::impl::category<ljh::__::co::winrt_task_completed_handler<TResult>>
 {
 	using type = interface_category;
 };
 template<typename TResult>
-inline constexpr auto& winrt::impl::name_v<ljh::co::__::winrt_task_completed_handler<TResult>> = L"winrt_task_completed_handler";
+inline constexpr auto& winrt::impl::name_v<ljh::__::co::winrt_task_completed_handler<TResult>> = L"winrt_task_completed_handler";
 template<typename TResult>
-inline constexpr winrt::guid winrt::impl::guid_v<ljh::co::__::winrt_task_completed_handler<TResult>>{"3C736D26-5C53-46D7-AF11-14F91C834852"};
+inline constexpr winrt::guid winrt::impl::guid_v<ljh::__::co::winrt_task_completed_handler<TResult>>{"3C736D26-5C53-46D7-AF11-14F91C834852"};
 template<typename TResult>
-struct winrt::impl::abi<ljh::co::__::winrt_task_completed_handler<TResult>>
+struct winrt::impl::abi<ljh::__::co::winrt_task_completed_handler<TResult>>
 {
 	struct __declspec(novtable) type : unknown_abi
 	{
@@ -168,7 +168,7 @@ struct winrt::impl::produce<D, ljh::co::winrt_task<TResult>> : winrt::impl::prod
 	try
 	{
 		typename D::abi_guard guard(this->shim());
-		this->shim().Completed(*reinterpret_cast<ljh::co::__::winrt_task_completed_handler<TResult> const*>(&handler));
+		this->shim().Completed(*reinterpret_cast<ljh::__::co::winrt_task_completed_handler<TResult> const*>(&handler));
 		return 0;
 	}
 	catch (...)
@@ -181,7 +181,7 @@ struct winrt::impl::produce<D, ljh::co::winrt_task<TResult>> : winrt::impl::prod
 	{
 		clear_abi(winrt_impl_result);
 		typename D::abi_guard guard(this->shim());
-		*winrt_impl_result = detach_from<ljh::co::__::winrt_task_completed_handler<TResult>>(this->shim().Completed());
+		*winrt_impl_result = detach_from<ljh::__::co::winrt_task_completed_handler<TResult>>(this->shim().Completed());
 		return 0;
 	}
 	catch (...)
@@ -204,11 +204,11 @@ struct winrt::impl::produce<D, ljh::co::winrt_task<TResult>> : winrt::impl::prod
 };
 
 template<typename H, typename TResult>
-struct winrt::impl::delegate<ljh::co::__::winrt_task_completed_handler<TResult>, H> final 
-	: winrt::impl::implements_delegate<ljh::co::__::winrt_task_completed_handler<TResult>, H>
+struct winrt::impl::delegate<ljh::__::co::winrt_task_completed_handler<TResult>, H> final 
+	: winrt::impl::implements_delegate<ljh::__::co::winrt_task_completed_handler<TResult>, H>
 {
 	delegate(H&& handler)
-		: implements_delegate<ljh::co::__::winrt_task_completed_handler<TResult>, H>(std::forward<H>(handler))
+		: implements_delegate<ljh::__::co::winrt_task_completed_handler<TResult>, H>(std::forward<H>(handler))
 	{}
 
 	int32_t __stdcall Invoke(void* asyncInfo, int32_t asyncStatus) noexcept final

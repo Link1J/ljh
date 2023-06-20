@@ -10,7 +10,7 @@
 #include <winrt/base.h>
 #include <ctxtcall.h>
 
-namespace ljh::_co
+namespace ljh::__::co
 {
 	template<typename T>
 	struct com_promise_awaiter
@@ -70,11 +70,11 @@ namespace ljh::_co
 namespace ljh::co
 {
 	template<typename T>
-	struct com_aware_task : _co::task_base<T>
+	struct com_aware_task : __::co::task_base<T>
 	{
-		using base = _co::task_base<T>;
+		using base = __::co::task_base<T>;
 		com_aware_task() = default;
-		com_aware_task(_co::promise<T>* initial)
+		com_aware_task(__::co::promise<T>* initial)
 			: base(initial)
 		{
 			this->promise->start();
@@ -89,7 +89,7 @@ namespace ljh::co
 
 		auto operator co_await()&&
 		{
-			return _co::com_promise_awaiter<T>{ std::move(promise) };
+			return __::co::com_promise_awaiter<T>{ std::move(promise) };
 		}
 	};
 
@@ -103,5 +103,5 @@ namespace ljh::co
 template <typename T, typename... Args>
 struct std::coroutine_traits<ljh::co::com_aware_task<T>, Args...>
 {
-	using promise_type = ljh::_co::promise<T>;
+	using promise_type = ljh::__::co::promise<T>;
 };

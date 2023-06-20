@@ -7,7 +7,7 @@
 #pragma once
 #include "task_base.hpp"
 
-namespace ljh::_co
+namespace ljh::__::co
 {
 	template<typename T>
 	struct cold_promise_awaiter
@@ -34,10 +34,10 @@ namespace ljh::_co
 namespace ljh::co
 {
 	template<typename T>
-	struct cold_task : _co::task_base<T>
+	struct cold_task : __::co::task_base<T>
 	{
-		using base = _co::task_base<T>;
-		cold_task(_co::promise<T>* initial = nullptr)
+		using base = __::co::task_base<T>;
+		cold_task(__::co::promise<T>* initial = nullptr)
 			: base(initial)
 		{
 			this->promise->start();
@@ -52,7 +52,7 @@ namespace ljh::co
 
 		auto operator co_await()&&
 		{
-			return _co::cold_promise_awaiter<T>{ std::move(promise) };
+			return __::co::cold_promise_awaiter<T>{ std::move(promise) };
 		}
 	};
 
@@ -66,5 +66,5 @@ namespace ljh::co
 template <typename T, typename... Args>
 struct std::coroutine_traits<ljh::co::cold_task<T>, Args...>
 {
-	using promise_type = ljh::_co::cold_promise_awaiter<T>;
+	using promise_type = ljh::__::co::cold_promise_awaiter<T>;
 };

@@ -7,7 +7,7 @@
 #pragma once
 #include "task_base.hpp"
 
-namespace ljh::_co
+namespace ljh::__::co
 {
 	template<typename T>
 	struct promise_awaiter
@@ -34,11 +34,11 @@ namespace ljh::_co
 namespace ljh::co
 {
 	template<typename T>
-	struct task : _co::task_base<T>
+	struct task : __::co::task_base<T>
 	{
-		using base = _co::task_base<T>;
+		using base = __::co::task_base<T>;
 		task() = default;
-		task(_co::promise<T>* initial)
+		task(__::co::promise<T>* initial)
 			: base(initial)
 		{
 			this->promise->start();
@@ -53,7 +53,7 @@ namespace ljh::co
 
 		auto operator co_await() &&
 		{
-			return _co::promise_awaiter<T>{ std::move(this->promise) };
+			return __::co::promise_awaiter<T>{ std::move(this->promise) };
 		}
 	};
 
@@ -67,5 +67,5 @@ namespace ljh::co
 template <typename T, typename... Args>
 struct std::coroutine_traits<ljh::co::task<T>, Args...>
 {
-	using promise_type = ljh::_co::promise<T>;
+	using promise_type = ljh::__::co::promise<T>;
 };

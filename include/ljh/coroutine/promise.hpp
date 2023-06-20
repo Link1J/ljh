@@ -12,7 +12,7 @@
 #include <exception>
 #include <memory>
 
-namespace ljh::_co
+namespace ljh::__::co
 {
 	template<typename T> 
 	struct promise;

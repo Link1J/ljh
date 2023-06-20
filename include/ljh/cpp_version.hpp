@@ -531,3 +531,11 @@
 #else
 #define LJH_NORETURN
 #endif
+
+#if defined(_MSC_VER) && !defined(__clang__)
+#define LJH_NO_UNIQUE_ADDRESS [[msvc::no_unique_address]]
+#elif defined(_MSC_VER) && defined(__clang__)
+#define LJH_NO_UNIQUE_ADDRESS
+#else
+#define LJH_NO_UNIQUE_ADDRESS [[no_unique_address]]
+#endif

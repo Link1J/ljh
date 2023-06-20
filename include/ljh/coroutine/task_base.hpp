@@ -7,7 +7,7 @@
 #pragma once
 #include "promise.hpp"
 
-namespace ljh::_co
+namespace ljh::__::co
 {
 	template<typename T>
 	struct task_base

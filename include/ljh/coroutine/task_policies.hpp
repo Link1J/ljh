@@ -7,7 +7,7 @@
 #pragma once
 #include <utility>
 
-namespace ljh::_co
+namespace ljh::__::co
 {
 	struct promise_policies
 	{
@@ -19,7 +19,7 @@ namespace ljh::co
 {
 	struct task_policy
 	{
-		task_policy(_co::promise_policies& policies)
+		task_policy(__::co::promise_policies& policies)
 			: policies(policies)
 		{}
 
@@ -28,7 +28,7 @@ namespace ljh::co
 			return std::exchange(policies.m_terminate_on_unhandled_exception, value);
 		}
 	private:
-		_co::promise_policies& policies;
+		__::co::promise_policies& policies;
 	};
 
 	struct get_task_policy {};
