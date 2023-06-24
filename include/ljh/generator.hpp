@@ -101,7 +101,7 @@ namespace ljh::__
 			return target;
 		}
 
-		void await_resume() noexcept
+		void await_resume()
 		{
 			if (nested.except)
 				::std::rethrow_exception(::std::move(nested.except));
