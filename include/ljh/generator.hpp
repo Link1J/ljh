@@ -257,6 +257,7 @@ namespace ljh
 		{
 			if (coroutine)
 				coroutine.destroy();
+			coroutine = nullptr;
 		}
 
 		iterator begin()

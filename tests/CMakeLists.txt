@@ -11,6 +11,7 @@ if(POLICY CMP0110)
 	cmake_policy(SET CMP0110 NEW)
 endif()
 
+set(CATCH_CONFIG_CONSOLE_WIDTH 500)
 set(CATCH_BUILD_TESTING OFF)
 
 FetchContent_Declare(Catch2
@@ -38,7 +39,6 @@ add_executable(tests_11
 )
 set_target_properties(tests_11 PROPERTIES CXX_STANDARD 11 CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)
 target_link_libraries(tests_11 Catch2::Catch2WithMain ljh)
-target_compile_definitions(tests_11 PRIVATE CATCH_CONFIG_CONSOLE_WIDTH=500)
 
 add_executable(tests_14
 	compile_time_string.14.cpp
@@ -46,7 +46,6 @@ add_executable(tests_14
 )
 set_target_properties(tests_14 PROPERTIES CXX_STANDARD 14 CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)
 target_link_libraries(tests_14 Catch2::Catch2WithMain ljh)
-target_compile_definitions(tests_14 PRIVATE CATCH_CONFIG_CONSOLE_WIDTH=500)
 
 add_executable(tests_17
 	version.17.cpp
@@ -64,7 +63,6 @@ endif()
 
 set_target_properties(tests_17 PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)
 target_link_libraries(tests_17 Catch2::Catch2WithMain ljh)
-target_compile_definitions(tests_17 PRIVATE CATCH_CONFIG_CONSOLE_WIDTH=500)
 
 add_executable(tests_20
 	expected.20.cpp
@@ -77,14 +75,12 @@ add_executable(tests_20
 )
 set_target_properties(tests_20 PROPERTIES CXX_STANDARD 20 CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)
 target_link_libraries(tests_20 Catch2::Catch2WithMain ljh)
-target_compile_definitions(tests_20 PRIVATE CATCH_CONFIG_CONSOLE_WIDTH=500)
 
 add_executable(tests_info
 	info.na.cpp
 )
 set_target_properties(tests_info PROPERTIES CXX_STANDARD 23 CXX_STANDARD_REQUIRED NO CXX_EXTENSIONS NO)
 target_link_libraries(tests_info Catch2::Catch2 ljh)
-target_compile_definitions(tests_info PRIVATE CATCH_CONFIG_CONSOLE_WIDTH=500)
 
 include(CTest)
 include(Catch)

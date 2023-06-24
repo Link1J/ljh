@@ -8,6 +8,8 @@
 
 #include "ljh/generator.hpp"
 
+#include <string_view>
+
 ljh::generator<std::uint64_t> fibonacci_sequence(unsigned n)
 {
 	if (n == 0)
@@ -40,28 +42,21 @@ ljh::generator<std::uint64_t> fibonacci_sequence(unsigned n)
 
 TEST_CASE("generator", "[test_20][generator]")
 {
-	SECTION("Iterating") {
-		auto testing = fibonacci_sequence(10);
-		auto it = std::ranges::begin(testing);
-		auto end = std::ranges::end(testing);
-	
-		      REQUIRE(it != end); CHECK(*it == 0);	
-		it++; REQUIRE(it != end); CHECK(*it == 1);
-		it++; REQUIRE(it != end); CHECK(*it == 1);
-		it++; REQUIRE(it != end); CHECK(*it == 2);
-		it++; REQUIRE(it != end); CHECK(*it == 3);
-		it++; REQUIRE(it != end); CHECK(*it == 5);
-		it++; REQUIRE(it != end); CHECK(*it == 8);
-		it++; REQUIRE(it != end); CHECK(*it == 13);
-		it++; REQUIRE(it != end); CHECK(*it == 21);
-		it++; REQUIRE(it != end); CHECK(*it == 34);
-		it++; REQUIRE(it == end);
-	}
-	SECTION("Exceptions") {
-		REQUIRE_NOTHROW(fibonacci_sequence(95));
-		auto testing = fibonacci_sequence(95);
-		REQUIRE_THROWS_AS(std::ranges::begin(testing), std::runtime_error);
-	}
+	auto testing = fibonacci_sequence(10);
+	auto it = std::ranges::begin(testing);
+	auto end = std::ranges::end(testing);
+
+	      REQUIRE(it != end); CHECK(*it == 0);	
+	it++; REQUIRE(it != end); CHECK(*it == 1);
+	it++; REQUIRE(it != end); CHECK(*it == 1);
+	it++; REQUIRE(it != end); CHECK(*it == 2);
+	it++; REQUIRE(it != end); CHECK(*it == 3);
+	it++; REQUIRE(it != end); CHECK(*it == 5);
+	it++; REQUIRE(it != end); CHECK(*it == 8);
+	it++; REQUIRE(it != end); CHECK(*it == 13);
+	it++; REQUIRE(it != end); CHECK(*it == 21);
+	it++; REQUIRE(it != end); CHECK(*it == 34);
+	it++; REQUIRE(it == end);
 }
 
 ljh::generator<std::string const&> delete_rows(std::string table, std::vector<int> ids)
@@ -91,4 +86,120 @@ TEST_CASE("nested generator", "[test_20][generator]")
 	it++; REQUIRE(it != end); CHECK(*it == "DELETE FROM order WHERE id = 11;");
 	it++; REQUIRE(it != end); CHECK(*it == "DELETE FROM order WHERE id = 19;");
 	it++; REQUIRE(it == end);
+}
+
+TEST_CASE("exception handling - first throws", "[test_20][generator]")
+{
+	REQUIRE_NOTHROW(fibonacci_sequence(95));
+	auto testing = fibonacci_sequence(95);
+	REQUIRE_THROWS(std::ranges::begin(testing));
+}
+
+ljh::generator<int> fails()
+{
+	co_yield 1;
+	throw std::exception{"test"};
+}
+
+TEST_CASE("exception handling - second throws", "[test_20][generator]")
+{
+	SECTION("when") {
+		auto testing = fails();
+		auto it = std::ranges::begin(testing);
+		auto end = std::ranges::end(testing);
+
+		REQUIRE(it != end);
+		CHECK(*it == 1);
+		REQUIRE_THROWS(it++);
+	}
+	SECTION("for each loop") {
+		try {
+			for (auto part : fails()) {}
+		} catch (std::exception const& e) {
+			using namespace std::literals;
+			REQUIRE(e.what() == "test"s);
+		}
+	}
+}
+
+ljh::generator<int> no_fail(auto&& start)
+{
+	co_yield start + 1;
+	co_yield start + 2;
+	co_yield start + 3;
+}
+
+ljh::generator<int> fails_main(auto&& start)
+{
+	auto nested = no_fail(start);
+	for (auto it = std::begin(nested); it != std::end(nested); it++)
+	{
+		auto token = *it;
+		if (token != start + 2)
+			co_yield token;
+		else 
+			throw std::exception{"test"};
+	}
+}
+
+TEST_CASE("exception handling - nested - main throws", "[test_20][generator]")
+{
+	SECTION("when") {
+		auto testing = fails_main(0);
+		auto it = std::ranges::begin(testing);
+		auto end = std::ranges::end(testing);
+
+		REQUIRE(it != end);
+		CHECK(*it == 1);
+		REQUIRE_THROWS(it++);
+	}
+	SECTION("for each loop") {
+		try {
+			for (auto part : fails_main(0)) {}
+		} catch (std::exception const& e) {
+			using namespace std::literals;
+			REQUIRE(e.what() == "test"s);
+		}
+	}
+}
+
+struct unknown : std::invalid_argument
+{
+	explicit unknown(std::string const& item)
+		: std::invalid_argument("Unknown " + item)
+	{}
+};
+
+ljh::generator<int> fails_main2(auto&& start)
+{
+	auto nested = no_fail(start);
+	for (auto it = std::begin(nested); it != std::end(nested); it++)
+	{
+		auto token = *it;
+		if (token != start + 2)
+			co_yield token;
+		else
+			throw unknown{std::format("{}", token)};
+	}
+}
+
+TEST_CASE("exception handling - nested - main throws - custom error", "[test_20][generator]")
+{
+	SECTION("when") {
+		auto testing = fails_main2(0);
+		auto it = std::ranges::begin(testing);
+		auto end = std::ranges::end(testing);
+
+		REQUIRE(it != end);
+		CHECK(*it == 1);
+		REQUIRE_THROWS(it++);
+	}
+	SECTION("for each loop") {
+		try {
+			for (auto part : fails_main2(0)) {}
+		} catch (std::exception const& e) {
+			using namespace std::literals;
+			REQUIRE(e.what() == "Unknown 2"s);
+		}
+	}
 }
