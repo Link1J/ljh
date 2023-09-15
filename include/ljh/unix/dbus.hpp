@@ -388,9 +388,36 @@ namespace ljh::unix::dbus
 			}
 		}
 
-		struct func;
-		struct sign;
-		struct prop;
+		struct func
+		{
+			std::function<void(message mes)> callback;
+			std::span<std::string_view const> (*arg_info)();
+			std::span<std::string_view const> (*return_info)();
+
+			template<typename F>
+			static func create(connection con, F&& cb);
+		};
+
+		struct sign
+		{
+			std::function<void(message mes)> callback;
+			std::span<std::string_view const> (*arg_info)();
+			std::span<std::string_view const> (*return_info)();
+
+			template<typename F>
+			static sign create(connection con, F&& cb);
+		};
+
+		struct prop
+		{
+			std::function<void(message::iter&)> getter;
+			std::function<void(message::iter&)> setter;
+			std::function<void(std::string const&, message::iter::map_builder&)> getall;
+			std::span<std::string_view const> (*arg_info)();
+
+			template<typename G, typename S>
+			static prop create(connection con, G&& g, S&& s);
+		};
 
 		struct interface
 		{
@@ -483,39 +510,6 @@ namespace ljh::unix::dbus
 		template<typename T>
 		bool get(T& data) requires (!std::is_const_v<T>);
 	};
-
-
-	struct object::func
-	{
-		std::function<void(message mes)> callback;
-		std::span<std::string_view const> (*arg_info)();
-		std::span<std::string_view const> (*return_info)();
-
-		template<typename F>
-		static func create(connection con, F&& cb);
-	};
-
-	struct object::sign
-	{
-		std::function<void(message mes)> callback;
-		std::span<std::string_view const> (*arg_info)();
-		std::span<std::string_view const> (*return_info)();
-
-		template<typename F>
-		static sign create(connection con, F&& cb);
-	};
-
-	struct object::prop
-	{
-		std::function<void(message::iter&)> getter;
-		std::function<void(message::iter&)> setter;
-		std::function<void(std::string const&, message::iter::map_builder&)> getall;
-		std::span<std::string_view const> (*arg_info)();
-
-		template<typename G, typename S>
-		static prop create(connection con, G&& g, S&& s);
-	};
-
 
 	class interface
 	{
