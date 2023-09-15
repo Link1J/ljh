@@ -21,10 +21,15 @@
 
 #if __has_include(<ranges>) && __cpp_lib_ranges
 #include <ranges>
+#endif
 
 namespace ljh::ranges
 {
+#if __has_include(<ranges>) && __cpp_lib_ranges
 	template<std::ranges::range rng>
+#else 
+	template<typename rng>
+#endif
 	struct elements_of
 	{
 		LJH_NO_UNIQUE_ADDRESS rng range;
@@ -40,4 +45,3 @@ namespace ljh::ranges
 	template<typename rng>
 	elements_of(rng&&) -> elements_of<rng&&>;
 }
-#endif
