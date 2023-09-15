@@ -56,12 +56,6 @@ target_include_directories(ljh
 		$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
 		$<INSTALL_INTERFACE:include>
 )
-if (MSVC)
-	target_compile_options(ljh
-		PRIVATE
-			/await:strict
-	)
-endif()
 
 if (WIN32)
 	try_compile(AWAIT_NOT_NEEDED
