@@ -61,25 +61,25 @@ namespace ljh::ranges::views
 			template<std::ranges::viewable_range R2>
 			constexpr auto operator()(R2&& r) &
 			{
-				return std::apply([&r]<typename... R>(R&&... o) { return std::ranges::zip_view(std::forward<R2>(r), std::forward<R>(o)...); }, range);
+				return std::apply([&r]<typename... R3>(R3&&... o) { return std::ranges::zip_view(std::forward<R2>(r), std::forward<R3>(o)...); }, range);
 			}
 
 			template<std::ranges::viewable_range R2>
 			constexpr auto operator()(R2&& r) const&
 			{
-				return std::apply([&r]<typename... R>(R&&... o) { return std::ranges::zip_view(std::forward<R2>(r), std::forward<R>(o)...); }, range);
+				return std::apply([&r]<typename... R3>(R3&&... o) { return std::ranges::zip_view(std::forward<R2>(r), std::forward<R3>(o)...); }, range);
 			}
 
 			template<std::ranges::viewable_range R2>
 			constexpr auto operator()(R2&& r) &&
 			{
-				return std::apply([&r]<typename... R>(R&&... o) { return std::ranges::zip_view(std::forward<R2>(r), std::forward<R>(o)...); }, range);
+				return std::apply([&r]<typename... R3>(R3&&... o) { return std::ranges::zip_view(std::forward<R2>(r), std::forward<R3>(o)...); }, range);
 			}
 
 			template<std::ranges::viewable_range R2>
 			constexpr auto operator()(R2&& r) const&&
 			{
-				return std::apply([&r]<typename... R>(R&&... o) { return std::ranges::zip_view(std::forward<R2>(r), std::forward<R>(o)...); }, range);
+				return std::apply([&r]<typename... R3>(R3&&... o) { return std::ranges::zip_view(std::forward<R2>(r), std::forward<R3>(o)...); }, range);
 			}
 		};
 
