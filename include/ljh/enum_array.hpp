@@ -22,22 +22,22 @@
 
 namespace ljh
 {
-    template<typename T, typename N>
+    template<typename T, typename N, std::size_t E = (std::size_t)N::END + 1>
     struct enum_array
     {
-        std::array<T, (std::size_t)N::END + 1> items;
+        std::array<T, E> items;
 
-        using value_type             = T;
-        using pointer                = value_type*;
-        using const_pointer          = value_type const*;
-        using reference              = value_type&;
-        using const_reference        = value_type const&;
-        using iterator               = value_type*;
-        using const_iterator         = value_type const*;
-        using size_type              = std::size_t;
-        using difference_type        = std::ptrdiff_t;
-        using reverse_iterator       = std::reverse_iterator<iterator>;
-        using const_reverse_iterator = std::reverse_iterator<const_iterator>;
+        using value_type             = typename decltype(items)::value_type;
+        using pointer                = typename decltype(items)::pointer;
+        using const_pointer          = typename decltype(items)::const_pointer;
+        using reference              = typename decltype(items)::reference;
+        using const_reference        = typename decltype(items)::const_reference;
+        using iterator               = typename decltype(items)::iterator;
+        using const_iterator         = typename decltype(items)::const_iterator;
+        using size_type              = typename decltype(items)::size_type;
+        using difference_type        = typename decltype(items)::difference_type;
+        using reverse_iterator       = typename decltype(items)::reverse_iterator;
+        using const_reverse_iterator = typename decltype(items)::const_reverse_iterator;
 
         [[nodiscard]] constexpr bool empty() const noexcept
         {
@@ -46,12 +46,12 @@ namespace ljh
 
         [[nodiscard]] constexpr size_type size() const noexcept
         {
-            return (size_type)N::END;
+            return E;
         }
 
         [[nodiscard]] constexpr size_type max_size() const noexcept
         {
-            return (size_type)N::END;
+            return E;
         }
 
         LJH_CPP17_CONSTEXPR T* data() noexcept
