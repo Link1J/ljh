@@ -19,7 +19,7 @@
 #pragma once
 #include "../cpp_version.hpp"
 
-#if __cpp_­lib_bind_back <= 202202L
+#if __cpp_lib_bind_back <= 202202L
 #include <tuple>
 #include <type_traits>
 
