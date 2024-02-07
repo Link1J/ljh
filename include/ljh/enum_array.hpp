@@ -25,7 +25,7 @@ namespace ljh
     template<typename T, typename N, std::size_t E = (std::size_t)N::END + 1>
     struct enum_array
     {
-        std::array<T, E> items;
+        std::array<T, E - 1> items;
 
         using value_type             = typename decltype(items)::value_type;
         using pointer                = typename decltype(items)::pointer;
@@ -46,12 +46,12 @@ namespace ljh
 
         [[nodiscard]] constexpr size_type size() const noexcept
         {
-            return E;
+            return E - 1;
         }
 
         [[nodiscard]] constexpr size_type max_size() const noexcept
         {
-            return E;
+            return E - 1;
         }
 
         LJH_CPP17_CONSTEXPR T* data() noexcept
