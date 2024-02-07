@@ -95,10 +95,18 @@ TEST_CASE("exception handling - first throws", "[test_20][generator]")
 	REQUIRE_THROWS(std::ranges::begin(testing));
 }
 
+struct error : std::exception
+{
+	const char* what() const noexcept
+	{
+		return "test";
+	}
+};
+
 ljh::generator<int> fails()
 {
 	co_yield 1;
-	throw std::exception{"test"};
+	throw error{};
 }
 
 TEST_CASE("exception handling - second throws", "[test_20][generator]")
@@ -138,7 +146,7 @@ ljh::generator<int> fails_main(auto&& start)
 		if (token != start + 2)
 			co_yield token;
 		else 
-			throw std::exception{"test"};
+			throw error{};
 	}
 }
 

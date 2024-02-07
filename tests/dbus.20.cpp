@@ -15,7 +15,7 @@ CATCH_TRANSLATE_EXCEPTION(const ljh::unix::dbus::error& ex) {
 	return "DBus Error (" + ex.name() + "): " + ex.message();
 }
 
-TEST_CASE("dbus - call (store)", "[test_17][dbus]") {
+TEST_CASE("dbus - call (store)", "[test_20][dbus]") {
 	using namespace ljh::unix;
 	
 	dbus::connection connection(dbus::bus::SYSTEM);
@@ -26,7 +26,7 @@ TEST_CASE("dbus - call (store)", "[test_17][dbus]") {
 	REQUIRE(storage != "");
 }
 
-TEST_CASE("dbus - call (return)", "[test_17][dbus]") {
+TEST_CASE("dbus - call (return)", "[test_20][dbus]") {
 	using namespace ljh::unix;
 	
 	dbus::connection connection(dbus::bus::SYSTEM);
@@ -35,7 +35,7 @@ TEST_CASE("dbus - call (return)", "[test_17][dbus]") {
 	REQUIRE(dbus_obj.call("GetId").run<std::string>() != "");
 }
 
-TEST_CASE("dbus - call (args, return)", "[test_17][dbus]") {
+TEST_CASE("dbus - call (args, return)", "[test_20][dbus]") {
 	using namespace ljh::unix;
 	
 	dbus::connection connection(dbus::bus::SYSTEM);
@@ -44,7 +44,7 @@ TEST_CASE("dbus - call (args, return)", "[test_17][dbus]") {
 	REQUIRE(dbus_obj.call("GetNameOwner").args("org.freedesktop.DBus").run<std::string>() == "org.freedesktop.DBus");
 }
 
-TEST_CASE("dbus - call (args, store)", "[test_17][dbus]") {
+TEST_CASE("dbus - call (args, store)", "[test_20][dbus]") {
 	using namespace ljh::unix;
 	
 	dbus::connection connection(dbus::bus::SYSTEM);
@@ -55,7 +55,7 @@ TEST_CASE("dbus - call (args, store)", "[test_17][dbus]") {
 	REQUIRE(storage != "");
 }
 
-TEST_CASE("dbus - get property", "[test_17][dbus]") {
+TEST_CASE("dbus - get property", "[test_20][dbus]") {
 	using namespace ljh::unix;
 	
 	dbus::connection connection(dbus::bus::SYSTEM);
