@@ -749,7 +749,7 @@ namespace ljh::unix::dbus
 	template<typename F>
 	object::func object::func::create(connection con, F&& cb)
 	{
-		using ft = decltype([&cb]{ return std::function{cb}; }());
+		using ft = decltype(std::function{cb});
 		using at = typename ljh::function_traits<ft>::argument_types;
 		using rt = typename ljh::function_traits<ft>::return_type;
 
