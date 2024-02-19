@@ -76,6 +76,12 @@ endif()
 set_target_properties(tests_20 PROPERTIES CXX_STANDARD 20 CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)
 target_link_libraries(tests_20 Catch2::Catch2WithMain ljh)
 
+add_executable(tests_23
+	smarc.23.cpp
+)
+set_target_properties(tests_23 PROPERTIES CXX_STANDARD 23 CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)
+target_link_libraries(tests_23 Catch2::Catch2WithMain ljh)
+
 add_executable(tests_info
 	info.na.cpp
 )
