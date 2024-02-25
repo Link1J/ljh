@@ -4,6 +4,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
+#include <catch2/catch_test_macros.hpp>
+
 #include "ljh/smarc/node.hpp"
 #include "ljh/smarc/list.hpp"
 #include "ljh/smarc/ptr.hpp"
@@ -16,6 +18,252 @@ struct test : ljh::smarc::node<test>
         return new bool;
     }
 };
+
+TEST_CASE("ljh::smarc::list range type", "[test_23][smarc_list]")
+{
+    SECTION("normal")
+    {
+        ljh::smarc::list<test> testing;
+        STATIC_REQUIRE(std::ranges::range<decltype(testing)>);
+        STATIC_REQUIRE(std::ranges::common_range<decltype(testing)>);
+        STATIC_REQUIRE_FALSE(std::ranges::constant_range<decltype(testing)>);
+    }
+    SECTION("const")
+    {
+        ljh::smarc::list<test> const testing;
+        STATIC_REQUIRE(std::ranges::range<decltype(testing)>);
+        STATIC_REQUIRE(std::ranges::common_range<decltype(testing)>);
+        STATIC_REQUIRE(std::ranges::constant_range<decltype(testing)>);
+    }
+}
+
+TEST_CASE("ljh::smarc::list C++11 iterator types", "[test_23][smarc_list]")
+{
+    SECTION("normal")
+    {
+        ljh::smarc::list<test> testing;
+        SECTION("begin/end")
+        {
+            auto begin = std::begin(testing);
+            auto end   = std::end(testing);
+            STATIC_REQUIRE(std::same_as<decltype(begin), decltype(end)>);
+        }
+        SECTION("cbegin/cend")
+        {
+            auto begin = std::cbegin(testing);
+            auto end   = std::cend(testing);
+            STATIC_REQUIRE(std::same_as<decltype(begin), decltype(end)>);
+        }
+        SECTION("rbegin/rend")
+        {
+            auto begin = std::rbegin(testing);
+            auto end   = std::rend(testing);
+            STATIC_REQUIRE(std::same_as<decltype(begin), decltype(end)>);
+        }
+        SECTION("crbegin/crend")
+        {
+            auto begin = std::crbegin(testing);
+            auto end   = std::crend(testing);
+            STATIC_REQUIRE(std::same_as<decltype(begin), decltype(end)>);
+        }
+        SECTION("normal and const")
+        {
+            SECTION("begin")
+            {
+                auto normal   = std::begin(testing);
+                auto constant = std::cbegin(testing);
+                STATIC_REQUIRE_FALSE(std::same_as<decltype(normal), decltype(constant)>);
+            }
+            SECTION("end")
+            {
+                auto normal   = std::end(testing);
+                auto constant = std::cend(testing);
+                STATIC_REQUIRE_FALSE(std::same_as<decltype(normal), decltype(constant)>);
+            }
+            SECTION("rbegin")
+            {
+                auto normal   = std::rbegin(testing);
+                auto constant = std::crbegin(testing);
+                STATIC_REQUIRE_FALSE(std::same_as<decltype(normal), decltype(constant)>);
+            }
+            SECTION("rend")
+            {
+                auto normal   = std::rend(testing);
+                auto constant = std::crend(testing);
+                STATIC_REQUIRE_FALSE(std::same_as<decltype(normal), decltype(constant)>);
+            }
+        }
+    }
+    SECTION("const")
+    {
+        ljh::smarc::list<test> const testing;
+        SECTION("begin/end")
+        {
+            auto begin = std::begin(testing);
+            auto end   = std::end(testing);
+            STATIC_REQUIRE(std::same_as<decltype(begin), decltype(end)>);
+        }
+        SECTION("cbegin/cend")
+        {
+            auto begin = std::cbegin(testing);
+            auto end   = std::cend(testing);
+            STATIC_REQUIRE(std::same_as<decltype(begin), decltype(end)>);
+        }
+        SECTION("rbegin/rend")
+        {
+            auto begin = std::rbegin(testing);
+            auto end   = std::rend(testing);
+            STATIC_REQUIRE(std::same_as<decltype(begin), decltype(end)>);
+        }
+        SECTION("crbegin/crend")
+        {
+            auto begin = std::crbegin(testing);
+            auto end   = std::crend(testing);
+            STATIC_REQUIRE(std::same_as<decltype(begin), decltype(end)>);
+        }
+        SECTION("normal and const")
+        {
+            SECTION("begin")
+            {
+                auto normal   = std::begin(testing);
+                auto constant = std::cbegin(testing);
+                STATIC_REQUIRE(std::same_as<decltype(normal), decltype(constant)>);
+            }
+            SECTION("end")
+            {
+                auto normal   = std::end(testing);
+                auto constant = std::cend(testing);
+                STATIC_REQUIRE(std::same_as<decltype(normal), decltype(constant)>);
+            }
+            SECTION("rbegin")
+            {
+                auto normal   = std::rbegin(testing);
+                auto constant = std::crbegin(testing);
+                STATIC_REQUIRE(std::same_as<decltype(normal), decltype(constant)>);
+            }
+            SECTION("rend")
+            {
+                auto normal   = std::rend(testing);
+                auto constant = std::crend(testing);
+                STATIC_REQUIRE(std::same_as<decltype(normal), decltype(constant)>);
+            }
+        }
+    }
+}
+
+TEST_CASE("ljh::smarc::list C++20 iterator types", "[test_23][smarc_list]")
+{
+    SECTION("normal")
+    {
+        ljh::smarc::list<test> testing;
+        SECTION("begin/end")
+        {
+            auto begin = std::ranges::begin(testing);
+            auto end   = std::ranges::end(testing);
+            STATIC_REQUIRE(std::same_as<decltype(begin), decltype(end)>);
+        }
+        SECTION("cbegin/cend")
+        {
+            auto begin = std::ranges::cbegin(testing);
+            auto end   = std::ranges::cend(testing);
+            STATIC_REQUIRE(std::same_as<decltype(begin), decltype(end)>);
+        }
+        SECTION("rbegin/rend")
+        {
+            auto begin = std::ranges::rbegin(testing);
+            auto end   = std::ranges::rend(testing);
+            STATIC_REQUIRE(std::same_as<decltype(begin), decltype(end)>);
+        }
+        SECTION("crbegin/crend")
+        {
+            auto begin = std::ranges::crbegin(testing);
+            auto end   = std::ranges::crend(testing);
+            STATIC_REQUIRE(std::same_as<decltype(begin), decltype(end)>);
+        }
+        SECTION("normal and const")
+        {
+            SECTION("begin")
+            {
+                auto normal   = std::ranges::begin(testing);
+                auto constant = std::ranges::cbegin(testing);
+                STATIC_REQUIRE_FALSE(std::same_as<decltype(normal), decltype(constant)>);
+            }
+            SECTION("end")
+            {
+                auto normal   = std::ranges::end(testing);
+                auto constant = std::ranges::cend(testing);
+                STATIC_REQUIRE_FALSE(std::same_as<decltype(normal), decltype(constant)>);
+            }
+            SECTION("rbegin")
+            {
+                auto normal   = std::ranges::rbegin(testing);
+                auto constant = std::ranges::crbegin(testing);
+                STATIC_REQUIRE_FALSE(std::same_as<decltype(normal), decltype(constant)>);
+            }
+            SECTION("rend")
+            {
+                auto normal   = std::ranges::rend(testing);
+                auto constant = std::ranges::crend(testing);
+                STATIC_REQUIRE_FALSE(std::same_as<decltype(normal), decltype(constant)>);
+            }
+        }
+    }
+    SECTION("const")
+    {
+        ljh::smarc::list<test> const testing;
+        SECTION("begin/end")
+        {
+            auto begin = std::ranges::begin(testing);
+            auto end   = std::ranges::end(testing);
+            STATIC_REQUIRE(std::same_as<decltype(begin), decltype(end)>);
+        }
+        SECTION("cbegin/cend")
+        {
+            auto begin = std::ranges::cbegin(testing);
+            auto end   = std::ranges::cend(testing);
+            STATIC_REQUIRE(std::same_as<decltype(begin), decltype(end)>);
+        }
+        SECTION("rbegin/rend")
+        {
+            auto begin = std::ranges::rbegin(testing);
+            auto end   = std::ranges::rend(testing);
+            STATIC_REQUIRE(std::same_as<decltype(begin), decltype(end)>);
+        }
+        SECTION("crbegin/crend")
+        {
+            auto begin = std::ranges::crbegin(testing);
+            auto end   = std::ranges::crend(testing);
+            STATIC_REQUIRE(std::same_as<decltype(begin), decltype(end)>);
+        }
+        SECTION("normal and const")
+        {
+            SECTION("begin")
+            {
+                auto normal   = std::ranges::begin(testing);
+                auto constant = std::ranges::cbegin(testing);
+                STATIC_REQUIRE(std::same_as<decltype(normal), decltype(constant)>);
+            }
+            SECTION("end")
+            {
+                auto normal   = std::ranges::end(testing);
+                auto constant = std::ranges::cend(testing);
+                STATIC_REQUIRE(std::same_as<decltype(normal), decltype(constant)>);
+            }
+            SECTION("rbegin")
+            {
+                auto normal   = std::ranges::rbegin(testing);
+                auto constant = std::ranges::crbegin(testing);
+                STATIC_REQUIRE(std::same_as<decltype(normal), decltype(constant)>);
+            }
+            SECTION("rend")
+            {
+                auto normal   = std::ranges::rend(testing);
+                auto constant = std::ranges::crend(testing);
+                STATIC_REQUIRE(std::same_as<decltype(normal), decltype(constant)>);
+            }
+        }
+    }
+}
 
 decltype(auto) setup()
 {
@@ -34,48 +282,6 @@ void testfn()
     item2->insert_after(testing.last());
     item2->insert_after(testing.last());
 
-    static_assert(std::ranges::range<decltype(testing)>);
-    static_assert(std::ranges::common_range<decltype(testing)>);
-    static_assert(!std::ranges::constant_range<decltype(testing)>);
-
-    auto begin   = std::begin(testing);
-    auto end     = std::end(testing);
-    auto cbegin  = std::cbegin(testing);
-    auto cend    = std::cend(testing);
-    auto rbegin  = std::rbegin(testing);
-    auto rend    = std::rend(testing);
-    auto crbegin = std::crbegin(testing);
-    auto crend   = std::crend(testing);
-
-    static_assert(std::same_as<decltype(begin), decltype(end)>);
-    static_assert(std::same_as<decltype(cbegin), decltype(cend)>);
-    static_assert(std::same_as<decltype(rbegin), decltype(rend)>);
-    static_assert(std::same_as<decltype(crbegin), decltype(crend)>);
-
-    static_assert(!std::same_as<decltype(begin), decltype(cbegin)>);
-    static_assert(!std::same_as<decltype(end), decltype(cend)>);
-    static_assert(!std::same_as<decltype(rbegin), decltype(crbegin)>);
-    static_assert(!std::same_as<decltype(rend), decltype(crend)>);
-
-    auto ranges_begin   = std::ranges::begin(testing);
-    auto ranges_end     = std::ranges::end(testing);
-    auto ranges_cbegin  = std::ranges::cbegin(testing);
-    auto ranges_cend    = std::ranges::cend(testing);
-    auto ranges_rbegin  = std::ranges::rbegin(testing);
-    auto ranges_rend    = std::ranges::rend(testing);
-    auto ranges_crbegin = std::ranges::crbegin(testing);
-    auto ranges_crend   = std::ranges::crend(testing);
-
-    static_assert(std::sentinel_for<decltype(ranges_end), decltype(ranges_begin)>);
-    static_assert(std::sentinel_for<decltype(ranges_cend), decltype(ranges_cbegin)>);
-    static_assert(std::sentinel_for<decltype(ranges_rend), decltype(ranges_rbegin)>);
-    static_assert(std::sentinel_for<decltype(ranges_crend), decltype(ranges_crbegin)>);
-
-    static_assert(!std::same_as<decltype(ranges_begin), decltype(ranges_cbegin)>);
-    static_assert(!std::same_as<decltype(ranges_end), decltype(ranges_cend)>);
-    static_assert(!std::same_as<decltype(ranges_rbegin), decltype(ranges_crbegin)>);
-    static_assert(!std::same_as<decltype(ranges_rend), decltype(ranges_crend)>);
-
     for (auto&& i : testing)
     {
         static_assert(std::same_as<bool*, decltype(&i)>);
@@ -88,48 +294,6 @@ void testfnconst()
     ljh::smarc::ref weak    = testing.first();
     auto            weak2   = weak;
     auto            item2   = weak.lock();
-
-    static_assert(std::ranges::range<decltype(testing)>);
-    static_assert(std::ranges::common_range<decltype(testing)>);
-    static_assert(std::ranges::constant_range<decltype(testing)>);
-
-    auto begin   = std::begin(testing);
-    auto end     = std::end(testing);
-    auto cbegin  = std::cbegin(testing);
-    auto cend    = std::cend(testing);
-    auto rbegin  = std::rbegin(testing);
-    auto rend    = std::rend(testing);
-    auto crbegin = std::crbegin(testing);
-    auto crend   = std::crend(testing);
-
-    static_assert(std::same_as<decltype(begin), decltype(end)>);
-    static_assert(std::same_as<decltype(cbegin), decltype(cend)>);
-    static_assert(std::same_as<decltype(rbegin), decltype(rend)>);
-    static_assert(std::same_as<decltype(crbegin), decltype(crend)>);
-
-    static_assert(std::same_as<decltype(begin), decltype(cbegin)>);
-    static_assert(std::same_as<decltype(end), decltype(cend)>);
-    static_assert(std::same_as<decltype(rbegin), decltype(crbegin)>);
-    static_assert(std::same_as<decltype(rend), decltype(crend)>);
-
-    auto ranges_begin   = std::ranges::begin(testing);
-    auto ranges_end     = std::ranges::end(testing);
-    auto ranges_cbegin  = std::ranges::cbegin(testing);
-    auto ranges_cend    = std::ranges::cend(testing);
-    auto ranges_rbegin  = std::ranges::rbegin(testing);
-    auto ranges_rend    = std::ranges::rend(testing);
-    auto ranges_crbegin = std::ranges::crbegin(testing);
-    auto ranges_crend   = std::ranges::crend(testing);
-
-    static_assert(std::sentinel_for<decltype(ranges_end), decltype(ranges_begin)>);
-    static_assert(std::sentinel_for<decltype(ranges_cend), decltype(ranges_cbegin)>);
-    static_assert(std::sentinel_for<decltype(ranges_rend), decltype(ranges_rbegin)>);
-    static_assert(std::sentinel_for<decltype(ranges_crend), decltype(ranges_crbegin)>);
-
-    static_assert(std::same_as<decltype(ranges_begin), decltype(ranges_cbegin)>);
-    static_assert(std::same_as<decltype(ranges_end), decltype(ranges_cend)>);
-    static_assert(std::same_as<decltype(ranges_rbegin), decltype(ranges_crbegin)>);
-    static_assert(std::same_as<decltype(ranges_rend), decltype(ranges_crend)>);
 
     for (auto&& i : testing)
     {
