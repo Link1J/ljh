@@ -67,6 +67,9 @@ add_executable(tests_20
 	concepts.20.cpp
 	ranges.20.cpp
 	generator.20.cpp
+	size.20.cpp
+	point.20.cpp
+	rect.20.cpp
 )
 if (UNIX AND NOT APPLE)
 	target_sources(tests_20 PRIVATE
