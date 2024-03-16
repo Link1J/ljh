@@ -5,39 +5,96 @@
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/catch_template_test_macros.hpp>
+
 #include "ljh/area/size.hpp"
 
-TEST_CASE("size - constructor", "[test_20][size]")
+TEMPLATE_TEST_CASE("size - constructor", "[test_20][size]", ljh::size, ljh::isize)
 {
     SECTION("default")
     {
-        ljh::size v;
+        TestType v;
         REQUIRE(v.w == 0);
         REQUIRE(v.h == 0);
     }
     SECTION("width, height")
     {
-        ljh::size v{3, 4};
+        TestType v{3, 4};
         REQUIRE(v.w == 3);
         REQUIRE(v.h == 4);
     }
 }
 
-TEST_CASE("size - equality", "[test_20][size]")
+TEMPLATE_TEST_CASE("size - equality", "[test_20][size]", ljh::size, ljh::isize)
 {
-    ljh::size v;
+    TestType v;
     SECTION("equal")
     {
-        ljh::size v1;
+        TestType v1;
         CHECK(v.w == v1.w);
         CHECK(v.h == v1.h);
         REQUIRE(v == v1);
     }
     SECTION("not equal")
     {
-        ljh::size v1{3, 4};
+        TestType v1{3, 4};
         CHECK(v.w != v1.w);
         CHECK(v.h != v1.h);
         REQUIRE(v != v1);
+    }
+}
+
+static void value(ljh::size v, bool _default)
+{
+    CHECK(v.w == (_default ? 0 : 3));
+    CHECK(v.h == (_default ? 0 : 4));
+}
+static void lvalue(ljh::size const& v, bool _default)
+{
+    CHECK(v.w == (_default ? 0 : 3));
+    CHECK(v.h == (_default ? 0 : 4));
+}
+static void rvalue(ljh::size&& v, bool _default)
+{
+    CHECK(v.w == (_default ? 0 : 3));
+    CHECK(v.h == (_default ? 0 : 4));
+}
+
+// This is really compile test.
+TEMPLATE_TEST_CASE_SIG("size - function call constructors", "[test_20][size]", ((auto FN), FN), (value), (lvalue), (rvalue))
+{
+    SECTION("direct-initialization")
+    {
+        FN(ljh::size(), true);
+        FN(ljh::size(3, 4), false);
+        FN(ljh::size({}, {}), true);
+        FN(ljh::size({3, 4}), false); // What?
+    }
+    SECTION("list-initialization with type")
+    {
+        FN(ljh::size{}, true);
+        FN(ljh::size{3, 4}, false);
+        FN(ljh::size{{}, {}}, true);
+    }
+    SECTION("list-initialization without type")
+    {
+        FN({}, true);
+        FN({3, 4}, false);
+        FN({{}, {}}, true);
+    }
+}
+
+// This is really compile test.
+TEMPLATE_TEST_CASE_SIG("size - assignment from other size", "[test_20][size]", ((typename F, typename T, int V), F, T, V), (ljh::size, ljh::isize, 0),
+                       (ljh::isize, ljh::size, 0))
+{
+    F v{3, 4};
+    SECTION("via converting constructor")
+    {
+        auto v1 = T{v};
+        REQUIRE(v1.w == 3);
+        REQUIRE(v1.h == 4);
+        REQUIRE(v1.w == v.w);
+        REQUIRE(v1.h == v.h);
     }
 }

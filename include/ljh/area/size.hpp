@@ -31,10 +31,8 @@ namespace ljh
         using value_type  = T;
         using length_type = size_t;
 
-        struct
-        {
-            value_type w = 0, h = 0;
-        };
+        value_type w = 0;
+        value_type h = 0;
 
         static constexpr length_type length() noexcept
         {

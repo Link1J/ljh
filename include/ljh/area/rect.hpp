@@ -40,10 +40,10 @@ namespace ljh
         using point_type  = tpoint<T>;
         using size_type   = tsize<T>;
 
-        struct
-        {
-            value_type x = 0, y = 0, w = 0, h = 0;
-        };
+        value_type x = 0;
+        value_type y = 0;
+        value_type w = 0;
+        value_type h = 0;
 
         static constexpr length_type length() noexcept
         {
@@ -56,7 +56,7 @@ namespace ljh
 
         template<typename X = value_type, typename Y = value_type, typename W = value_type, typename H = value_type>
         constexpr trect(X x, Y y, W w, H h) noexcept;
-        template<typename P, typename S>
+        template<typename P = value_type, typename S = value_type>
         constexpr trect(tpoint<P> const& pos, tsize<S> const& size) noexcept;
 
         constexpr trect& operator=(trect const& v) noexcept = default;
