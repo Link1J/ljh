@@ -28,11 +28,11 @@ namespace Catch
     };
 } // namespace Catch
 
-TEMPLATE_TEST_CASE("trect - constructor", "[test_23][rect]", float, int)
+TEMPLATE_TEST_CASE("basic_rect - constructor", "[test_23][rect]", float, int)
 {
     SECTION("x, y, width, height")
     {
-        ljh::trect v{TestType{1}, TestType{2}, TestType{3}, TestType{4}};
+        ljh::basic_rect v{TestType{1}, TestType{2}, TestType{3}, TestType{4}};
         REQUIRE(v.x == 1);
         REQUIRE(v.y == 2);
         REQUIRE(v.w == 3);
@@ -40,9 +40,9 @@ TEMPLATE_TEST_CASE("trect - constructor", "[test_23][rect]", float, int)
     }
     SECTION("point, size")
     {
-        ljh::tpoint<TestType> p{1, 2};
-        ljh::tsize<TestType>  s{3, 4};
-        ljh::trect            v{p, s};
+        ljh::basic_point<TestType> p{1, 2};
+        ljh::basic_size<TestType>  s{3, 4};
+        ljh::basic_rect            v{p, s};
         REQUIRE(v.x == 1);
         REQUIRE(v.y == 2);
         REQUIRE(v.w == 3);
@@ -115,9 +115,9 @@ TEMPLATE_TEST_CASE("rect - equality", "[test_23][rect]", ljh::rect, ljh::irect)
 
 TEMPLATE_TEST_CASE("rect - operators", "[test_23][rect]", float, int)
 {
-    using rect  = ljh::trect<TestType>;
-    using point = ljh::tpoint<TestType>;
-    using size  = ljh::tsize<TestType>;
+    using rect  = ljh::basic_rect<TestType>;
+    using point = ljh::basic_point<TestType>;
+    using size  = ljh::basic_size<TestType>;
 
     rect v{1, 2, 3, 4};
     SECTION("operator+")
@@ -228,9 +228,9 @@ TEMPLATE_TEST_CASE_SIG("rect - assignment from other rect", "[test_23][rect]", (
 
 TEMPLATE_TEST_CASE("rect - structured binding", "[test_23][rect]", float, int)
 {
-    using rect  = ljh::trect<TestType>;
-    using point = ljh::tpoint<TestType>;
-    using size  = ljh::tsize<TestType>;
+    using rect  = ljh::basic_rect<TestType>;
+    using point = ljh::basic_point<TestType>;
+    using size  = ljh::basic_size<TestType>;
 
     SECTION("basic")
     {
@@ -358,9 +358,9 @@ TEMPLATE_TEST_CASE("rect - structured binding", "[test_23][rect]", float, int)
 TEMPLATE_TEST_CASE("tagged_rect - structured binding", "[test_23][rect][tagged_rect]", float, int)
 {
     using tag   = int;
-    using rect  = ljh::tagged_trect<TestType, tag>;
-    using point = ljh::tpoint<TestType>;
-    using size  = ljh::tsize<TestType>;
+    using rect  = ljh::basic_tagged_rect<TestType, tag>;
+    using point = ljh::basic_point<TestType>;
+    using size  = ljh::basic_size<TestType>;
 
     rect item;
     SECTION("from constructor")

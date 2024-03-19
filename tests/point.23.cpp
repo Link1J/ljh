@@ -26,11 +26,11 @@ namespace Catch
     };
 } // namespace Catch
 
-TEMPLATE_TEST_CASE("tpoint - constructor", "[test_23][point]", float, int)
+TEMPLATE_TEST_CASE("basic_point - constructor", "[test_23][point]", float, int)
 {
     SECTION("x, y")
     {
-        ljh::tpoint v{TestType{1}, TestType{2}};
+        ljh::basic_point v{TestType{1}, TestType{2}};
         REQUIRE(v.x == 1);
         REQUIRE(v.y == 2);
     }

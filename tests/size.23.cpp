@@ -26,11 +26,11 @@ namespace Catch
     };
 } // namespace Catch
 
-TEMPLATE_TEST_CASE("tsize - constructor", "[test_23][size]", float, int)
+TEMPLATE_TEST_CASE("basic_size - constructor", "[test_23][size]", float, int)
 {
     SECTION("w, h")
     {
-        ljh::tsize v{TestType{3}, TestType{4}};
+        ljh::basic_size v{TestType{3}, TestType{4}};
         REQUIRE(v.w == 3);
         REQUIRE(v.h == 4);
     }

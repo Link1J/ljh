@@ -27,7 +27,7 @@
 namespace ljh
 {
     template<typename T>
-    struct tsize
+    struct basic_size
     {
         using value_type  = T;
         using length_type = size_t;
@@ -40,28 +40,28 @@ namespace ljh
             return 2;
         }
 
-        constexpr tsize() noexcept               = default;
-        constexpr tsize(tsize const& v) noexcept = default;
-        constexpr tsize(tsize&& v) noexcept      = default;
+        constexpr basic_size() noexcept                    = default;
+        constexpr basic_size(basic_size const& v) noexcept = default;
+        constexpr basic_size(basic_size&& v) noexcept      = default;
 
-        constexpr tsize(T w, T h) noexcept;
+        constexpr basic_size(T w, T h) noexcept;
 
         template<typename W = value_type, typename H = value_type>
-        constexpr tsize(W w, H h) noexcept;
+        constexpr basic_size(W w, H h) noexcept;
 
-        constexpr tsize& operator=(tsize const& v) noexcept = default;
-        constexpr tsize& operator=(tsize&& v) noexcept      = default;
+        constexpr basic_size& operator=(basic_size const& v) noexcept = default;
+        constexpr basic_size& operator=(basic_size&& v) noexcept      = default;
 
-        constexpr ~tsize() noexcept = default;
+        constexpr ~basic_size() noexcept = default;
 
         template<typename U>
-        constexpr explicit tsize(tsize<U> const& v) noexcept;
+        constexpr explicit basic_size(basic_size<U> const& v) noexcept;
         template<typename U>
-        constexpr tsize& operator=(tsize<U> const& v) noexcept;
+        constexpr basic_size& operator=(basic_size<U> const& v) noexcept;
 
 #ifdef GLM_VERSION
         template<typename U, glm::qualifier P>
-        constexpr explicit tsize(glm::vec<2, U, P> const& size) noexcept;
+        constexpr explicit basic_size(glm::vec<2, U, P> const& size) noexcept;
         template<typename U, glm::qualifier P>
         constexpr explicit operator glm::vec<2, U, P>() const noexcept;
 #endif
@@ -69,41 +69,41 @@ namespace ljh
         constexpr value_type&       operator[](length_type i) noexcept;
         constexpr value_type const& operator[](length_type i) const noexcept;
 
-        constexpr bool operator==(tsize const& rhs) const noexcept;
-        constexpr bool operator!=(tsize const& rhs) const noexcept = default;
+        constexpr bool operator==(basic_size const& rhs) const noexcept;
+        constexpr bool operator!=(basic_size const& rhs) const noexcept = default;
 
-        constexpr tsize operator+(tsize const& rhs) const noexcept;
-        constexpr tsize operator-(tsize const& rhs) const noexcept;
-        constexpr tsize operator/(tsize const& rhs) const noexcept;
-        constexpr tsize operator*(tsize const& rhs) const noexcept;
+        constexpr basic_size operator+(basic_size const& rhs) const noexcept;
+        constexpr basic_size operator-(basic_size const& rhs) const noexcept;
+        constexpr basic_size operator/(basic_size const& rhs) const noexcept;
+        constexpr basic_size operator*(basic_size const& rhs) const noexcept;
 
-        constexpr tsize& operator+=(tsize const& rhs) noexcept;
-        constexpr tsize& operator-=(tsize const& rhs) noexcept;
-        constexpr tsize& operator/=(tsize const& rhs) noexcept;
-        constexpr tsize& operator*=(tsize const& rhs) noexcept;
+        constexpr basic_size& operator+=(basic_size const& rhs) noexcept;
+        constexpr basic_size& operator-=(basic_size const& rhs) noexcept;
+        constexpr basic_size& operator/=(basic_size const& rhs) noexcept;
+        constexpr basic_size& operator*=(basic_size const& rhs) noexcept;
 
         template<size_t I, typename S>
         constexpr decltype(auto) get(this S&& self) noexcept;
     };
 
-    using size  = tsize<float>;
-    using isize = tsize<int>;
+    using size  = basic_size<float>;
+    using isize = basic_size<int>;
 } // namespace ljh
 
 namespace std
 {
     template<typename T>
-    struct tuple_size<ljh::tsize<T>> : integral_constant<size_t, 2>
+    struct tuple_size<ljh::basic_size<T>> : integral_constant<size_t, 2>
     {};
 
     template<size_t I, typename T>
-    struct tuple_element<I, ljh::tsize<T>>
+    struct tuple_element<I, ljh::basic_size<T>>
     {
         using type = T;
     };
 
     template<typename T, typename C>
-    struct formatter<ljh::tsize<T>, C>
+    struct formatter<ljh::basic_size<T>, C>
     {
         template<typename PC>
         constexpr PC::iterator parse(PC& ctx)
@@ -112,7 +112,7 @@ namespace std
         }
 
         template<typename FC>
-        FC::iterator format(ljh::tsize<T> const& value, FC& ctx) const
+        FC::iterator format(ljh::basic_size<T> const& value, FC& ctx) const
         {
             return std::format_to(ctx.out(), "{}x{}", value.w, value.h);
         }
@@ -122,28 +122,28 @@ namespace std
 namespace ljh
 {
     template<typename T>
-    inline constexpr tsize<T>::tsize(T w, T h) noexcept
+    inline constexpr basic_size<T>::basic_size(T w, T h) noexcept
         : w(w)
         , h(h)
     {}
 
     template<typename T>
     template<typename W, typename H>
-    inline constexpr tsize<T>::tsize(W w, H h) noexcept
+    inline constexpr basic_size<T>::basic_size(W w, H h) noexcept
         : w(static_cast<value_type>(w))
         , h(static_cast<value_type>(h))
     {}
 
     template<typename T>
     template<typename U>
-    inline constexpr tsize<T>::tsize(tsize<U> const& v) noexcept
+    inline constexpr basic_size<T>::basic_size(basic_size<U> const& v) noexcept
         : w(static_cast<value_type>(v.w))
         , h(static_cast<value_type>(v.h))
     {}
 
     template<typename T>
     template<typename U>
-    inline constexpr tsize<T>& tsize<T>::operator=(tsize<U> const& v) noexcept
+    inline constexpr basic_size<T>& basic_size<T>::operator=(basic_size<U> const& v) noexcept
     {
         w = static_cast<value_type>(v.w);
         h = static_cast<value_type>(v.h);
@@ -153,21 +153,21 @@ namespace ljh
 #ifdef GLM_VERSION
     template<typename T>
     template<typename U, glm::qualifier P>
-    inline constexpr tsize<T>::tsize(glm::vec<2, U, P> const& size) noexcept
+    inline constexpr basic_size<T>::basic_size(glm::vec<2, U, P> const& size) noexcept
         : w(static_cast<value_type>(size.x))
         , h(static_cast<value_type>(size.y))
     {}
 
     template<typename T>
     template<typename U, glm::qualifier P>
-    inline constexpr tsize<T>::operator glm::vec<2, U, P>() const noexcept
+    inline constexpr basic_size<T>::operator glm::vec<2, U, P>() const noexcept
     {
         return {static_cast<U>(w), static_cast<U>(h)};
     }
 #endif
 
     template<typename T>
-    inline constexpr tsize<T>::value_type& tsize<T>::operator[](typename tsize<T>::length_type i) noexcept
+    inline constexpr basic_size<T>::value_type& basic_size<T>::operator[](typename basic_size<T>::length_type i) noexcept
     {
         assert(i >= 0 && i < this->length());
         switch (i)
@@ -179,7 +179,7 @@ namespace ljh
     }
 
     template<typename T>
-    inline constexpr tsize<T>::value_type const& tsize<T>::operator[](typename tsize<T>::length_type i) const noexcept
+    inline constexpr basic_size<T>::value_type const& basic_size<T>::operator[](typename basic_size<T>::length_type i) const noexcept
     {
         assert(i >= 0 && i < this->length());
         switch (i)
@@ -191,37 +191,37 @@ namespace ljh
     }
 
     template<typename T>
-    inline constexpr bool tsize<T>::operator==(tsize<T> const& rhs) const noexcept
+    inline constexpr bool basic_size<T>::operator==(basic_size<T> const& rhs) const noexcept
     {
         return w == rhs.w && h == rhs.h;
     }
 
     template<typename T>
-    inline constexpr tsize<T> tsize<T>::operator+(tsize const& rhs) const noexcept
+    inline constexpr basic_size<T> basic_size<T>::operator+(basic_size const& rhs) const noexcept
     {
         return {w + rhs.w, h + rhs.h};
     }
 
     template<typename T>
-    inline constexpr tsize<T> tsize<T>::operator-(tsize const& rhs) const noexcept
+    inline constexpr basic_size<T> basic_size<T>::operator-(basic_size const& rhs) const noexcept
     {
         return {w - rhs.w, h - rhs.h};
     }
 
     template<typename T>
-    inline constexpr tsize<T> tsize<T>::operator/(tsize const& rhs) const noexcept
+    inline constexpr basic_size<T> basic_size<T>::operator/(basic_size const& rhs) const noexcept
     {
         return {w / rhs.w, h / rhs.h};
     }
 
     template<typename T>
-    inline constexpr tsize<T> tsize<T>::operator*(tsize const& rhs) const noexcept
+    inline constexpr basic_size<T> basic_size<T>::operator*(basic_size const& rhs) const noexcept
     {
         return {w * rhs.w, h * rhs.h};
     }
 
     template<typename T>
-    inline constexpr tsize<T>& tsize<T>::operator+=(tsize const& rhs) noexcept
+    inline constexpr basic_size<T>& basic_size<T>::operator+=(basic_size const& rhs) noexcept
     {
         w += rhs.w;
         h += rhs.h;
@@ -229,7 +229,7 @@ namespace ljh
     }
 
     template<typename T>
-    inline constexpr tsize<T>& tsize<T>::operator-=(tsize const& rhs) noexcept
+    inline constexpr basic_size<T>& basic_size<T>::operator-=(basic_size const& rhs) noexcept
     {
         w -= rhs.w;
         h -= rhs.h;
@@ -237,7 +237,7 @@ namespace ljh
     }
 
     template<typename T>
-    inline constexpr tsize<T>& tsize<T>::operator/=(tsize const& rhs) noexcept
+    inline constexpr basic_size<T>& basic_size<T>::operator/=(basic_size const& rhs) noexcept
     {
         w /= rhs.w;
         h /= rhs.h;
@@ -245,7 +245,7 @@ namespace ljh
     }
 
     template<typename T>
-    inline constexpr tsize<T>& tsize<T>::operator*=(tsize const& rhs) noexcept
+    inline constexpr basic_size<T>& basic_size<T>::operator*=(basic_size const& rhs) noexcept
     {
         w *= rhs.w;
         h *= rhs.h;
@@ -254,7 +254,7 @@ namespace ljh
 
     template<typename T>
     template<size_t I, typename S>
-    inline constexpr decltype(auto) tsize<T>::get(this S&& self) noexcept
+    inline constexpr decltype(auto) basic_size<T>::get(this S&& self) noexcept
     {
         if constexpr (I == 0)
             return self.w;

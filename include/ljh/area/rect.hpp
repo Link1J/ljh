@@ -29,12 +29,12 @@
 namespace ljh
 {
     template<typename T>
-    struct trect
+    struct basic_rect
     {
         using value_type  = T;
         using length_type = std::size_t;
-        using point_type  = tpoint<T>;
-        using size_type   = tsize<T>;
+        using point_type  = basic_point<T>;
+        using size_type   = basic_size<T>;
 
         value_type x = 0;
         value_type y = 0;
@@ -46,38 +46,38 @@ namespace ljh
             return 4;
         }
 
-        constexpr trect() noexcept               = default;
-        constexpr trect(trect const& v) noexcept = default;
-        constexpr trect(trect&& v) noexcept      = default;
+        constexpr basic_rect() noexcept                    = default;
+        constexpr basic_rect(basic_rect const& v) noexcept = default;
+        constexpr basic_rect(basic_rect&& v) noexcept      = default;
 
-        constexpr trect(T x, T y, T w, T h) noexcept;
-        constexpr trect(tpoint<T> const& pos, tsize<T> const& size) noexcept;
+        constexpr basic_rect(T x, T y, T w, T h) noexcept;
+        constexpr basic_rect(basic_point<T> const& pos, basic_size<T> const& size) noexcept;
 
         template<typename X = value_type, typename Y = value_type, typename W = value_type, typename H = value_type>
-        constexpr trect(X x, Y y, W w, H h) noexcept;
+        constexpr basic_rect(X x, Y y, W w, H h) noexcept;
         template<typename P = value_type, typename S = value_type>
-        constexpr trect(tpoint<P> const& pos, tsize<S> const& size) noexcept;
+        constexpr basic_rect(basic_point<P> const& pos, basic_size<S> const& size) noexcept;
         template<typename P1, typename P2>
-        constexpr trect(tpoint<P1> const& top_left, tpoint<P2> const& bottom_right) noexcept;
+        constexpr basic_rect(basic_point<P1> const& top_left, basic_point<P2> const& bottom_right) noexcept;
 
-        constexpr trect& operator=(trect const& v) noexcept = default;
-        constexpr trect& operator=(trect&& v) noexcept      = default;
+        constexpr basic_rect& operator=(basic_rect const& v) noexcept = default;
+        constexpr basic_rect& operator=(basic_rect&& v) noexcept      = default;
 
-        constexpr ~trect() noexcept = default;
-
-        template<typename U>
-        constexpr explicit operator tpoint<U>() const noexcept;
-        template<typename U>
-        constexpr explicit operator tsize<U>() const noexcept;
+        constexpr ~basic_rect() noexcept = default;
 
         template<typename U>
-        constexpr explicit trect(trect<U> const& v) noexcept;
+        constexpr explicit operator basic_point<U>() const noexcept;
         template<typename U>
-        constexpr trect& operator=(trect<U> const& v) noexcept;
+        constexpr explicit operator basic_size<U>() const noexcept;
+
+        template<typename U>
+        constexpr explicit basic_rect(basic_rect<U> const& v) noexcept;
+        template<typename U>
+        constexpr basic_rect& operator=(basic_rect<U> const& v) noexcept;
 
 #ifdef GLM_VERSION
         template<typename U, glm::qualifier P>
-        constexpr explicit trect(glm::vec<4, U, P> const& pos_size) noexcept;
+        constexpr explicit basic_rect(glm::vec<4, U, P> const& pos_size) noexcept;
         template<typename U, glm::qualifier P>
         constexpr explicit operator glm::vec<4, U, P>() const noexcept;
 #endif
@@ -95,59 +95,59 @@ namespace ljh
         template<typename S>
         constexpr auto&& size(this S&& self) noexcept;
 
-        constexpr bool operator==(trect const& rhs) const noexcept;
-        constexpr bool operator!=(trect const& rhs) const noexcept = default;
+        constexpr bool operator==(basic_rect const& rhs) const noexcept;
+        constexpr bool operator!=(basic_rect const& rhs) const noexcept = default;
 
         constexpr bool contains(point_type const& point) const noexcept;
-        constexpr bool contains(trect const& rhs) const noexcept;
+        constexpr bool contains(basic_rect const& rhs) const noexcept;
 
         constexpr bool intersects(point_type const& point) const noexcept;
-        constexpr bool intersects(trect const& rhs) const noexcept;
+        constexpr bool intersects(basic_rect const& rhs) const noexcept;
 
-        constexpr trect operator|(trect const& rhs) const noexcept;
-        constexpr trect operator&(trect const& rhs) const noexcept;
+        constexpr basic_rect operator|(basic_rect const& rhs) const noexcept;
+        constexpr basic_rect operator&(basic_rect const& rhs) const noexcept;
 
-        constexpr trect& operator|=(trect const& rhs) noexcept;
-        constexpr trect& operator&=(trect const& rhs) noexcept;
+        constexpr basic_rect& operator|=(basic_rect const& rhs) noexcept;
+        constexpr basic_rect& operator&=(basic_rect const& rhs) noexcept;
 
-        constexpr trect operator+(point_type const& rhs) const noexcept;
-        constexpr trect operator+(size_type const& rhs) const noexcept;
-        constexpr trect operator-(point_type const& rhs) const noexcept;
-        constexpr trect operator-(size_type const& rhs) const noexcept;
+        constexpr basic_rect operator+(point_type const& rhs) const noexcept;
+        constexpr basic_rect operator+(size_type const& rhs) const noexcept;
+        constexpr basic_rect operator-(point_type const& rhs) const noexcept;
+        constexpr basic_rect operator-(size_type const& rhs) const noexcept;
 
-        constexpr trect& operator+=(point_type const& rhs) noexcept;
-        constexpr trect& operator+=(size_type const& rhs) noexcept;
-        constexpr trect& operator-=(point_type const& rhs) noexcept;
-        constexpr trect& operator-=(size_type const& rhs) noexcept;
+        constexpr basic_rect& operator+=(point_type const& rhs) noexcept;
+        constexpr basic_rect& operator+=(size_type const& rhs) noexcept;
+        constexpr basic_rect& operator-=(point_type const& rhs) noexcept;
+        constexpr basic_rect& operator-=(size_type const& rhs) noexcept;
 
         template<size_t I, typename S>
         constexpr auto&& get(this S&& self) noexcept;
     };
 
-    using rect  = trect<float>;
-    using irect = trect<int>;
+    using rect  = basic_rect<float>;
+    using irect = basic_rect<int>;
 } // namespace ljh
 
 namespace std
 {
     template<typename T>
-    struct tuple_size<ljh::trect<T>> : integral_constant<size_t, 2>
+    struct tuple_size<ljh::basic_rect<T>> : integral_constant<size_t, 2>
     {};
 
     template<typename T>
-    struct tuple_element<0, ljh::trect<T>>
+    struct tuple_element<0, ljh::basic_rect<T>>
     {
-        using type = typename ljh::trect<T>::point_type;
+        using type = typename ljh::basic_rect<T>::point_type;
     };
 
     template<typename T>
-    struct tuple_element<1, ljh::trect<T>>
+    struct tuple_element<1, ljh::basic_rect<T>>
     {
-        using type = typename ljh::trect<T>::size_type;
+        using type = typename ljh::basic_rect<T>::size_type;
     };
 
     template<typename T, typename C>
-    struct formatter<ljh::trect<T>, C>
+    struct formatter<ljh::basic_rect<T>, C>
     {
         template<typename PC>
         constexpr PC::iterator parse(PC& ctx)
@@ -156,7 +156,7 @@ namespace std
         }
 
         template<typename FC>
-        FC::iterator format(ljh::trect<T> const& value, FC& ctx) const
+        FC::iterator format(ljh::basic_rect<T> const& value, FC& ctx) const
         {
             auto&& [pos, size] = value;
             return std::format_to(ctx.out(), "{{{} {}}}", pos, size);
@@ -167,7 +167,7 @@ namespace std
 namespace ljh
 {
     template<typename T>
-    inline constexpr trect<T>::trect(T x, T y, T w, T h) noexcept
+    inline constexpr basic_rect<T>::basic_rect(T x, T y, T w, T h) noexcept
         : x(x)
         , y(y)
         , w(w)
@@ -175,7 +175,7 @@ namespace ljh
     {}
 
     template<typename T>
-    inline constexpr trect<T>::trect(tpoint<T> const& pos, tsize<T> const& size) noexcept
+    inline constexpr basic_rect<T>::basic_rect(basic_point<T> const& pos, basic_size<T> const& size) noexcept
         : x(pos.x)
         , y(pos.y)
         , w(size.w)
@@ -184,7 +184,7 @@ namespace ljh
 
     template<typename T>
     template<typename X, typename Y, typename W, typename H>
-    inline constexpr trect<T>::trect(X x, Y y, W w, H h) noexcept
+    inline constexpr basic_rect<T>::basic_rect(X x, Y y, W w, H h) noexcept
         : x(static_cast<value_type>(x))
         , y(static_cast<value_type>(y))
         , w(static_cast<value_type>(w))
@@ -193,7 +193,7 @@ namespace ljh
 
     template<typename T>
     template<typename P, typename S>
-    inline constexpr trect<T>::trect(tpoint<P> const& pos, tsize<S> const& size) noexcept
+    inline constexpr basic_rect<T>::basic_rect(basic_point<P> const& pos, basic_size<S> const& size) noexcept
         : x(static_cast<value_type>(pos.x))
         , y(static_cast<value_type>(pos.y))
         , w(static_cast<value_type>(size.w))
@@ -202,7 +202,7 @@ namespace ljh
 
     template<typename T>
     template<typename P1, typename P2>
-    inline constexpr trect<T>::trect(tpoint<P1> const& top_left, tpoint<P2> const& bottom_right) noexcept
+    inline constexpr basic_rect<T>::basic_rect(basic_point<P1> const& top_left, basic_point<P2> const& bottom_right) noexcept
         : x(static_cast<value_type>(top_left.x))
         , y(static_cast<value_type>(top_left.y))
         , w(static_cast<value_type>(bottom_right.x - top_left.x))
@@ -211,21 +211,21 @@ namespace ljh
 
     template<typename T>
     template<typename U>
-    inline constexpr trect<T>::operator tpoint<U>() const noexcept
+    inline constexpr basic_rect<T>::operator basic_point<U>() const noexcept
     {
         return {static_cast<U>(x), static_cast<U>(y)};
     }
 
     template<typename T>
     template<typename U>
-    inline constexpr trect<T>::operator tsize<U>() const noexcept
+    inline constexpr basic_rect<T>::operator basic_size<U>() const noexcept
     {
         return {static_cast<U>(w), static_cast<U>(h)};
     }
 
     template<typename T>
     template<typename U>
-    inline constexpr trect<T>::trect(trect<U> const& v) noexcept
+    inline constexpr basic_rect<T>::basic_rect(basic_rect<U> const& v) noexcept
         : x(static_cast<value_type>(v.x))
         , y(static_cast<value_type>(v.y))
         , w(static_cast<value_type>(v.w))
@@ -234,7 +234,7 @@ namespace ljh
 
     template<typename T>
     template<typename U>
-    inline constexpr trect<T>& trect<T>::operator=(trect<U> const& v) noexcept
+    inline constexpr basic_rect<T>& basic_rect<T>::operator=(basic_rect<U> const& v) noexcept
     {
         x = static_cast<value_type>(v.x);
         y = static_cast<value_type>(v.y);
@@ -246,7 +246,7 @@ namespace ljh
 #ifdef GLM_VERSION
     template<typename T>
     template<typename U, glm::qualifier P>
-    inline constexpr trect<T>::trect(glm::vec<4, U, P> const& pos_size) noexcept
+    inline constexpr basic_rect<T>::basic_rect(glm::vec<4, U, P> const& pos_size) noexcept
         : x(static_cast<value_type>(pos_size.x))
         , y(static_cast<value_type>(pos_size.y))
         , w(static_cast<value_type>(pos_size.z))
@@ -255,14 +255,14 @@ namespace ljh
 
     template<typename T>
     template<typename U, glm::qualifier P>
-    inline constexpr trect<T>::operator glm::vec<4, U, P>() const noexcept
+    inline constexpr basic_rect<T>::operator glm::vec<4, U, P>() const noexcept
     {
         return {static_cast<U>(x), static_cast<U>(y), static_cast<U>(w), static_cast<U>(h)};
     }
 #endif
 
     template<typename T>
-    inline constexpr typename trect<T>::value_type& trect<T>::operator[](typename trect<T>::length_type i) noexcept
+    inline constexpr typename basic_rect<T>::value_type& basic_rect<T>::operator[](typename basic_rect<T>::length_type i) noexcept
     {
         assert(i >= 0 && i < this->length());
         switch (i)
@@ -276,7 +276,7 @@ namespace ljh
     }
 
     template<typename T>
-    inline constexpr typename trect<T>::value_type const& trect<T>::operator[](typename trect<T>::length_type i) const noexcept
+    inline constexpr typename basic_rect<T>::value_type const& basic_rect<T>::operator[](typename basic_rect<T>::length_type i) const noexcept
     {
         assert(i >= 0 && i < this->length());
         switch (i)
@@ -290,32 +290,32 @@ namespace ljh
     }
 
     template<typename T>
-    inline constexpr typename trect<T>::value_type trect<T>::top() const noexcept
+    inline constexpr typename basic_rect<T>::value_type basic_rect<T>::top() const noexcept
     {
         return y;
     }
 
     template<typename T>
-    inline constexpr typename trect<T>::value_type trect<T>::bottom() const noexcept
+    inline constexpr typename basic_rect<T>::value_type basic_rect<T>::bottom() const noexcept
     {
         return y + h;
     }
 
     template<typename T>
-    inline constexpr typename trect<T>::value_type trect<T>::left() const noexcept
+    inline constexpr typename basic_rect<T>::value_type basic_rect<T>::left() const noexcept
     {
         return x;
     }
 
     template<typename T>
-    inline constexpr typename trect<T>::value_type trect<T>::right() const noexcept
+    inline constexpr typename basic_rect<T>::value_type basic_rect<T>::right() const noexcept
     {
         return x + w;
     }
 
     template<typename T>
     template<typename S>
-    inline constexpr auto&& trect<T>::position(this S&& self) noexcept
+    inline constexpr auto&& basic_rect<T>::position(this S&& self) noexcept
     {
         using type    = point_type;
         auto index    = std::addressof(self.x);
@@ -327,7 +327,7 @@ namespace ljh
 
     template<typename T>
     template<typename S>
-    inline constexpr auto&& trect<T>::size(this S&& self) noexcept
+    inline constexpr auto&& basic_rect<T>::size(this S&& self) noexcept
     {
         using type    = size_type;
         auto index    = std::addressof(self.w);
@@ -338,35 +338,35 @@ namespace ljh
     }
 
     template<typename T>
-    inline constexpr bool trect<T>::operator==(trect<T> const& rhs) const noexcept
+    inline constexpr bool basic_rect<T>::operator==(basic_rect<T> const& rhs) const noexcept
     {
         return x == rhs.x && y == rhs.y && w == rhs.w && h == rhs.h;
     }
 
     template<typename T>
-    inline constexpr bool trect<T>::contains(trect<T>::point_type const& point) const noexcept
+    inline constexpr bool basic_rect<T>::contains(basic_rect<T>::point_type const& point) const noexcept
     {
         return left() <= point.x && top() <= point.y && point.x <= right() && point.y <= bottom();
     }
 
     template<typename T>
-    inline constexpr bool trect<T>::contains(trect<T> const& rhs) const noexcept
+    inline constexpr bool basic_rect<T>::contains(basic_rect<T> const& rhs) const noexcept
     {
         return left() <= rhs.left() && top() <= rhs.top() && rhs.right() <= right() && rhs.bottom() <= bottom();
     }
 
     template<typename T>
-    inline constexpr bool trect<T>::intersects(trect<T> const& rhs) const noexcept
+    inline constexpr bool basic_rect<T>::intersects(basic_rect<T> const& rhs) const noexcept
     {
         return ((left() < rhs.left()) ? (right() > rhs.left()) : (left() < rhs.right())) &&
                ((top() < rhs.top()) ? (bottom() > rhs.top()) : (top() < rhs.bottom()));
     }
 
     template<typename T>
-    inline constexpr trect<T> trect<T>::operator|(trect<T> const& rhs) const noexcept
+    inline constexpr basic_rect<T> basic_rect<T>::operator|(basic_rect<T> const& rhs) const noexcept
     {
-        auto const lhs_empty = *this == trect{};
-        auto const rhs_empty = rhs == trect{};
+        auto const lhs_empty = *this == basic_rect{};
+        auto const rhs_empty = rhs == basic_rect{};
         if (lhs_empty && rhs_empty)
             return {};
         if (lhs_empty)
@@ -378,11 +378,11 @@ namespace ljh
         auto const t = std::min(top(), rhs.top());
         auto const r = std::max(right(), rhs.right());
         auto const b = std::max(bottom(), rhs.bottom());
-        return trect{l, t, r - l, b - t};
+        return basic_rect{l, t, r - l, b - t};
     }
 
     template<typename T>
-    inline constexpr trect<T> trect<T>::operator&(trect<T> const& rhs) const noexcept
+    inline constexpr basic_rect<T> basic_rect<T>::operator&(basic_rect<T> const& rhs) const noexcept
     {
         auto const l = std::max(left(), rhs.left());
         auto const r = std::min(right(), rhs.right());
@@ -394,49 +394,49 @@ namespace ljh
         if (t >= b)
             return {};
 
-        return trect{l, t, r - l, b - t};
+        return basic_rect{l, t, r - l, b - t};
     }
 
     template<typename T>
-    inline constexpr trect<T>& trect<T>::operator|=(trect<T> const& rhs) noexcept
+    inline constexpr basic_rect<T>& basic_rect<T>::operator|=(basic_rect<T> const& rhs) noexcept
     {
         *this = *this & rhs;
         return *this;
     }
 
     template<typename T>
-    inline constexpr trect<T>& trect<T>::operator&=(trect<T> const& rhs) noexcept
+    inline constexpr basic_rect<T>& basic_rect<T>::operator&=(basic_rect<T> const& rhs) noexcept
     {
         *this = *this & rhs;
         return *this;
     }
 
     template<typename T>
-    inline constexpr trect<T> trect<T>::operator+(point_type const& rhs) const noexcept
+    inline constexpr basic_rect<T> basic_rect<T>::operator+(point_type const& rhs) const noexcept
     {
         return {x + rhs.x, y + rhs.y, w, h};
     }
 
     template<typename T>
-    inline constexpr trect<T> trect<T>::operator+(size_type const& rhs) const noexcept
+    inline constexpr basic_rect<T> basic_rect<T>::operator+(size_type const& rhs) const noexcept
     {
         return {x, y, w + rhs.w, h + rhs.h};
     }
 
     template<typename T>
-    inline constexpr trect<T> trect<T>::operator-(point_type const& rhs) const noexcept
+    inline constexpr basic_rect<T> basic_rect<T>::operator-(point_type const& rhs) const noexcept
     {
         return {x - rhs.x, y - rhs.y, w, h};
     }
 
     template<typename T>
-    inline constexpr trect<T> trect<T>::operator-(size_type const& rhs) const noexcept
+    inline constexpr basic_rect<T> basic_rect<T>::operator-(size_type const& rhs) const noexcept
     {
         return {x, y, w - rhs.w, h - rhs.h};
     }
 
     template<typename T>
-    inline constexpr trect<T>& trect<T>::operator+=(point_type const& rhs) noexcept
+    inline constexpr basic_rect<T>& basic_rect<T>::operator+=(point_type const& rhs) noexcept
     {
         x += rhs.x;
         y += rhs.y;
@@ -444,7 +444,7 @@ namespace ljh
     }
 
     template<typename T>
-    inline constexpr trect<T>& trect<T>::operator+=(size_type const& rhs) noexcept
+    inline constexpr basic_rect<T>& basic_rect<T>::operator+=(size_type const& rhs) noexcept
     {
         w += rhs.w;
         h += rhs.h;
@@ -452,7 +452,7 @@ namespace ljh
     }
 
     template<typename T>
-    inline constexpr trect<T>& trect<T>::operator-=(point_type const& rhs) noexcept
+    inline constexpr basic_rect<T>& basic_rect<T>::operator-=(point_type const& rhs) noexcept
     {
         x -= rhs.x;
         y -= rhs.y;
@@ -460,7 +460,7 @@ namespace ljh
     }
 
     template<typename T>
-    inline constexpr trect<T>& trect<T>::operator-=(size_type const& rhs) noexcept
+    inline constexpr basic_rect<T>& basic_rect<T>::operator-=(size_type const& rhs) noexcept
     {
         w -= rhs.w;
         h -= rhs.h;
@@ -469,9 +469,9 @@ namespace ljh
 
     template<typename T>
     template<size_t I, typename S>
-    inline constexpr auto&& trect<T>::get(this S&& self) noexcept
+    inline constexpr auto&& basic_rect<T>::get(this S&& self) noexcept
     {
-        using type = std::tuple_element_t<I, trect<T>>;
+        using type = std::tuple_element_t<I, basic_rect<T>>;
         if constexpr (std::same_as<type, point_type>)
             return self.position();
         if constexpr (std::same_as<type, size_type>)

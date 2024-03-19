@@ -29,19 +29,19 @@ namespace ljh::__
 {
     template<typename T, typename V>
         requires(std::is_void_v<V> || std::copyable<V>)
-    using rect_type = std::conditional_t<std::is_void_v<V>, trect<T>, tagged_trect<T, V>>;
+    using rect_type = std::conditional_t<std::is_void_v<V>, basic_rect<T>, basic_tagged_rect<T, V>>;
 } // namespace ljh::__
 
 namespace ljh
 {
     template<typename T, typename V = void>
-    struct tregion
+    struct basic_region
     {
     private:
         using container = std::vector<__::rect_type<T, V>>;
 
     public:
-        using rect_type  = trect<T>;
+        using rect_type  = basic_rect<T>;
         using point_type = typename rect_type::point_type;
 
         using value_type      = typename container::value_type;
@@ -52,16 +52,16 @@ namespace ljh
         using difference_type = typename container::difference_type;
         using size_type       = typename container::size_type;
 
-        constexpr tregion() noexcept            = default;
-        constexpr tregion(tregion const& v)     = default;
-        constexpr tregion(tregion&& v) noexcept = default;
+        constexpr basic_region() noexcept                 = default;
+        constexpr basic_region(basic_region const& v)     = default;
+        constexpr basic_region(basic_region&& v) noexcept = default;
 
-        constexpr tregion(std::initializer_list<value_type> list);
+        constexpr basic_region(std::initializer_list<value_type> list);
 
-        constexpr tregion& operator=(tregion const& v) noexcept = default;
-        constexpr tregion& operator=(tregion&& v) noexcept      = default;
+        constexpr basic_region& operator=(basic_region const& v) noexcept = default;
+        constexpr basic_region& operator=(basic_region&& v) noexcept      = default;
 
-        constexpr ~tregion() noexcept = default;
+        constexpr ~basic_region() noexcept = default;
 
         constexpr iterator       begin() noexcept;
         constexpr iterator       end() noexcept;
@@ -71,17 +71,17 @@ namespace ljh
         constexpr const_iterator cend() const noexcept;
 
         constexpr void add(value_type const& rhs);
-        constexpr void add(tregion const& rhs);
+        constexpr void add(basic_region const& rhs);
         constexpr void subtract(rect_type const& rhs);
-        constexpr void subtract(tregion<T> const& rhs);
+        constexpr void subtract(basic_region<T> const& rhs);
 
-        constexpr tregion& operator+=(value_type const& rhs);
-        constexpr tregion& operator+=(tregion const& rhs);
-        constexpr tregion& operator-=(rect_type const& rhs);
-        constexpr tregion& operator-=(tregion<T> const& rhs);
+        constexpr basic_region& operator+=(value_type const& rhs);
+        constexpr basic_region& operator+=(basic_region const& rhs);
+        constexpr basic_region& operator-=(rect_type const& rhs);
+        constexpr basic_region& operator-=(basic_region<T> const& rhs);
 
-        constexpr bool operator==(tregion const& rhs) const noexcept = default;
-        constexpr bool operator!=(tregion const& rhs) const noexcept = default;
+        constexpr bool operator==(basic_region const& rhs) const noexcept = default;
+        constexpr bool operator!=(basic_region const& rhs) const noexcept = default;
 
     private:
         template<typename T1, typename C>
@@ -95,66 +95,66 @@ namespace ljh
         container list;
     };
 
-    using region  = tregion<float>;
-    using iregion = tregion<int>;
+    using region  = basic_region<float>;
+    using iregion = basic_region<int>;
 
     template<typename V>
-    using tagged_region = tregion<float, V>;
+    using tagged_region = basic_region<float, V>;
     template<typename V>
-    using tagged_iregion = tregion<int, V>;
+    using tagged_iregion = basic_region<int, V>;
 
     template<typename T, typename V>
-    inline constexpr tregion<T, V>::tregion(std::initializer_list<value_type> list)
+    inline constexpr basic_region<T, V>::basic_region(std::initializer_list<value_type> list)
         : list(list)
     {
         merge();
     }
 
     template<typename T, typename V>
-    inline constexpr tregion<T, V>::iterator tregion<T, V>::begin() noexcept
+    inline constexpr basic_region<T, V>::iterator basic_region<T, V>::begin() noexcept
     {
         return list.begin();
     }
 
     template<typename T, typename V>
-    inline constexpr tregion<T, V>::iterator tregion<T, V>::end() noexcept
+    inline constexpr basic_region<T, V>::iterator basic_region<T, V>::end() noexcept
     {
         return list.end();
     }
 
     template<typename T, typename V>
-    inline constexpr tregion<T, V>::const_iterator tregion<T, V>::begin() const noexcept
+    inline constexpr basic_region<T, V>::const_iterator basic_region<T, V>::begin() const noexcept
     {
         return list.begin();
     }
 
     template<typename T, typename V>
-    inline constexpr tregion<T, V>::const_iterator tregion<T, V>::end() const noexcept
+    inline constexpr basic_region<T, V>::const_iterator basic_region<T, V>::end() const noexcept
     {
         return list.end();
     }
 
     template<typename T, typename V>
-    inline constexpr tregion<T, V>::const_iterator tregion<T, V>::cbegin() const noexcept
+    inline constexpr basic_region<T, V>::const_iterator basic_region<T, V>::cbegin() const noexcept
     {
         return list.cbegin();
     }
 
     template<typename T, typename V>
-    inline constexpr tregion<T, V>::const_iterator tregion<T, V>::cend() const noexcept
+    inline constexpr basic_region<T, V>::const_iterator basic_region<T, V>::cend() const noexcept
     {
         return list.cend();
     }
 
     template<typename T, typename V>
-    inline constexpr void tregion<T, V>::add(value_type const& rhs)
+    inline constexpr void basic_region<T, V>::add(value_type const& rhs)
     {
         list.push_back(rhs);
         merge();
     }
 
     template<typename T, typename V>
-    inline constexpr void tregion<T, V>::subtract(rect_type const& rhs)
+    inline constexpr void basic_region<T, V>::subtract(rect_type const& rhs)
     {
         for (auto it = std::begin(list); it != std::end(list); it++)
         {
@@ -193,49 +193,49 @@ namespace ljh
     }
 
     template<typename T, typename V>
-    inline constexpr void tregion<T, V>::add(tregion const& rhs)
+    inline constexpr void basic_region<T, V>::add(basic_region const& rhs)
     {
         for (auto&& rect : rhs)
             add(rect);
     }
 
     template<typename T, typename V>
-    inline constexpr void tregion<T, V>::subtract(tregion<T> const& rhs)
+    inline constexpr void basic_region<T, V>::subtract(basic_region<T> const& rhs)
     {
         for (auto&& rect : rhs)
             subtract(rect);
     }
 
     template<typename T, typename V>
-    inline constexpr tregion<T, V>& tregion<T, V>::operator+=(value_type const& rhs)
+    inline constexpr basic_region<T, V>& basic_region<T, V>::operator+=(value_type const& rhs)
     {
         add(rhs);
         return *this;
     }
 
     template<typename T, typename V>
-    inline constexpr tregion<T, V>& tregion<T, V>::operator+=(tregion const& rhs)
+    inline constexpr basic_region<T, V>& basic_region<T, V>::operator+=(basic_region const& rhs)
     {
         add(rhs);
         return *this;
     }
 
     template<typename T, typename V>
-    inline constexpr tregion<T, V>& tregion<T, V>::operator-=(rect_type const& rhs)
+    inline constexpr basic_region<T, V>& basic_region<T, V>::operator-=(rect_type const& rhs)
     {
         subtract(rhs);
         return *this;
     }
 
     template<typename T, typename V>
-    inline constexpr tregion<T, V>& tregion<T, V>::operator-=(tregion<T> const& rhs)
+    inline constexpr basic_region<T, V>& basic_region<T, V>::operator-=(basic_region<T> const& rhs)
     {
         subtract(rhs);
         return *this;
     }
 
     template<typename T, typename V>
-    inline constexpr void tregion<T, V>::merge() noexcept
+    inline constexpr void basic_region<T, V>::merge() noexcept
     {
         for (int a = 0; a < 2; a++)
         {
@@ -248,7 +248,7 @@ namespace ljh
                     auto const& rhs = *it2;
 
                     bool tag_check = true;
-                    if constexpr (std::same_as<value_type, tagged_trect<T, V>>)
+                    if constexpr (std::same_as<value_type, basic_tagged_rect<T, V>>)
                         tag_check = lhs.tag == rhs.tag;
 
                     if (tag_check)
@@ -276,21 +276,21 @@ namespace ljh
     }
 
     template<typename T, typename V>
-    inline constexpr tregion<T, V>::value_type tregion<T, V>::build_rect(point_type top_left, point_type bottom_right, const_reference base) noexcept
+    inline constexpr basic_region<T, V>::value_type basic_region<T, V>::build_rect(point_type top_left, point_type bottom_right, const_reference base) noexcept
     {
-        if constexpr (std::same_as<value_type, tagged_trect<T, V>>)
+        if constexpr (std::same_as<value_type, basic_tagged_rect<T, V>>)
             return {top_left, bottom_right, base.tag};
         else
             return {top_left, bottom_right};
     }
 
     template<typename T, typename V>
-    inline constexpr void tregion<T, V>::merge_rects(reference rect, iterator& it) noexcept
+    inline constexpr void basic_region<T, V>::merge_rects(reference rect, iterator& it) noexcept
     {}
 } // namespace ljh
 
 template<typename T, typename V, typename C>
-struct std::formatter<ljh::tregion<T, V>, C>
+struct std::formatter<ljh::basic_region<T, V>, C>
 {
     template<typename PC>
     constexpr PC::iterator parse(PC& ctx)
@@ -299,7 +299,7 @@ struct std::formatter<ljh::tregion<T, V>, C>
     }
 
     template<typename FC>
-    FC::iterator format(ljh::tregion<T, V> const& value, FC& ctx) const
+    FC::iterator format(ljh::basic_region<T, V> const& value, FC& ctx) const
     {
         bool not_first = false;
         ctx.advance_to(std::format_to(ctx.out(), "["));
