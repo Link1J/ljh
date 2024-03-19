@@ -7,7 +7,7 @@
 // size.hpp - v1.0
 // SPDX-License-Identifier: BSL-1.0
 //
-// Requires C++20
+// Requires C++23
 //
 // ABOUT
 //
@@ -18,6 +18,7 @@
 
 #pragma once
 #include <cstddef>
+#include <format>
 
 #if __has_include(<glm/fwd.hpp>)
 #include <glm/fwd.hpp>
@@ -42,6 +43,8 @@ namespace ljh
         constexpr tsize() noexcept               = default;
         constexpr tsize(tsize const& v) noexcept = default;
         constexpr tsize(tsize&& v) noexcept      = default;
+
+        constexpr tsize(T w, T h) noexcept;
 
         template<typename W = value_type, typename H = value_type>
         constexpr tsize(W w, H h) noexcept;
@@ -78,10 +81,51 @@ namespace ljh
         constexpr tsize& operator-=(tsize const& rhs) noexcept;
         constexpr tsize& operator/=(tsize const& rhs) noexcept;
         constexpr tsize& operator*=(tsize const& rhs) noexcept;
+
+        template<size_t I, typename S>
+        constexpr decltype(auto) get(this S&& self) noexcept;
     };
 
     using size  = tsize<float>;
     using isize = tsize<int>;
+} // namespace ljh
+
+namespace std
+{
+    template<typename T>
+    struct tuple_size<ljh::tsize<T>> : integral_constant<size_t, 2>
+    {};
+
+    template<size_t I, typename T>
+    struct tuple_element<I, ljh::tsize<T>>
+    {
+        using type = T;
+    };
+
+    template<typename T, typename C>
+    struct formatter<ljh::tsize<T>, C>
+    {
+        template<typename PC>
+        constexpr PC::iterator parse(PC& ctx)
+        {
+            return ctx.begin();
+        }
+
+        template<typename FC>
+        FC::iterator format(ljh::tsize<T> const& value, FC& ctx) const
+        {
+            return std::format_to(ctx.out(), "{}x{}", value.w, value.h);
+        }
+    };
+} // namespace std
+
+namespace ljh
+{
+    template<typename T>
+    inline constexpr tsize<T>::tsize(T w, T h) noexcept
+        : w(w)
+        , h(h)
+    {}
 
     template<typename T>
     template<typename W, typename H>
@@ -206,5 +250,15 @@ namespace ljh
         w *= rhs.w;
         h *= rhs.h;
         return *this;
+    }
+
+    template<typename T>
+    template<size_t I, typename S>
+    inline constexpr decltype(auto) tsize<T>::get(this S&& self) noexcept
+    {
+        if constexpr (I == 0)
+            return self.w;
+        else if constexpr (I == 1)
+            return self.h;
     }
 } // namespace ljh

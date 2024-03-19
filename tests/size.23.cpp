@@ -4,12 +4,39 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
+#include "ljh/area/size.hpp"
+
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/catch_template_test_macros.hpp>
 
-#include "ljh/area/size.hpp"
+namespace Catch
+{
+    template<typename T>
+    concept formattable = requires(T const& value) {
+        { std::format("{}", value) } -> std::same_as<std::string>;
+    };
 
-TEMPLATE_TEST_CASE("size - constructor", "[test_20][size]", ljh::size, ljh::isize)
+    template<formattable T>
+    struct StringMaker<T>
+    {
+        static std::string convert(T const& value)
+        {
+            return std::format("{}", value);
+        } // namespace Catch
+    };
+} // namespace Catch
+
+TEMPLATE_TEST_CASE("tsize - constructor", "[test_23][size]", float, int)
+{
+    SECTION("w, h")
+    {
+        ljh::tsize v{TestType{3}, TestType{4}};
+        REQUIRE(v.w == 3);
+        REQUIRE(v.h == 4);
+    }
+}
+
+TEMPLATE_TEST_CASE("size - constructor", "[test_23][size]", ljh::size, ljh::isize)
 {
     SECTION("default")
     {
@@ -25,7 +52,7 @@ TEMPLATE_TEST_CASE("size - constructor", "[test_20][size]", ljh::size, ljh::isiz
     }
 }
 
-TEMPLATE_TEST_CASE("size - equality", "[test_20][size]", ljh::size, ljh::isize)
+TEMPLATE_TEST_CASE("size - equality", "[test_23][size]", ljh::size, ljh::isize)
 {
     TestType v;
     SECTION("equal")
@@ -61,7 +88,7 @@ static void rvalue(ljh::size&& v, bool _default)
 }
 
 // This is really compile test.
-TEMPLATE_TEST_CASE_SIG("size - function call constructors", "[test_20][size]", ((auto FN), FN), (value), (lvalue), (rvalue))
+TEMPLATE_TEST_CASE_SIG("size - function call constructors", "[test_23][size]", ((auto FN), FN), (value), (lvalue), (rvalue))
 {
     SECTION("direct-initialization")
     {
@@ -85,7 +112,7 @@ TEMPLATE_TEST_CASE_SIG("size - function call constructors", "[test_20][size]", (
 }
 
 // This is really compile test.
-TEMPLATE_TEST_CASE_SIG("size - assignment from other size", "[test_20][size]", ((typename F, typename T, int V), F, T, V), (ljh::size, ljh::isize, 0),
+TEMPLATE_TEST_CASE_SIG("size - assignment from other size", "[test_23][size]", ((typename F, typename T, int V), F, T, V), (ljh::size, ljh::isize, 0),
                        (ljh::isize, ljh::size, 0))
 {
     F v{3, 4};

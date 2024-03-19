@@ -11,7 +11,7 @@ if(POLICY CMP0110)
 	cmake_policy(SET CMP0110 NEW)
 endif()
 
-set(CATCH_CONFIG_CONSOLE_WIDTH 500)
+set(CATCH_CONFIG_CONSOLE_WIDTH 160)
 set(CATCH_BUILD_TESTING OFF)
 
 FetchContent_Declare(Catch2
@@ -67,9 +67,6 @@ add_executable(tests_20
 	concepts.20.cpp
 	ranges.20.cpp
 	generator.20.cpp
-	size.20.cpp
-	point.20.cpp
-	rect.20.cpp
 )
 if (UNIX AND NOT APPLE)
 	target_sources(tests_20 PRIVATE
@@ -81,6 +78,9 @@ target_link_libraries(tests_20 Catch2::Catch2WithMain ljh)
 
 add_executable(tests_23
 	smarc.23.cpp
+	rect.23.cpp
+	size.23.cpp
+	point.23.cpp
 )
 set_target_properties(tests_23 PROPERTIES CXX_STANDARD 23 CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)
 target_link_libraries(tests_23 Catch2::Catch2WithMain ljh)

@@ -7,7 +7,7 @@
 // point.hpp - v1.0
 // SPDX-License-Identifier: BSL-1.0
 //
-// Requires C++20
+// Requires C++23
 //
 // ABOUT
 //
@@ -18,6 +18,7 @@
 
 #pragma once
 #include <cstddef>
+#include <format>
 
 #if __has_include(<glm/fwd.hpp>)
 #include <glm/fwd.hpp>
@@ -45,6 +46,8 @@ namespace ljh
         constexpr tpoint() noexcept                = default;
         constexpr tpoint(tpoint const& v) noexcept = default;
         constexpr tpoint(tpoint&& v) noexcept      = default;
+
+        constexpr tpoint(T x, T y) noexcept;
 
         template<typename X = value_type, typename Y = value_type>
         constexpr tpoint(X x, Y y) noexcept;
@@ -84,10 +87,51 @@ namespace ljh
 
         constexpr tpoint  operator/(tsize<T> const& rhs) const noexcept;
         constexpr tpoint& operator/=(tsize<T> const& rhs) noexcept;
+
+        template<size_t I, typename S>
+        constexpr decltype(auto) get(this S&& self) noexcept;
     };
 
     using point  = tpoint<float>;
     using ipoint = tpoint<int>;
+} // namespace ljh
+
+namespace std
+{
+    template<typename T>
+    struct tuple_size<ljh::tpoint<T>> : integral_constant<size_t, 2>
+    {};
+
+    template<size_t I, typename T>
+    struct tuple_element<I, ljh::tpoint<T>>
+    {
+        using type = T;
+    };
+
+    template<typename T, typename C>
+    struct formatter<ljh::tpoint<T>, C>
+    {
+        template<typename PC>
+        constexpr PC::iterator parse(PC& ctx)
+        {
+            return ctx.begin();
+        }
+
+        template<typename FC>
+        FC::iterator format(ljh::tpoint<T> const& value, FC& ctx) const
+        {
+            return std::format_to(ctx.out(), "{},{}", value.x, value.y);
+        }
+    };
+} // namespace std
+
+namespace ljh
+{
+    template<typename T>
+    inline constexpr tpoint<T>::tpoint(T x, T y) noexcept
+        : x(x)
+        , y(y)
+    {}
 
     template<typename T>
     template<typename X, typename Y>
@@ -129,24 +173,22 @@ namespace ljh
 #endif
 
     template<typename T>
-    inline constexpr tpoint<T>::value_type& tpoint<T>::operator[](typename tpoint<T>::length_type i) noexcept
+    inline constexpr tpoint<T>::value_type& tpoint<T>::operator[](length_type i) noexcept
     {
         assert(i >= 0 && i < this->length());
         switch (i)
         {
-        default:
         case 0: return x;
         case 1: return y;
         }
     }
 
     template<typename T>
-    inline constexpr tpoint<T>::value_type const& tpoint<T>::operator[](typename tpoint<T>::length_type i) const noexcept
+    inline constexpr tpoint<T>::value_type const& tpoint<T>::operator[](length_type i) const noexcept
     {
         assert(i >= 0 && i < this->length());
         switch (i)
         {
-        default:
         case 0: return x;
         case 1: return y;
         }
@@ -215,16 +257,26 @@ namespace ljh
     }
 
     template<typename T>
-    constexpr tpoint<T> tpoint<T>::operator/(tsize<T> const& rhs) const noexcept
+    inline constexpr tpoint<T> tpoint<T>::operator/(tsize<T> const& rhs) const noexcept
     {
         return {x / rhs.w, y / rhs.h};
     }
 
     template<typename T>
-    constexpr tpoint<T>& tpoint<T>::operator/=(tsize<T> const& rhs) noexcept
+    inline constexpr tpoint<T>& tpoint<T>::operator/=(tsize<T> const& rhs) noexcept
     {
         x /= rhs.w;
         y /= rhs.h;
         return *this;
+    }
+
+    template<typename T>
+    template<size_t I, typename S>
+    inline constexpr decltype(auto) tpoint<T>::get(this S&& self) noexcept
+    {
+        if constexpr (I == 0)
+            return self.x;
+        else if constexpr (I == 1)
+            return self.y;
     }
 } // namespace ljh

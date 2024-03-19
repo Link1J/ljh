@@ -4,12 +4,39 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
+#include "ljh/area/point.hpp"
+
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/catch_template_test_macros.hpp>
 
-#include "ljh/area/point.hpp"
+namespace Catch
+{
+    template<typename T>
+    concept formattable = requires(T const& value) {
+        { std::format("{}", value) } -> std::same_as<std::string>;
+    };
 
-TEMPLATE_TEST_CASE("point  - constructor", "[test_20][point]", ljh::point, ljh::ipoint)
+    template<formattable T>
+    struct StringMaker<T>
+    {
+        static std::string convert(T const& value)
+        {
+            return std::format("{}", value);
+        } // namespace Catch
+    };
+} // namespace Catch
+
+TEMPLATE_TEST_CASE("tpoint - constructor", "[test_23][point]", float, int)
+{
+    SECTION("x, y")
+    {
+        ljh::tpoint v{TestType{1}, TestType{2}};
+        REQUIRE(v.x == 1);
+        REQUIRE(v.y == 2);
+    }
+}
+
+TEMPLATE_TEST_CASE("point  - constructor", "[test_23][point]", ljh::point, ljh::ipoint)
 {
     SECTION("default")
     {
@@ -25,7 +52,7 @@ TEMPLATE_TEST_CASE("point  - constructor", "[test_20][point]", ljh::point, ljh::
     }
 }
 
-TEMPLATE_TEST_CASE("point - equality", "[test_20][point]", ljh::point, ljh::ipoint)
+TEMPLATE_TEST_CASE("point - equality", "[test_23][point]", ljh::point, ljh::ipoint)
 {
     TestType v;
     SECTION("equal")
@@ -61,7 +88,7 @@ static void rvalue(ljh::point&& v, bool _default)
 }
 
 // This are really compile tests.
-TEMPLATE_TEST_CASE_SIG("point - function call constructors", "[test_20][point]", ((auto FN), FN), (value), (lvalue), (rvalue))
+TEMPLATE_TEST_CASE_SIG("point - function call constructors", "[test_23][point]", ((auto FN), FN), (value), (lvalue), (rvalue))
 {
     SECTION("direct-initialization")
     {
@@ -85,7 +112,7 @@ TEMPLATE_TEST_CASE_SIG("point - function call constructors", "[test_20][point]",
 }
 
 // This is really compile test.
-TEMPLATE_TEST_CASE_SIG("point - assignment from other point", "[test_20][point]", ((typename F, typename T, int V), F, T, V), (ljh::point, ljh::ipoint, 0),
+TEMPLATE_TEST_CASE_SIG("point - assignment from other point", "[test_23][point]", ((typename F, typename T, int V), F, T, V), (ljh::point, ljh::ipoint, 0),
                        (ljh::ipoint, ljh::point, 0))
 {
     F v{1, 2};
