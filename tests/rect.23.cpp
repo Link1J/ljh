@@ -5,6 +5,7 @@
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "ljh/area/rect.hpp"
+#include "ljh/area/tagged_rect.hpp"
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/catch_template_test_macros.hpp>
@@ -354,6 +355,64 @@ TEMPLATE_TEST_CASE("rect - structured binding", "[test_23][rect]", float, int)
     }
 }
 
+TEMPLATE_TEST_CASE("tagged_rect - structured binding", "[test_23][rect][tagged_rect]", float, int)
+{
+    using tag   = int;
+    using rect  = ljh::tagged_trect<TestType, tag>;
+    using point = ljh::tpoint<TestType>;
+    using size  = ljh::tsize<TestType>;
+
+    rect item;
+    SECTION("from constructor")
+    {
+        auto [p, s, t] = rect{};
+        STATIC_CHECK(std::is_same_v<decltype(p), point>);
+        STATIC_CHECK(std::is_same_v<decltype(s), size>);
+        STATIC_CHECK(std::is_same_v<decltype(t), tag>);
+    }
+    SECTION("mutable value")
+    {
+        auto [p, s, t] = item;
+        STATIC_CHECK(std::is_same_v<decltype(p), point>);
+        STATIC_CHECK(std::is_same_v<decltype(s), size>);
+        STATIC_CHECK(std::is_same_v<decltype(t), tag>);
+    }
+    SECTION("const value")
+    {
+        auto const [p, s, t] = item;
+        STATIC_CHECK(std::is_same_v<decltype(p), point const>);
+        STATIC_CHECK(std::is_same_v<decltype(s), size const>);
+        STATIC_CHECK(std::is_same_v<decltype(t), tag const>);
+    }
+    SECTION("mutable lvalue")
+    {
+        auto&& [p, s, t] = item;
+        STATIC_CHECK(std::is_same_v<decltype(p), point>);
+        STATIC_CHECK(std::is_same_v<decltype(s), size>);
+        STATIC_CHECK(std::is_same_v<decltype(t), tag>);
+    }
+    SECTION("const lvalue")
+    {
+        auto&& [p, s, t] = std::as_const(item);
+        STATIC_CHECK(std::is_same_v<decltype(p), point const>);
+        STATIC_CHECK(std::is_same_v<decltype(s), size const>);
+        STATIC_CHECK(std::is_same_v<decltype(t), tag const>);
+    }
+    SECTION("mutable rvalue")
+    {
+        auto&& [p, s, t] = std::move(item);
+        STATIC_CHECK(std::is_same_v<decltype(p), point>);
+        STATIC_CHECK(std::is_same_v<decltype(s), size>);
+        STATIC_CHECK(std::is_same_v<decltype(t), tag>);
+    }
+    SECTION("const rvalue")
+    {
+        auto&& [p, s, t] = std::move(std::as_const(item));
+        STATIC_CHECK(std::is_same_v<decltype(p), point const>);
+        STATIC_CHECK(std::is_same_v<decltype(s), size const>);
+        STATIC_CHECK(std::is_same_v<decltype(t), tag const>);
+    }
+}
 
 // This is just a sanity check.
 #include <tuple>
