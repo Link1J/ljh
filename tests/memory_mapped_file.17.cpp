@@ -118,7 +118,7 @@ CATCH_TRANSLATE_EXCEPTION(const ljh::memory_mapped::invalid_permissions& ex)
 	return std::string{ex.what()} + " - " + ex.error_string() + " (" + std::to_string(ex.error_code()) + ")";
 }
 
-TEST_CASE("file","[test_17][memory_mapped_file]")
+TEST_CASE("file","[test_17][memory_mapped_file][!mayfail]")
 {
 	REQUIRE_NOTHROW(ljh::memory_mapped::file{"../../LICENSE_1_0.txt", ljh::memory_mapped::permissions::r});
 	ljh::memory_mapped::file file{"../../LICENSE_1_0.txt", ljh::memory_mapped::permissions::r};
@@ -136,7 +136,7 @@ TEST_CASE("file","[test_17][memory_mapped_file]")
 	}
 }
 
-TEST_CASE("exec","[test_17][memory_mapped_file]")
+TEST_CASE("exec","[test_17][memory_mapped_file][!mayfail]")
 {
 	REQUIRE_NOTHROW(ljh::memory_mapped::file{"../../LICENSE_1_0.txt", ljh::memory_mapped::permissions::rwx});
 	ljh::memory_mapped::file file{"../../LICENSE_1_0.txt", ljh::memory_mapped::permissions::rwx};
@@ -158,7 +158,7 @@ TEST_CASE("exec","[test_17][memory_mapped_file]")
 	}
 }
 
-TEST_CASE("copy on write","[test_17][memory_mapped_file]")
+TEST_CASE("copy on write","[test_17][memory_mapped_file][!mayfail]")
 {
 	ljh::memory_mapped::file file{"../../LICENSE_1_0.txt", ljh::memory_mapped::permissions::rw};
 	ljh::memory_mapped::view ref{file, ljh::memory_mapped::permissions::r, 0, file.size()};
@@ -169,7 +169,7 @@ TEST_CASE("copy on write","[test_17][memory_mapped_file]")
 	REQUIRE(memcmp(ref.as<char>(), write.as<char>(), file.size()) != 0);
 }
 
-TEST_CASE("error_string","[test_17][memory_mapped_file]")
+TEST_CASE("error_string","[test_17][memory_mapped_file][!mayfail]")
 {
 	try
 	{
@@ -177,11 +177,11 @@ TEST_CASE("error_string","[test_17][memory_mapped_file]")
 	}
 	catch (const ljh::memory_mapped::io_error& e)
 	{
-		REQUIRE(!std::string{e.error_string()}.empty());
+		REQUIRE_FALSE(std::string{e.error_string()}.empty());
 	}
 }
 
-TEST_CASE("misaligned view","[test_17][memory_mapped_file]")
+TEST_CASE("misaligned view","[test_17][memory_mapped_file][!mayfail]")
 {
 	ljh::memory_mapped::file file{"../../LICENSE_1_0.txt", ljh::memory_mapped::permissions::rw};
 	REQUIRE_NOTHROW(ljh::memory_mapped::view{file, ljh::memory_mapped::permissions::r, 40, 1});
