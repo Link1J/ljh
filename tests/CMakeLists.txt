@@ -79,6 +79,7 @@ target_link_libraries(tests_20 Catch2::Catch2WithMain ljh)
 add_executable(tests_23
 	smarc.23.cpp
 	rect.23.cpp
+	region.23.cpp
 	size.23.cpp
 	point.23.cpp
 )
