@@ -41,7 +41,7 @@ TEST_CASE("function_traits", "[function_traits]")
 
 TEST_CASE("function_traits no_exceptions", "[function_traits]")
 {
-#ifdef __cpp_noexcept_function_type >= 201510L
+#if __cpp_noexcept_function_type >= 201510L
 #define STATIC_REQUIRE_NOEXCEPT STATIC_REQUIRE
 #else
 #define STATIC_REQUIRE_NOEXCEPT STATIC_REQUIRE_FALSE
