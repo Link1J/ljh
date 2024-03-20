@@ -57,15 +57,14 @@ target_include_directories(ljh
 		$<INSTALL_INTERFACE:include>
 )
 
-if (WIN32)
-	try_compile(AWAIT_NOT_NEEDED
-		"${PROJECT_BINARY_DIR}/_build_tests"
-		"${PROJECT_SOURCE_DIR}/tests/cmake.cppwinrt_await.cpp"
-		CXX_STANDARD 20
-		CXX_STANDARD_REQUIRED YES
-		CXX_EXTENSIONS NO
-	)
-endif()
+try_compile(AWAIT_NOT_NEEDED
+	"${PROJECT_BINARY_DIR}/_build_tests"
+	"${PROJECT_SOURCE_DIR}/tests/cmake.cppwinrt_await.cpp"
+	CXX_STANDARD 20
+	CXX_STANDARD_REQUIRED YES
+	CXX_EXTENSIONS NO
+)
+message(${AWAIT_NOT_NEEDED})
 
 if (WIN32)
 	target_link_libraries(ljh PUBLIC
@@ -96,7 +95,7 @@ target_compile_options(ljh
 		$<$<PLATFORM_ID:Windows,WindowsStore>:
 			/D_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
 			/Zc:twoPhase-
-			/await:strict
+			$<$<NOT:$<BOOL:${AWAIT_NOT_NEEDED}>>:/await>
 		>
 )
 
