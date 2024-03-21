@@ -115,6 +115,25 @@ TEST_CASE("expected<trivial_data_type, std::string>::emplace", "[test_17][expect
         {
             test = ljh::unexpected{std::string{"test"}};
             REQUIRE(!test.has_value());
+            REQUIRE(test.error() == "test");
+        }
+    }
+}
+
+TEST_CASE("expected<trivial_data_type, not_copy>::emplace", "[test_17][expected][emplace]")
+{
+    ljh::expected<trivial_data_type, not_copy> test;
+    REQUIRE(test.has_value());
+
+    SECTION("emplace trivial_data_type")
+    {
+        test.emplace(1, 2, 3);
+        REQUIRE(test.has_value());
+
+        SECTION("Overwrite with error")
+        {
+            test = ljh::unexpected{not_copy{}};
+            REQUIRE(!test.has_value());
         }
     }
 }

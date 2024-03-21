@@ -62,7 +62,7 @@ set_target_properties(tests_17 PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED 
 target_link_libraries(tests_17 Catch2::Catch2WithMain ljh)
 
 add_executable(tests_20
-	expected.20.cpp
+	expected.17.cpp
 	version.20.cpp
 	compile_time_string.20.cpp
 	delay_loaded_functions.20.cpp
