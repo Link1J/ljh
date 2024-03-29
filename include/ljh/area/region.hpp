@@ -24,6 +24,7 @@
 #include <initializer_list>
 #include <concepts>
 #include <vector>
+#include <array>
 
 namespace ljh::__
 {

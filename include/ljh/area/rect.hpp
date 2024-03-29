@@ -25,6 +25,7 @@
 #include <utility>
 #include <algorithm>
 #include <format>
+#include <initializer_list>
 
 namespace ljh
 {
@@ -158,7 +159,12 @@ namespace std
         template<typename FC>
         FC::iterator format(ljh::basic_rect<T> const& value, FC& ctx) const
         {
+#if !defined(LJH_COMPILER_MSVC) // Currently ICE on MSVC
             auto&& [pos, size] = value;
+#else
+            auto&& pos  = value.get<0>();
+            auto&& size = value.get<1>();
+#endif
             return std::format_to(ctx.out(), "{{{} {}}}", pos, size);
         }
     };

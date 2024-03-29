@@ -15,7 +15,9 @@ namespace Catch
 {
     template<typename T>
     concept formattable = requires(T const& value) {
-        { std::format("{}", value) } -> std::same_as<std::string>;
+        {
+            std::format("{}", value)
+        } -> std::same_as<std::string>;
     };
 
     template<formattable T>
@@ -226,6 +228,7 @@ TEMPLATE_TEST_CASE_SIG("rect - assignment from other rect", "[test_23][rect]", (
     }
 }
 
+#if !defined(LJH_COMPILER_MSVC) // Currently ICE on MSVC
 TEMPLATE_TEST_CASE("rect - structured binding", "[test_23][rect]", float, int)
 {
     using rect  = ljh::basic_rect<TestType>;
@@ -354,7 +357,9 @@ TEMPLATE_TEST_CASE("rect - structured binding", "[test_23][rect]", float, int)
         REQUIRE(item.h == 0);
     }
 }
+#endif
 
+#if !defined(LJH_COMPILER_MSVC) // Currently ICE on MSVC
 TEMPLATE_TEST_CASE("tagged_rect - structured binding", "[test_23][rect][tagged_rect]", float, int)
 {
     using tag   = int;
@@ -413,6 +418,7 @@ TEMPLATE_TEST_CASE("tagged_rect - structured binding", "[test_23][rect][tagged_r
         STATIC_CHECK(std::is_same_v<decltype(t), tag const>);
     }
 }
+#endif
 
 // This is just a sanity check.
 #include <tuple>
