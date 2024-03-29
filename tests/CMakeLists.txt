@@ -28,7 +28,7 @@ if (MSVC)
 		/D_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
 		/Zc:twoPhase-
 		$<$<NOT:$<BOOL:${AWAIT_NOT_NEEDED}>>:/await>
-		/Zf /utf-8 /permissive- /Zc:inline /Zc:__cplusplus /Zc:__STDC__ /bigobj /Y-
+		 /utf-8 /permissive- /Zc:inline /Zc:__cplusplus /Zc:__STDC__ /bigobj /Y-
 	)
 endif()
 
@@ -36,9 +36,10 @@ add_executable(tests_11
 	system_directories.98.cpp
 	function_pointer.11.cpp
 	string_utils.11.cpp
+	defer.11.cpp
 	function_traits.na.cpp
 )
-set_target_properties(tests_11 PROPERTIES CXX_STANDARD 11 CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)
+set_target_properties(tests_11 PROPERTIES CXX_STANDARD 14 CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)
 target_link_libraries(tests_11 Catch2::Catch2WithMain ljh)
 
 add_executable(tests_14
@@ -56,6 +57,7 @@ add_executable(tests_17
 	system_info.17.cpp
 	string_utils.17.cpp
 	enum_array.17.cpp
+	defer.11.cpp
 	function_traits.na.cpp
 )
 set_target_properties(tests_17 PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)
