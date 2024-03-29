@@ -78,6 +78,7 @@ stages:
         ./$(BuildConfiguration)/tests_14.exe -r jUnit -s --out tests_14_data.xml
         ./$(BuildConfiguration)/tests_17.exe -r jUnit -s --out tests_17_data.xml
         ./$(BuildConfiguration)/tests_20.exe -r jUnit -s --out tests_20_data.xml
+        ./$(BuildConfiguration)/tests_23.exe -r jUnit -s --out tests_23_data.xml
       ignoreLASTEXITCODE: true
       displayName: Run Tests (Windows)
       workingDirectory: '$(BuildConfiguration)/tests'
@@ -88,6 +89,7 @@ stages:
         ./tests_11 -r jUnit -s --out tests_14_data.xml
         ./tests_17 -r jUnit -s --out tests_17_data.xml
         ./tests_20 -r jUnit -s --out tests_20_data.xml
+        ./tests_23 -r jUnit -s --out tests_23_data.xml
       ignoreLASTEXITCODE: true
       displayName: Run Tests (Linux)
       workingDirectory: '$(BuildConfiguration)/tests'
