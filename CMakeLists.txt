@@ -16,11 +16,6 @@ endif()
 option(ljh_BUILD_TESTS "Build the Self Tests" ${LJH_SUB_PROJECT})
 option(ljh_INSTALL "Install" ${LJH_SUB_PROJECT})
 
-if (UNIX AND NOT APPLE)
-	find_package(PkgConfig)
-	pkg_check_modules(DBUS REQUIRED IMPORTED_TARGET dbus-1)
-endif()
-
 add_library(ljh STATIC
 	source/system_directories.cpp
 	source/memory_mapped_file.cpp
@@ -40,7 +35,6 @@ add_library(ljh STATIC
 	>
 	$<$<PLATFORM_ID:Linux>:
 		source/unix/system_info.cpp
-		source/unix/dbus.cpp
 		source/unix/named_mutex.cpp
 		source/unix/thread_name.cpp
 	>
