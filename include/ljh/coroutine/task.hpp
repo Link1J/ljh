@@ -9,63 +9,63 @@
 
 namespace ljh::__::co
 {
-	template<typename T>
-	struct promise_awaiter
-	{
-		promise_ptr<T> self;
+    template<typename T>
+    struct promise_awaiter
+    {
+        promise_ptr<T> self;
 
-		bool await_ready()
-		{
-			return self->client_await_ready();
-		}
+        bool await_ready()
+        {
+            return self->client_await_ready();
+        }
 
-		auto await_suspend(std::coroutine_handle<> handle)
-		{
-			return self->client_await_suspend(handle.address());
-		}
+        auto await_suspend(std::coroutine_handle<> handle)
+        {
+            return self->client_await_suspend(handle.address());
+        }
 
-		T await_resume()
-		{
-			return self->client_await_resume();
-		}
-	};
-}
+        T await_resume()
+        {
+            return self->client_await_resume();
+        }
+    };
+} // namespace ljh::__::co
 
 namespace ljh::co
 {
-	template<typename T>
-	struct task : __::co::task_base<T>
-	{
-		using base = __::co::task_base<T>;
-		task() = default;
-		task(__::co::promise<T>* initial)
-			: base(initial)
-		{
-			this->promise->start();
-		}
+    template<typename T>
+    struct task : __::co::task_base<T>
+    {
+        using base = __::co::task_base<T>;
+        task()     = default;
+        task(__::co::promise<T>* initial)
+            : base(initial)
+        {
+            this->promise->start();
+        }
 
-		void swap(task& other)
-		{
-			std::swap(this->promise, other.promise);
-		}
+        void swap(task& other)
+        {
+            std::swap(this->promise, other.promise);
+        }
 
-		using base::operator co_await;
+        using base::operator co_await;
 
-		auto operator co_await() &&
-		{
-			return __::co::promise_awaiter<T>{ std::move(this->promise) };
-		}
-	};
+        auto operator co_await() &&
+        {
+            return __::co::promise_awaiter<T>{std::move(this->promise)};
+        }
+    };
 
-	template<typename T>
-	void swap(task<T>& left, task<T>& right)
-	{
-		left.swap(right);
-	}
-}
+    template<typename T>
+    void swap(task<T>& left, task<T>& right)
+    {
+        left.swap(right);
+    }
+} // namespace ljh::co
 
-template <typename T, typename... Args>
+template<typename T, typename... Args>
 struct std::coroutine_traits<ljh::co::task<T>, Args...>
 {
-	using promise_type = ljh::__::co::promise<T>;
+    using promise_type = ljh::__::co::promise<T>;
 };

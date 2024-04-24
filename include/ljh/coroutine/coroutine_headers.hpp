@@ -13,6 +13,9 @@
 #define LJH_COROUTINES_AVALIABLE 1
 #elif __has_include(<experimental/coroutine>)
 #include <experimental/coroutine>
-namespace std { using namespace std::experimental; }
+namespace std
+{
+    using namespace std::experimental;
+}
 #define LJH_COROUTINES_AVALIABLE 1
 #endif

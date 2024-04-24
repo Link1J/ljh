@@ -10,45 +10,45 @@
 
 namespace ljh::co
 {
-	struct fire_and_forget {};
+    struct fire_and_forget
+    {};
 
-	template <typename T>
-	fire_and_forget no_await(T t)
-	{
-		if constexpr (std::is_invocable_v<T>)
-			co_await t();
-		else
-			co_await t;
-	}
-}
+    template<typename T>
+    fire_and_forget no_await(T t)
+    {
+        if constexpr (std::is_invocable_v<T>)
+            co_await t();
+        else
+            co_await t;
+    }
+} // namespace ljh::co
 
-template <typename... Args>
+template<typename... Args>
 struct std::coroutine_traits<ljh::co::fire_and_forget, Args...>
 {
-	struct promise_type
-	{
-		ljh::co::fire_and_forget get_return_object() const noexcept
-		{
-			return {};
-		}
+    struct promise_type
+    {
+        ljh::co::fire_and_forget get_return_object() const noexcept
+        {
+            return {};
+        }
 
-		void return_void() const noexcept
-		{
-		}
+        void return_void() const noexcept
+        {}
 
-		suspend_never initial_suspend() const noexcept
-		{
-			return {};
-		}
+        suspend_never initial_suspend() const noexcept
+        {
+            return {};
+        }
 
-		suspend_never final_suspend() const noexcept
-		{
-			return {};
-		}
+        suspend_never final_suspend() const noexcept
+        {
+            return {};
+        }
 
-		void unhandled_exception() const noexcept
-		{
-			std::terminate();
-		}
-	};
+        void unhandled_exception() const noexcept
+        {
+            std::terminate();
+        }
+    };
 };
