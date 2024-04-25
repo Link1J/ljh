@@ -11,6 +11,7 @@
 #include <atomic>
 #include <exception>
 #include <memory>
+#include <bit>
 
 namespace ljh::__::co
 {
@@ -102,10 +103,10 @@ namespace ljh::__::co
         promise_result_holder<T> m_holder;
         promise_policies         m_policies;
 
-        static constexpr void* running_ptr   = nullptr;
-        static constexpr void* completed_ptr = std::bit_cast<void*>(std::uintptr_t(1));
-        static constexpr void* abandoned_ptr = std::bit_cast<void*>(std::uintptr_t(2));
-        static constexpr void* cold_ptr      = std::bit_cast<void*>(std::uintptr_t(3));
+        static constexpr void*          running_ptr   = nullptr;
+        static constexpr std::uintptr_t completed_ptr = 1;
+        static constexpr std::uintptr_t abandoned_ptr = 2;
+        static constexpr std::uintptr_t cold_ptr      = 3;
 
         promise_base()                      = default;
         promise_base(promise_base const&)   = delete;
@@ -141,7 +142,7 @@ namespace ljh::__::co
 
         void abandon()
         {
-            auto waiting = m_waiting.exchange(abandoned_ptr, std::memory_order_acquire);
+            auto waiting = m_waiting.exchange(reinterpret_cast<void*>(abandoned_ptr), std::memory_order_acquire);
             if (waiting != running_ptr)
                 destroy();
         }
@@ -203,8 +204,8 @@ namespace ljh::__::co
                 promise_base& self;
                 void          await_suspend(std::coroutine_handle<> /* handle */) const noexcept
                 {
-                    auto waiting = self.m_waiting.exchange(completed_ptr, std::memory_order_acq_rel);
-                    if (waiting == abandoned_ptr)
+                    auto waiting = self.m_waiting.exchange(reinterpret_cast<void*>(completed_ptr), std::memory_order_acq_rel);
+                    if (waiting == reinterpret_cast<void*>(abandoned_ptr))
                         self.destroy();
                     if (waiting != running_ptr)
                         self.resume_waiting_coroutine(waiting);
@@ -219,7 +220,7 @@ namespace ljh::__::co
             if constexpr (!COLD)
             {
                 auto waiting = m_waiting.load(std::memory_order_acquire);
-                assert(waiting == running_ptr || waiting == completed_ptr);
+                assert(waiting == running_ptr || waiting == reinterpret_cast<void*>(completed_ptr));
                 return waiting != running_ptr;
             }
             else

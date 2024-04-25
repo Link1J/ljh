@@ -16,14 +16,14 @@
 namespace ljh::co
 {
     template<typename TResult>
-    struct winrt_task : Windows::Foundation::IInspectable,
-                        impl::consume_t<winrt_task<TResult>>,
-                        impl::require<winrt_task<TResult>, winrt::Windows::Foundation::IAsyncInfo>
+    struct winrt_task : winrt::Windows::Foundation::IInspectable,
+                        winrt::impl::consume_t<winrt_task<TResult>>,
+                        winrt::impl::require<winrt_task<TResult>, winrt::Windows::Foundation::IAsyncInfo>
     {
         winrt_task(std::nullptr_t = nullptr) noexcept
         {}
         winrt_task(void* ptr, take_ownership_from_abi_t) noexcept
-            : winrt::Windows::Foundation::IInspectable(ptr, take_ownership_from_abi)
+            : winrt::Windows::Foundation::IInspectable(ptr, winrt::take_ownership_from_abi)
         {}
     };
 

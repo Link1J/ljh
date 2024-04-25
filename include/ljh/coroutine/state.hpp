@@ -8,6 +8,7 @@
 #include "node_list.hpp"
 #include <mutex>
 #include <atomic>
+#include <memory>
 
 namespace ljh::co
 {
