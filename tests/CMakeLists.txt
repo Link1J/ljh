@@ -72,11 +72,6 @@ add_executable(tests_20
 	ranges.20.cpp
 	generator.20.cpp
 )
-if (UNIX AND NOT APPLE)
-	target_sources(tests_20 PRIVATE
-		dbus.20.cpp
-	)
-endif()
 set_target_properties(tests_20 PROPERTIES CXX_STANDARD 20 CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)
 target_link_libraries(tests_20 Catch2::Catch2WithMain ljh)
 
