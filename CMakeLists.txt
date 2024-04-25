@@ -58,7 +58,6 @@ try_compile(AWAIT_NOT_NEEDED
 	CXX_STANDARD_REQUIRED YES
 	CXX_EXTENSIONS NO
 )
-message(${AWAIT_NOT_NEEDED})
 
 if (WIN32)
 	target_link_libraries(ljh PRIVATE
@@ -88,7 +87,7 @@ target_compile_options(ljh
 		$<$<PLATFORM_ID:Windows,WindowsStore>:
 			/D_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
 			/Zc:twoPhase-
-			$<$<NOT:$<BOOL:${AWAIT_NOT_NEEDED}>>:/await>
+			/await:strict
 		>
 )
 

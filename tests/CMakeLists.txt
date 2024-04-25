@@ -26,9 +26,7 @@ set(CMAKE_MODULE_PATH ${CATCH2_SOURCE}/extras ${CMAKE_MODULE_PATH})
 if (MSVC)
 	add_compile_options(
 		/D_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
-		/Zc:twoPhase-
-		$<$<NOT:$<BOOL:${AWAIT_NOT_NEEDED}>>:/await>
-		 /utf-8 /permissive- /Zc:inline /Zc:__cplusplus /Zc:__STDC__ /bigobj /Y-
+		/Zc:twoPhase- /await:strict /utf-8 /permissive- /Zc:inline /Zc:__cplusplus /Zc:__STDC__ /bigobj /Y-
 	)
 endif()
 
