@@ -44,7 +44,7 @@ namespace ljh
 	}
 
 	template<typename out, typename in>
-	out dereference_as(in* value)
+	out& dereference_as(in* value)
 	{
 		return *pointer_cast<out>(value);
 	}
