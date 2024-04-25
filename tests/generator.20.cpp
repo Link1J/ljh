@@ -9,6 +9,7 @@
 #include "ljh/generator.hpp"
 
 #include <string_view>
+#include <fmt/format.h>
 
 ljh::generator<std::uint64_t> fibonacci_sequence(unsigned n)
 {
@@ -63,7 +64,7 @@ ljh::generator<std::string const&> delete_rows(std::string table, std::vector<in
 {
 	for (int id : ids)
 	{
-		co_yield std::format("DELETE FROM {0} WHERE id = {1};", table, id);
+		co_yield fmt::format("DELETE FROM {0} WHERE id = {1};", table, id);
 	}
 }
 
@@ -187,7 +188,7 @@ ljh::generator<int> fails_main2(auto&& start)
 		if (token != start + 2)
 			co_yield token;
 		else
-			throw unknown{std::format("{}", token)};
+			throw unknown{fmt::format("{}", token)};
 	}
 }
 

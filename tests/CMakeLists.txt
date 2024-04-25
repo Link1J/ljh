@@ -18,8 +18,11 @@ FetchContent_Declare(Catch2
 	GIT_REPOSITORY https://github.com/catchorg/Catch2.git
 	GIT_TAG        v3.3.2
 )
-
-FetchContent_MakeAvailable(Catch2)
+FetchContent_Declare(fmt
+	GIT_REPOSITORY https://github.com/fmtlib/fmt.git
+	GIT_TAG        10.2.1
+)
+FetchContent_MakeAvailable(Catch2 fmt)
 FetchContent_GetProperties(Catch2 SOURCE_DIR CATCH2_SOURCE)
 set(CMAKE_MODULE_PATH ${CATCH2_SOURCE}/extras ${CMAKE_MODULE_PATH})
 
@@ -71,7 +74,7 @@ add_executable(tests_20
 	generator.20.cpp
 )
 set_target_properties(tests_20 PROPERTIES CXX_STANDARD 20 CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)
-target_link_libraries(tests_20 Catch2::Catch2WithMain ljh)
+target_link_libraries(tests_20 Catch2::Catch2WithMain ljh fmt::fmt)
 
 add_executable(tests_23
 	smarc.23.cpp
@@ -81,7 +84,7 @@ add_executable(tests_23
 	point.23.cpp
 )
 set_target_properties(tests_23 PROPERTIES CXX_STANDARD 23 CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)
-target_link_libraries(tests_23 Catch2::Catch2WithMain ljh)
+target_link_libraries(tests_23 Catch2::Catch2WithMain ljh fmt::fmt)
 
 add_executable(tests_info
 	info.na.cpp
