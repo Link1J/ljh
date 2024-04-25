@@ -61,14 +61,14 @@ try_compile(AWAIT_NOT_NEEDED
 message(${AWAIT_NOT_NEEDED})
 
 if (WIN32)
-	target_link_libraries(ljh PUBLIC
+	target_link_libraries(ljh PRIVATE
 		wbemuuid
 		#windowsapp
 	)
 elseif (APPLE)
 	set(THREADS_PREFER_PTHREAD_FLAG ON)
 	find_package(Threads REQUIRED)
-	target_link_libraries(ljh PUBLIC
+	target_link_libraries(ljh PRIVATE
 		"-framework CoreFoundation"
 		"-framework Foundation"
 		"-framework CoreServices"
@@ -77,9 +77,8 @@ elseif (APPLE)
 elseif (UNIX)
 	set(THREADS_PREFER_PTHREAD_FLAG ON)
 	find_package(Threads REQUIRED)
-	target_link_libraries(ljh PUBLIC
+	target_link_libraries(ljh PRIVATE
 		dl
-		PkgConfig::DBUS
 		Threads::Threads
 	)
 endif()

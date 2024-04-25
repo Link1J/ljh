@@ -112,10 +112,10 @@ namespace ljh::__
 	template<typename yielded>
 	struct promise_base
 	{
-		using coroutine_handle = coroutine_handle<yielded>;
-		using nesting_info     = nesting_info<yielded>;
-		using element_awaiter  = element_awaiter<yielded>;
-		using final_awaiter    = final_awaiter<yielded>;
+		using coroutine_handle = __::coroutine_handle<yielded>;
+		using nesting_info     = __::nesting_info<yielded>;
+		using element_awaiter  = __::element_awaiter<yielded>;
+		using final_awaiter    = __::final_awaiter<yielded>;
 		template<typename R, typename V>
 		using nested_awaiter = nested_awaiter<yielded, R, V>;
 
