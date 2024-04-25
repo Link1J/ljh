@@ -82,7 +82,7 @@ namespace ljh::co
             this->_promise->start();
         }
 
-        void swap(com_task& other)
+        void swap(com_aware_task& other)
         {
             std::swap(this->_promise, other._promise);
         }

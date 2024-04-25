@@ -98,15 +98,15 @@ namespace ljh::__::co
     template<typename T>
     struct promise_base
     {
-        void (*m_resumer)(void*);
-        std::atomic<void*>       m_waiting{cold_ptr};
-        promise_result_holder<T> m_holder;
-        promise_policies         m_policies;
-
         static constexpr void*          running_ptr   = nullptr;
         static constexpr std::uintptr_t completed_ptr = 1;
         static constexpr std::uintptr_t abandoned_ptr = 2;
         static constexpr std::uintptr_t cold_ptr      = 3;
+
+        void (*m_resumer)(void*);
+        std::atomic<void*>       m_waiting{reinterpret_cast<void*>(cold_ptr)};
+        promise_result_holder<T> m_holder;
+        promise_policies         m_policies;
 
         promise_base()                      = default;
         promise_base(promise_base const&)   = delete;

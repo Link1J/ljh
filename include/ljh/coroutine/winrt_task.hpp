@@ -22,7 +22,7 @@ namespace ljh::co
     {
         winrt_task(std::nullptr_t = nullptr) noexcept
         {}
-        winrt_task(void* ptr, take_ownership_from_abi_t) noexcept
+        winrt_task(void* ptr, winrt::take_ownership_from_abi_t) noexcept
             : winrt::Windows::Foundation::IInspectable(ptr, winrt::take_ownership_from_abi)
         {}
     };
@@ -41,8 +41,8 @@ namespace ljh::__::co
     {
         winrt_task_completed_handler(std::nullptr_t = nullptr) noexcept
         {}
-        winrt_task_completed_handler(void* ptr, take_ownership_from_abi_t) noexcept
-            : winrt::Windows::Foundation::IUnknown(ptr, take_ownership_from_abi)
+        winrt_task_completed_handler(void* ptr, winrt::take_ownership_from_abi_t) noexcept
+            : winrt::Windows::Foundation::IUnknown(ptr, winrt::take_ownership_from_abi)
         {}
 
         template<typename L>
@@ -71,7 +71,7 @@ namespace ljh::__::co
             })
         {}
 
-        auto operator()(winrt_task<TResult> const& asyncInfo, winrt::Windows::Foundation::AsyncStatus const& asyncStatus) const
+        auto operator()(ljh::co::winrt_task<TResult> const& asyncInfo, winrt::Windows::Foundation::AsyncStatus const& asyncStatus) const
         {
             check_hresult(
                 (*(winrt::impl::abi_t<winrt_task_completed_handler<TResult>>**)this)->Invoke(*(void**)(&asyncInfo), static_cast<int32_t>(asyncStatus)));
@@ -95,31 +95,31 @@ namespace ljh::__::co
 
         auto Completed(winrt_task_completed_handler<TResult> const& handler) const
         {
-            winrt::check_hresult(shim<winrt_task<TResult>>()->put_Completed(*(void**)(&handler)));
+            winrt::check_hresult(shim<ljh::co::winrt_task<TResult>>()->put_Completed(*(void**)(&handler)));
         }
 
         [[nodiscard]] auto Completed() const
         {
             void* winrt_impl_result{};
-            winrt::check_hresult(shim<winrt_task<TResult>>()->get_Completed(&winrt_impl_result));
-            return winrt_task_completed_handler<TResult>{winrt_impl_result, take_ownership_from_abi};
+            winrt::check_hresult(shim<ljh::co::winrt_task<TResult>>()->get_Completed(&winrt_impl_result));
+            return winrt_task_completed_handler<TResult>{winrt_impl_result, winrt::take_ownership_from_abi};
         }
 
         auto GetResults() const
         {
             TResult winrt_impl_result{winrt::impl::empty_value<TResult>()};
-            winrt::check_hresult(shim<winrt_task<TResult>>()->GetResults(put_abi(winrt_impl_result)));
+            winrt::check_hresult(shim<ljh::co::winrt_task<TResult>>()->GetResults(put_abi(winrt_impl_result)));
             return winrt_impl_result;
         }
 
         auto get() const
         {
-            return winrt::impl::wait_get(cast_self<winrt_task<TResult>>());
+            return winrt::impl::wait_get(cast_self<ljh::co::winrt_task<TResult>>());
         }
 
         auto wait_for(winrt::Windows::Foundation::TimeSpan const& timeout) const
         {
-            return winrt::impl::wait_for(cast_self<winrt_task<TResult>>(), timeout);
+            return winrt::impl::wait_for(cast_self<ljh::co::winrt_task<TResult>>(), timeout);
         }
     };
 } // namespace ljh::__::co
