@@ -4,8 +4,10 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
+#include <version>
 #include <catch2/catch_test_macros.hpp>
 
+#if __cpp_lib_ranges >= 201911L
 #include "ljh/generator.hpp"
 
 #include <string_view>
@@ -212,3 +214,4 @@ TEST_CASE("exception handling - nested - main throws - custom error", "[test_20]
 		}
 	}
 }
+#endif
