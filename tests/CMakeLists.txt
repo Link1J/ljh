@@ -76,13 +76,25 @@ add_executable(tests_20
 set_target_properties(tests_20 PROPERTIES CXX_STANDARD 20 CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)
 target_link_libraries(tests_20 Catch2::Catch2WithMain ljh fmt::fmt)
 
-add_executable(tests_23
-	smarc.23.cpp
-	rect.23.cpp
-	region.23.cpp
-	size.23.cpp
-	point.23.cpp
+try_compile(SUPPORTS_explicit_this
+	"${PROJECT_BINARY_DIR}/_build_tests"
+	"${PROJECT_SOURCE_DIR}/cmake.__cpp_explicit_this_parameter.cpp"
+	CXX_STANDARD 23
+	CXX_STANDARD_REQUIRED YES
+	CXX_EXTENSIONS NO
 )
+add_executable(tests_23
+	info.na.cpp
+)
+if (SUPPORTS_explicit_this)
+	target_sources(tests_23 PRIVATE
+		smarc.23.cpp
+		rect.23.cpp
+		region.23.cpp
+		size.23.cpp
+		point.23.cpp
+	)
+endif()
 set_target_properties(tests_23 PROPERTIES CXX_STANDARD 23 CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)
 target_link_libraries(tests_23 Catch2::Catch2WithMain ljh fmt::fmt)
 
@@ -98,3 +110,4 @@ catch_discover_tests(tests_11)
 catch_discover_tests(tests_14)
 catch_discover_tests(tests_17)
 catch_discover_tests(tests_20)
+catch_discover_tests(tests_23)

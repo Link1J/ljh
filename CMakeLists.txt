@@ -5,6 +5,7 @@
 #          https://www.boost.org/LICENSE_1_0.txt)
 
 cmake_minimum_required(VERSION 3.11.0)
+set(CMAKE_SYSTEM_VERSION 10.0)
 project(ljh)
 
 if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
