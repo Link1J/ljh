@@ -16,12 +16,12 @@ namespace ljh::__::co
 
 		bool await_ready()
 		{
-			return self->client_await_ready<true>();
+			return self->template client_await_ready<true>();
 		}
 
-		auto await_suspend(std::experimental::coroutine_handle<> handle)
+		auto await_suspend(std::coroutine_handle<> handle)
 		{
-			return self->client_await_suspend<true>(handle.address());
+			return self->template client_await_suspend<true>(handle.address());
 		}
 
 		T await_resume()
@@ -40,19 +40,19 @@ namespace ljh::co
 		cold_task(__::co::promise<T>* initial = nullptr)
 			: base(initial)
 		{
-			this->promise->start();
+			this->_promise->start();
 		}
 
 		void swap(cold_task& other)
 		{
-			std::swap(this->promise, other.promise);
+			std::swap(this->_promise, other._promise);
 		}
 
 		using base::operator co_await;
 
 		auto operator co_await()&&
 		{
-			return __::co::cold_promise_awaiter<T>{ std::move(promise) };
+			return __::co::cold_promise_awaiter<T>{ std::move(this->_promise) };
 		}
 	};
 

@@ -7,7 +7,7 @@
 #pragma once
 #include "task_base.hpp"
 
-#ifndef _WIN32
+#if !defined(LJH_TARGET_Windows)
 #error "This file requires Windows."
 #else
 #include <winrt/base.h>
@@ -22,16 +22,16 @@ namespace ljh::__::co
             : self(std::move(ptr))
         {}
 
-        promise_ptr<T>                        self;
-        std::experimental::coroutine_handle<> waiter;
-        winrt::com_ptr<IContextCallback>      context;
+        promise_ptr<T>                   self;
+        std::coroutine_handle<>          waiter;
+        winrt::com_ptr<IContextCallback> context;
 
         bool await_ready()
         {
             return self->client_await_ready();
         }
 
-        auto await_suspend(std::experimental::coroutine_handle<> handle)
+        auto await_suspend(std::coroutine_handle<> handle)
         {
             waiter = handle;
             winrt::check_hresult(CoGetObjectContext(IID_PPV_ARGS(&context)));
@@ -79,19 +79,19 @@ namespace ljh::co
         com_aware_task(__::co::promise<T>* initial)
             : base(initial)
         {
-            this->promise->start();
+            this->_promise->start();
         }
 
         void swap(com_task& other)
         {
-            std::swap(this->promise, other.promise);
+            std::swap(this->_promise, other._promise);
         }
 
         using base::operator co_await;
 
         auto operator co_await() &&
         {
-            return __::co::com_promise_awaiter<T>{std::move(promise)};
+            return __::co::com_promise_awaiter<T>{std::move(this->_promise)};
         }
     };
 

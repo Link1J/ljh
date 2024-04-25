@@ -25,7 +25,7 @@ namespace ljh::__::co
     struct task_base
     {
         task_base(promise<T>* initial = nullptr) noexcept
-            : promise(initial)
+            : _promise(initial)
         {}
 
         struct cannot_await_lvalue_use_std_move
@@ -34,10 +34,10 @@ namespace ljh::__::co
 
         T get() &&
         {
-            if (!promise->client_await_ready())
+            if (!_promise->client_await_ready())
             {
                 check_type completed = false;
-                if (promise->client_await_suspend(&completed, wake_by_address))
+                if (_promise->client_await_suspend(&completed, wake_by_address))
                 {
                     auto ready = completed;
                     while (!completed)
@@ -50,11 +50,11 @@ namespace ljh::__::co
                     }
                 }
             }
-            return std::exchange(promise, {})->client_await_resume();
+            return std::exchange(_promise, {})->client_await_resume();
         }
 
     protected:
-        promise_ptr<T> promise;
+        promise_ptr<T> _promise;
 
         static void wake_by_address(void* completed)
         {

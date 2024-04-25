@@ -7,6 +7,7 @@
 #pragma once
 #include "node_list.hpp"
 #include <mutex>
+#include <atomic>
 
 namespace ljh::co
 {
@@ -43,7 +44,7 @@ namespace ljh::co
         }
 
         template<bool fast, typename T, typename... Args, typename... Params>
-        bool calc_claim(std::atomic<T>& value, bool (*transition)(T, T&, Params&&...), T initial, Args&&... args)
+        bool calc_claim(std::atomic<T>& value, T initial, bool (*transition)(T, T&, Params&&...), Args&&... args)
         {
             constexpr auto order = fast ? std::memory_order::acquire : std::memory_order::relaxed;
             for (;;)
@@ -61,26 +62,25 @@ namespace ljh::co
             }
         }
 
-        template<bool fast, typename T, typename... Args>
-        bool calc_claim(std::atomic<T>& value, T initial, Args&&... args)
-        {
-            return calc_claim<fast>(value, &State::transition, initial, std::forward<Args>(args)...);
-        }
+        // template<bool fast, typename T, typename... Args>
+        // bool calc_claim(std::atomic<T>& value, T initial, Args&&... args)
+        // {
+        //     return calc_claim<fast>(value, initial, &State::transition, std::forward<Args>(args)...);
+        // }
 
         template<bool fast, typename T, typename... Args, typename... Params>
         bool calc_claim(std::atomic<T>& value, bool (*transition)(T, T&, Params&&...), Args&&... args)
         {
-            return calc_claim<fast>(value, transition, value.load(std::memory_order::relaxed), std::forward<Args>(args)...);
+            return calc_claim<fast, T, Args..., Params...>(value, value.load(std::memory_order::relaxed), transition, std::forward<Args>(args)...);
         }
 
         template<bool fast, typename T>
         bool calc_claim(std::atomic<T>& value)
         {
-            return calc_claim<fast>(value, &State::transition, value.load(std::memory_order::relaxed));
+            return calc_claim<fast>(value, value.load(std::memory_order::relaxed), &State::transition);
         }
 
-        using extra_await_data = extra_await_data<State>;
-        using node_list        = node_list;
+        using extra_await_data = co::extra_await_data<State>;
 
         bool fast_claim(extra_await_data const&) const noexcept
         {

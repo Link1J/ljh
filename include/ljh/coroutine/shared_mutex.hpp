@@ -47,7 +47,7 @@ namespace ljh::co
             if (any_waiters())
                 return false;
             if (e.exclusive)
-                return calc_claim<true>(owners, exclusive_transition, 0);
+                return calc_claim<true>(owners, 0, exclusive_transition);
             else
                 return calc_claim<true>(owners, shared_transition);
         }

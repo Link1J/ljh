@@ -7,7 +7,7 @@
 #pragma once
 #include "coroutine_headers.hpp"
 
-#ifndef _WIN32
+#if !defined(LJH_TARGET_Windows)
 #error "This file requires Windows."
 #else
 #include <winrt/base.h>

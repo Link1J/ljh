@@ -103,9 +103,9 @@ namespace ljh::__::co
         promise_policies         m_policies;
 
         static constexpr void* running_ptr   = nullptr;
-        static constexpr void* completed_ptr = reinterpret_cast<void*>(1);
-        static constexpr void* abandoned_ptr = reinterpret_cast<void*>(2);
-        static constexpr void* cold_ptr      = reinterpret_cast<void*>(3);
+        static constexpr void* completed_ptr = std::bit_cast<void*>(std::uintptr_t(1));
+        static constexpr void* abandoned_ptr = std::bit_cast<void*>(std::uintptr_t(2));
+        static constexpr void* cold_ptr      = std::bit_cast<void*>(std::uintptr_t(3));
 
         promise_base()                      = default;
         promise_base(promise_base const&)   = delete;
@@ -184,7 +184,7 @@ namespace ljh::__::co
                 promise_policies& policies;
                 auto              await_resume() const noexcept
                 {
-                    return co::task_policy(policies);
+                    return ljh::co::task_policy(policies);
                 }
             };
             return awaiter{{}, m_policies};
