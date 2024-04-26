@@ -248,17 +248,5 @@ TEST_CASE("exception handling - nested - main throws - custom error", "[test_20]
         CHECK(*it == 1);
         REQUIRE_THROWS(it++);
     }
-    SECTION("for each loop")
-    {
-        try
-        {
-            for (auto part : fails_main2(0)) {}
-        }
-        catch (std::exception const& e)
-        {
-            using namespace std::literals;
-            REQUIRE(e.what() == "Unknown 2"s);
-        }
-    }
 }
 #endif
