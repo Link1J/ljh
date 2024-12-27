@@ -75,9 +75,10 @@ stages:
         pool:
           vmImage: $(imageName)
 
-        condition: or(in(variables['agent.os'], 'Windows_NT', 'Linux'), and(in(variables['agent.os'], 'Darwin'), in(variables['agent.osarchitecture'], 'X64')))
-
         steps:
+          - bash: exit 1
+            displayName: Fail build if partially successful
+            condition: and(in(variables['agent.os'], 'Darwin'), not(in(variables['agent.osarchitecture'], 'X64')))
           - script: |
               echo "Agent.OS:" $(agent.os)
               echo "Agent.OSArchitecture:" $(agent.osarchitecture)
@@ -110,7 +111,7 @@ stages:
                 displayName: Run Tests
                 workingDirectory: "$(BuildConfiguration)/tests"
                 condition: variables.PerformTests
-          - ${{ if in(variables.agent.os, 'Linux', 'Darwin') }}:
+          - ${{ elseif in(variables.agent.os, 'Linux', 'Darwin') }}:
               - pwsh: |
                   ./tests_info -r jUnit -s --out tests_info_data.xml
                   ./tests_11 -r jUnit -s --out tests_11_data.xml
