@@ -16,68 +16,67 @@ stages:
               imageName: "ubuntu-latest"
               BuildConfiguration: "Debug"
               Generator: ""
-              PerformTests: true
+              performTests: true
             Linux_Release:
               OS: "Linux"
               imageName: "ubuntu-latest"
               BuildConfiguration: "RelWithDebInfo"
               Generator: ""
-              PerformTests: true
+              performTests: true
             MacOS_AMD64_Debug:
               OS: "MacOS"
               imageName: "macos-latest"
               BuildConfiguration: "Debug"
               Generator: ""
-              PerformTests: true
+              performTests: true
             MacOS_AMD64_Release:
               OS: "MacOS"
               imageName: "macos-latest"
               BuildConfiguration: "RelWithDebInfo"
               Generator: ""
-              PerformTests: true
+              performTests: true
             Windows_x86_Debug:
               OS: "Windows"
               imageName: "windows-latest"
               BuildConfiguration: "Debug"
               Generator: "-A Win32"
-              PerformTests: true
+              performTests: true
             Windows_x86_Release:
               OS: "Windows"
               imageName: "windows-latest"
               BuildConfiguration: "RelWithDebInfo"
               Generator: "-A Win32"
-              PerformTests: true
+              performTests: true
             Windows_AMD64_Debug:
               OS: "Windows"
               imageName: "windows-latest"
               BuildConfiguration: "Debug"
               Generator: "-A x64"
-              PerformTests: true
+              performTests: true
             Windows_AMD64_Release:
               OS: "Windows"
               imageName: "windows-latest"
               BuildConfiguration: "RelWithDebInfo"
               Generator: "-A x64"
-              PerformTests: true
+              performTests: true
             Windows_ARM64_Debug:
               OS: "Windows"
               imageName: "windows-latest"
               BuildConfiguration: "Debug"
               Generator: "-A ARM64"
-              PerformTests: false
+              performTests: false
             Windows_ARM64_Release:
               OS: "Windows"
               imageName: "windows-latest"
               BuildConfiguration: "RelWithDebInfo"
               Generator: "-A ARM64"
-              PerformTests: false
+              performTests: false
 
         pool:
           vmImage: $(imageName)
 
         variables:
           isWindows: $[in(variables['agent.os'], 'Windows_NT')]
-          performTests: $[variables['PerformTests']]
 
         steps:
           - script: |
@@ -100,7 +99,7 @@ stages:
               cmakeArgs: "-DCMAKE_BUILD_TYPE=$(BuildConfiguration) $(Generator) .. -Dljh_BUILD_TESTS=ON"
           - task: CMake@1
             displayName: Build Info
-            condition: eq(variables["performTests"], true)
+            condition: eq(variables.performTests, true)
             inputs:
               workingDirectory: $(BuildConfiguration)
               cmakeArgs: "--build . --config $(BuildConfiguration) --target tests_info"
@@ -113,7 +112,7 @@ stages:
             ignoreLASTEXITCODE: true
             displayName: Print Info
             workingDirectory: "$(BuildConfiguration)/tests"
-            condition: and(succeeded(), eq(variables["performTests"], true))
+            condition: and(succeeded(), eq(variables.performTests, true))
           - task: CMake@1
             displayName: Build Everything
             inputs:
@@ -136,7 +135,7 @@ stages:
             ignoreLASTEXITCODE: true
             displayName: Run Tests
             workingDirectory: "$(BuildConfiguration)/tests"
-            condition: and(succeeded(), eq(variables["performTests"], true))
+            condition: and(succeeded(), eq(variables.performTests, true))
           - task: PublishTestResults@2
             displayName: Publish Test Results
             condition: always()
