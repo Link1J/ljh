@@ -1,126 +1,141 @@
 trigger:
-- master
+  - master
 
 stages:
-- stage: Build
-  displayName: Build
+  - stage: Build
+    displayName: Build
 
-  jobs:
-  - job: BuildTest
-    displayName: Build & Test
+    jobs:
+      - job: BuildTest
+        displayName: Build & Test
 
-    strategy:
-      matrix:
-        Linux_Debug:
-          OS: 'Linux'
-          imageName: 'ubuntu-latest'
-          BuildConfiguration: 'Debug'
-          Generator: ''
-        Linux_Release:
-          OS: 'Linux'
-          imageName: 'ubuntu-latest'
-          BuildConfiguration: 'RelWithDebInfo'
-          Generator: ''
-        MacOS_ARM_Debug:
-          OS: 'MacOS'
-          imageName: 'macos-latest'
-          BuildConfiguration: 'Debug'
-          Generator: ''
-        MacOS_ARM_Release:
-          OS: 'MacOS'
-          imageName: 'macos-latest'
-          BuildConfiguration: 'RelWithDebInfo'
-          Generator: ''
-        MacOS_AMD64_Debug:
-          OS: 'MacOS'
-          imageName: 'macos-latest-large'
-          BuildConfiguration: 'Debug'
-          Generator: ''
-        MacOS_AMD64_Release:
-          OS: 'MacOS'
-          imageName: 'macos-latest-large'
-          BuildConfiguration: 'RelWithDebInfo'
-          Generator: ''
-        Windows_x86_Debug:
-          OS: 'Windows'
-          imageName: 'windows-latest'
-          BuildConfiguration: 'Debug'
-          Generator: '-A Win32'
-        Windows_x86_Release:
-          OS: 'Windows'
-          imageName: 'windows-latest'
-          BuildConfiguration: 'RelWithDebInfo'
-          Generator: '-A Win32'
-        Windows_AMD64_Debug:
-          OS: 'Windows'
-          imageName: 'windows-latest'
-          BuildConfiguration: 'Debug'
-          Generator: '-A x64'
-        Windows_AMD64_Release:
-          OS: 'Windows'
-          imageName: 'windows-latest'
-          BuildConfiguration: 'RelWithDebInfo'
-          Generator: '-A x64'
-        Windows_ARM64_Debug:
-          OS: 'Windows'
-          imageName: 'windows-latest'
-          BuildConfiguration: 'Debug'
-          Generator: '-A ARM64'
-        Windows_ARM64_Release:
-          OS: 'Windows'
-          imageName: 'windows-latest'
-          BuildConfiguration: 'RelWithDebInfo'
-          Generator: '-A ARM64'
+        strategy:
+          matrix:
+            Linux_Debug:
+              OS: "Linux"
+              imageName: "ubuntu-latest"
+              BuildConfiguration: "Debug"
+              Generator: ""
+              PerformTests: true
+            Linux_Release:
+              OS: "Linux"
+              imageName: "ubuntu-latest"
+              BuildConfiguration: "RelWithDebInfo"
+              Generator: ""
+              PerformTests: true
+            MacOS_ARM_Debug:
+              OS: "MacOS"
+              imageName: "macos-latest"
+              BuildConfiguration: "Debug"
+              Generator: ""
+              PerformTests: true
+            MacOS_ARM_Release:
+              OS: "MacOS"
+              imageName: "macos-latest"
+              BuildConfiguration: "RelWithDebInfo"
+              Generator: ""
+              PerformTests: true
+            MacOS_AMD64_Debug:
+              OS: "MacOS"
+              imageName: "macos-latest-large"
+              BuildConfiguration: "Debug"
+              Generator: ""
+              PerformTests: true
+            MacOS_AMD64_Release:
+              OS: "MacOS"
+              imageName: "macos-latest-large"
+              BuildConfiguration: "RelWithDebInfo"
+              Generator: ""
+              PerformTests: true
+            Windows_x86_Debug:
+              OS: "Windows"
+              imageName: "windows-latest"
+              BuildConfiguration: "Debug"
+              Generator: "-A Win32"
+              PerformTests: true
+            Windows_x86_Release:
+              OS: "Windows"
+              imageName: "windows-latest"
+              BuildConfiguration: "RelWithDebInfo"
+              Generator: "-A Win32"
+              PerformTests: true
+            Windows_AMD64_Debug:
+              OS: "Windows"
+              imageName: "windows-latest"
+              BuildConfiguration: "Debug"
+              Generator: "-A x64"
+              PerformTests: true
+            Windows_AMD64_Release:
+              OS: "Windows"
+              imageName: "windows-latest"
+              BuildConfiguration: "RelWithDebInfo"
+              Generator: "-A x64"
+              PerformTests: true
+            Windows_ARM64_Debug:
+              OS: "Windows"
+              imageName: "windows-latest"
+              BuildConfiguration: "Debug"
+              Generator: "-A ARM64"
+              PerformTests: false
+            Windows_ARM64_Release:
+              OS: "Windows"
+              imageName: "windows-latest"
+              BuildConfiguration: "RelWithDebInfo"
+              Generator: "-A ARM64"
+              PerformTests: false
 
-    pool:
-      vmImage: $(imageName)
+        pool:
+          vmImage: $(imageName)
 
-    steps:
-    - script: sudo apt-get update
-      displayName: 'Update packages'
-      condition: in(variables['agent.os'], 'Linux')
-    - script: mkdir $(BuildConfiguration)
-      displayName: Create Build Directory
-      workingDirectory: $(Build.SourcesDirectory)
-    - task: CMake@1
-      displayName: Generate CMake Cache
-      inputs:
-        workingDirectory: $(BuildConfiguration)
-        cmakeArgs: '-DCMAKE_BUILD_TYPE=$(BuildConfiguration) $(Generator) .. -Dljh_BUILD_TESTS=ON'
-    - task: CMake@1
-      displayName: Run Build Process
-      inputs:
-        workingDirectory: $(BuildConfiguration)
-        cmakeArgs: '--build . --config $(BuildConfiguration)'
-    - pwsh: | 
-        ./$(BuildConfiguration)/tests_info.exe -r jUnit -s --out tests_info_data.xml
-        ./$(BuildConfiguration)/tests_11.exe -r jUnit -s --out tests_11_data.xml
-        ./$(BuildConfiguration)/tests_14.exe -r jUnit -s --out tests_14_data.xml
-        ./$(BuildConfiguration)/tests_17.exe -r jUnit -s --out tests_17_data.xml
-        ./$(BuildConfiguration)/tests_20.exe -r jUnit -s --out tests_20_data.xml
-        ./$(BuildConfiguration)/tests_23.exe -r jUnit -s --out tests_23_data.xml
-      ignoreLASTEXITCODE: true
-      displayName: Run Tests (Windows)
-      workingDirectory: '$(BuildConfiguration)/tests'
-      condition: and(eq(variables['agent.os'], 'Windows_NT'), not(eq("$(imageName)", "-A ARM64")))
-    - pwsh: | 
-        ./tests_info -r jUnit -s --out tests_info_data.xml
-        ./tests_11 -r jUnit -s --out tests_11_data.xml
-        ./tests_11 -r jUnit -s --out tests_14_data.xml
-        ./tests_17 -r jUnit -s --out tests_17_data.xml
-        ./tests_20 -r jUnit -s --out tests_20_data.xml
-        ./tests_23 -r jUnit -s --out tests_23_data.xml
-      ignoreLASTEXITCODE: true
-      displayName: Run Tests (Linux)
-      workingDirectory: '$(BuildConfiguration)/tests'
-      condition: in(variables['agent.os'], 'Linux', 'Darwin')
-    - task: PublishTestResults@2
-      displayName: Publish Test Results
-      inputs:
-        testResultsFormat: JUnit
-        testResultsFiles: '**/tests_*.xml'
-        failTaskOnFailedTests: true
-        configuration: '$(BuildConfiguration)'
-        searchFolder: '$(BuildConfiguration)'
-        mergeTestResults: true
-        testRunTitle: '$(Agent.JobName)'
+        steps:
+          - script: sudo apt-get update
+            displayName: "Update packages"
+            condition: in(variables['agent.os'], 'Linux')
+          - script: mkdir $(BuildConfiguration)
+            displayName: Create Build Directory
+            workingDirectory: $(Build.SourcesDirectory)
+          - task: CMake@1
+            displayName: Generate CMake Cache
+            inputs:
+              workingDirectory: $(BuildConfiguration)
+              cmakeArgs: "-DCMAKE_BUILD_TYPE=$(BuildConfiguration) $(Generator) .. -Dljh_BUILD_TESTS=ON"
+          - task: CMake@1
+            displayName: Run Build Process
+            inputs:
+              workingDirectory: $(BuildConfiguration)
+              cmakeArgs: "--build . --config $(BuildConfiguration)"
+          - ${{ if eq(variables['agent.os'], 'Windows_NT') }}:
+              - pwsh: |
+                  ./$(BuildConfiguration)/tests_info.exe -r jUnit -s --out tests_info_data.xml
+                  ./$(BuildConfiguration)/tests_11.exe -r jUnit -s --out tests_11_data.xml
+                  ./$(BuildConfiguration)/tests_14.exe -r jUnit -s --out tests_14_data.xml
+                  ./$(BuildConfiguration)/tests_17.exe -r jUnit -s --out tests_17_data.xml
+                  ./$(BuildConfiguration)/tests_20.exe -r jUnit -s --out tests_20_data.xml
+                  ./$(BuildConfiguration)/tests_23.exe -r jUnit -s --out tests_23_data.xml
+                ignoreLASTEXITCODE: true
+                displayName: Run Tests
+                workingDirectory: "$(BuildConfiguration)/tests"
+                condition: $(PerformTests)
+          - ${{ if in(variables['agent.os'], 'Linux', 'Darwin') }}:
+              - pwsh: |
+                  ./tests_info -r jUnit -s --out tests_info_data.xml
+                  ./tests_11 -r jUnit -s --out tests_11_data.xml
+                  ./tests_11 -r jUnit -s --out tests_14_data.xml
+                  ./tests_17 -r jUnit -s --out tests_17_data.xml
+                  ./tests_20 -r jUnit -s --out tests_20_data.xml
+                  ./tests_23 -r jUnit -s --out tests_23_data.xml
+                ignoreLASTEXITCODE: true
+                displayName: Run Tests
+                workingDirectory: "$(BuildConfiguration)/tests"
+                condition: $(PerformTests)
+          - task: PublishTestResults@2
+            displayName: Publish Test Results
+            condition: $(PerformTests)
+            inputs:
+              testResultsFormat: JUnit
+              testResultsFiles: "**/tests_*.xml"
+              failTaskOnFailedTests: true
+              configuration: "$(BuildConfiguration)"
+              searchFolder: "$(BuildConfiguration)"
+              mergeTestResults: true
+              testRunTitle: "$(Agent.JobName)"
