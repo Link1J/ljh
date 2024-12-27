@@ -89,8 +89,8 @@ stages:
 
         steps:
           - script: |
-              echo "Agent.OS:" ${{ variables.Agent.OS }}
-              echo "Agent.OSArchitecture:" ${{ variables.Agent.OSArchitecture }}
+              echo "Agent.OS:" $(agent.os)
+              echo "Agent.OSArchitecture:" $(agent.osarchitecture)
             displayName: "Basic Info"
           - script: sudo apt-get update
             displayName: "Update packages"
@@ -108,7 +108,7 @@ stages:
             inputs:
               workingDirectory: $(BuildConfiguration)
               cmakeArgs: "--build . --config $(BuildConfiguration)"
-          - ${{ if eq(variables.Agent.OS, 'Windows_NT') }}:
+          - ${{ if in(variables.agent.os, 'Windows_NT') }}:
               - pwsh: |
                   ./$(BuildConfiguration)/tests_info.exe -r jUnit -s --out tests_info_data.xml
                   ./$(BuildConfiguration)/tests_11.exe -r jUnit -s --out tests_11_data.xml
@@ -120,7 +120,7 @@ stages:
                 displayName: Run Tests
                 workingDirectory: "$(BuildConfiguration)/tests"
                 condition: variables.PerformTests
-          - ${{ if in(variables.Agent.OS, 'Linux', 'Darwin') }}:
+          - ${{ if in(variables.agent.os, 'Linux', 'Darwin') }}:
               - pwsh: |
                   ./tests_info -r jUnit -s --out tests_info_data.xml
                   ./tests_11 -r jUnit -s --out tests_11_data.xml
