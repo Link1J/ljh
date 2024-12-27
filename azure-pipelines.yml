@@ -77,6 +77,7 @@ stages:
 
         variables:
           isWindows: $[in(variables['agent.os'], 'Windows_NT')]
+          performTests: $[variables['PerformTests'])]
 
         steps:
           - script: |
@@ -99,7 +100,7 @@ stages:
               cmakeArgs: "-DCMAKE_BUILD_TYPE=$(BuildConfiguration) $(Generator) .. -Dljh_BUILD_TESTS=ON"
           - task: CMake@1
             displayName: Build Info
-            condition: eq(variables["PerformTests"], true)
+            condition: eq(variables["performTests"], true)
             inputs:
               workingDirectory: $(BuildConfiguration)
               cmakeArgs: "--build . --config $(BuildConfiguration) --target tests_info"
@@ -112,7 +113,7 @@ stages:
             ignoreLASTEXITCODE: true
             displayName: Print Info
             workingDirectory: "$(BuildConfiguration)/tests"
-            condition: and(succeeded(), eq(variables["PerformTests"], true))
+            condition: and(succeeded(), eq(variables["performTests"], true))
           - task: CMake@1
             displayName: Build Everything
             inputs:
@@ -135,7 +136,7 @@ stages:
             ignoreLASTEXITCODE: true
             displayName: Run Tests
             workingDirectory: "$(BuildConfiguration)/tests"
-            condition: and(succeeded(), eq(variables["PerformTests"], true))
+            condition: and(succeeded(), eq(variables["performTests"], true))
           - task: PublishTestResults@2
             displayName: Publish Test Results
             condition: always()
