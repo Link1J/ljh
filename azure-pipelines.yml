@@ -84,8 +84,8 @@ stages:
               echo "Agent.OSArchitecture:" $(agent.osarchitecture)
             displayName: "Basic Info"
           - bash: exit 1
-            displayName: Fail if architecture for macOS changes
-            condition: and(in(variables['agent.os'], 'Darwin'), notIn(variables['agent.osarchitecture'], 'X64'))
+            displayName: Fail if architecture changes
+            condition: notIn(variables['agent.osarchitecture'], 'X64')
           - script: sudo apt-get update
             displayName: "Update packages"
             condition: in(variables['agent.os'], 'Linux')
@@ -103,7 +103,7 @@ stages:
               workingDirectory: $(BuildConfiguration)
               cmakeArgs: "--build . --config $(BuildConfiguration)"
           - pwsh: |
-              if ($(isWindows)) {
+              if (\"$(isWindows)\" -eq "True") {
                 ./$(BuildConfiguration)/tests_info.exe -r jUnit -s --out tests_info_data.xml
                 ./$(BuildConfiguration)/tests_11.exe -r jUnit -s --out tests_11_data.xml
                 ./$(BuildConfiguration)/tests_14.exe -r jUnit -s --out tests_14_data.xml
