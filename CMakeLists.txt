@@ -5,6 +5,7 @@
 #          https://www.boost.org/LICENSE_1_0.txt)
 
 cmake_minimum_required(VERSION 3.11.0)
+set(CMAKE_SYSTEM_VERSION 10.0)
 project(ljh)
 
 if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
@@ -15,11 +16,6 @@ endif()
 
 option(ljh_BUILD_TESTS "Build the Self Tests" ${LJH_SUB_PROJECT})
 option(ljh_INSTALL "Install" ${LJH_SUB_PROJECT})
-
-if (UNIX AND NOT APPLE)
-	find_package(PkgConfig)
-	pkg_check_modules(DBUS REQUIRED IMPORTED_TARGET dbus-1)
-endif()
 
 add_library(ljh STATIC
 	source/system_directories.cpp
@@ -40,7 +36,6 @@ add_library(ljh STATIC
 	>
 	$<$<PLATFORM_ID:Linux>:
 		source/unix/system_info.cpp
-		source/unix/dbus.cpp
 		source/unix/named_mutex.cpp
 		source/unix/thread_name.cpp
 	>
@@ -64,17 +59,16 @@ try_compile(AWAIT_NOT_NEEDED
 	CXX_STANDARD_REQUIRED YES
 	CXX_EXTENSIONS NO
 )
-message(${AWAIT_NOT_NEEDED})
 
 if (WIN32)
-	target_link_libraries(ljh PUBLIC
+	target_link_libraries(ljh PRIVATE
 		wbemuuid
 		#windowsapp
 	)
 elseif (APPLE)
 	set(THREADS_PREFER_PTHREAD_FLAG ON)
 	find_package(Threads REQUIRED)
-	target_link_libraries(ljh PUBLIC
+	target_link_libraries(ljh PRIVATE
 		"-framework CoreFoundation"
 		"-framework Foundation"
 		"-framework CoreServices"
@@ -83,9 +77,8 @@ elseif (APPLE)
 elseif (UNIX)
 	set(THREADS_PREFER_PTHREAD_FLAG ON)
 	find_package(Threads REQUIRED)
-	target_link_libraries(ljh PUBLIC
+	target_link_libraries(ljh PRIVATE
 		dl
-		PkgConfig::DBUS
 		Threads::Threads
 	)
 endif()
@@ -95,7 +88,7 @@ target_compile_options(ljh
 		$<$<PLATFORM_ID:Windows,WindowsStore>:
 			/D_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
 			/Zc:twoPhase-
-			$<$<NOT:$<BOOL:${AWAIT_NOT_NEEDED}>>:/await>
+			/await:strict
 		>
 )
 

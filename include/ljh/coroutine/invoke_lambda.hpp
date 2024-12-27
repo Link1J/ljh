@@ -8,9 +8,9 @@
 
 namespace ljh::co
 {
-	template <typename TLambda>
-	auto invoke_lambda(TLambda lambda) -> decltype(lambda())
-	{
-		return co_await lambda();
-	}
-}
+    template<typename TLambda>
+    auto invoke_lambda(TLambda lambda) -> decltype(lambda())
+    {
+        co_return co_await lambda();
+    }
+} // namespace ljh::co

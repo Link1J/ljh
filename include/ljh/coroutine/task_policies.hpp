@@ -9,27 +9,29 @@
 
 namespace ljh::__::co
 {
-	struct promise_policies
-	{
-		bool m_terminate_on_unhandled_exception = false;
-	};
-}
+    struct promise_policies
+    {
+        bool m_terminate_on_unhandled_exception = false;
+    };
+} // namespace ljh::__::co
 
 namespace ljh::co
 {
-	struct task_policy
-	{
-		task_policy(__::co::promise_policies& policies)
-			: policies(policies)
-		{}
+    struct task_policy
+    {
+        task_policy(__::co::promise_policies& policies)
+            : policies(policies)
+        {}
 
-		bool terminate_on_unhandled_exception(bool value = true) const noexcept
-		{
-			return std::exchange(policies.m_terminate_on_unhandled_exception, value);
-		}
-	private:
-		__::co::promise_policies& policies;
-	};
+        bool terminate_on_unhandled_exception(bool value = true) const noexcept
+        {
+            return std::exchange(policies.m_terminate_on_unhandled_exception, value);
+        }
 
-	struct get_task_policy {};
-}
+    private:
+        __::co::promise_policies& policies;
+    };
+
+    struct get_task_policy
+    {};
+} // namespace ljh::co

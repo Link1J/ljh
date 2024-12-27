@@ -16,19 +16,20 @@ set(CATCH_BUILD_TESTING OFF)
 
 FetchContent_Declare(Catch2
 	GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-	GIT_TAG        v3.3.2
+	GIT_TAG        v3.5.4
 )
-
-FetchContent_MakeAvailable(Catch2)
+FetchContent_Declare(fmt
+	GIT_REPOSITORY https://github.com/fmtlib/fmt.git
+	GIT_TAG        10.2.1
+)
+FetchContent_MakeAvailable(Catch2 fmt)
 FetchContent_GetProperties(Catch2 SOURCE_DIR CATCH2_SOURCE)
 set(CMAKE_MODULE_PATH ${CATCH2_SOURCE}/extras ${CMAKE_MODULE_PATH})
 
 if (MSVC)
 	add_compile_options(
 		/D_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
-		/Zc:twoPhase-
-		$<$<NOT:$<BOOL:${AWAIT_NOT_NEEDED}>>:/await>
-		 /utf-8 /permissive- /Zc:inline /Zc:__cplusplus /Zc:__STDC__ /bigobj /Y-
+		/Zc:twoPhase- /await:strict /utf-8 /permissive- /Zc:inline /Zc:__cplusplus /Zc:__STDC__ /bigobj /Y-
 	)
 endif()
 
@@ -71,24 +72,32 @@ add_executable(tests_20
 	concepts.20.cpp
 	ranges.20.cpp
 	generator.20.cpp
+	coroutine.20.cpp
 )
-if (UNIX AND NOT APPLE)
-	target_sources(tests_20 PRIVATE
-		dbus.20.cpp
+set_target_properties(tests_20 PROPERTIES CXX_STANDARD 20 CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)
+target_link_libraries(tests_20 Catch2::Catch2WithMain ljh fmt::fmt)
+
+try_compile(SUPPORTS_explicit_this
+	"${PROJECT_BINARY_DIR}/_build_tests"
+	"${PROJECT_SOURCE_DIR}/cmake.__cpp_explicit_this_parameter.cpp"
+	CXX_STANDARD 23
+	CXX_STANDARD_REQUIRED YES
+	CXX_EXTENSIONS NO
+)
+add_executable(tests_23
+	info.na.cpp
+)
+if (SUPPORTS_explicit_this)
+	target_sources(tests_23 PRIVATE
+		smarc.23.cpp
+		rect.23.cpp
+		region.23.cpp
+		size.23.cpp
+		point.23.cpp
 	)
 endif()
-set_target_properties(tests_20 PROPERTIES CXX_STANDARD 20 CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)
-target_link_libraries(tests_20 Catch2::Catch2WithMain ljh)
-
-add_executable(tests_23
-	smarc.23.cpp
-	rect.23.cpp
-	region.23.cpp
-	size.23.cpp
-	point.23.cpp
-)
 set_target_properties(tests_23 PROPERTIES CXX_STANDARD 23 CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)
-target_link_libraries(tests_23 Catch2::Catch2WithMain ljh)
+target_link_libraries(tests_23 Catch2::Catch2WithMain ljh fmt::fmt)
 
 add_executable(tests_info
 	info.na.cpp
@@ -102,3 +111,4 @@ catch_discover_tests(tests_11)
 catch_discover_tests(tests_14)
 catch_discover_tests(tests_17)
 catch_discover_tests(tests_20)
+catch_discover_tests(tests_23)

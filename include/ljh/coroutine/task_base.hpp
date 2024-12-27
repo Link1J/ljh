@@ -7,37 +7,63 @@
 #pragma once
 #include "promise.hpp"
 
+#ifdef __linux__
+#include <linux/futex.h>
+#include <sys/syscall.h>
+#include <unistd.h>
+#endif
+
 namespace ljh::__::co
 {
-	template<typename T>
-	struct task_base
-	{
-		task_base(promise<T>* initial = nullptr) noexcept : promise(initial) { }
+#if defined(__linux__)
+    using check_type = int;
+#else
+    using check_type = bool;
+#endif
 
-		struct cannot_await_lvalue_use_std_move {};
-		cannot_await_lvalue_use_std_move operator co_await() & = delete;
+    template<typename T>
+    struct task_base
+    {
+        task_base(promise<T>* initial = nullptr) noexcept
+            : _promise(initial)
+        {}
 
-		T get()&&
-		{
-			if (!promise->client_await_ready()) {
-				bool completed = false;
-				if (promise->client_await_suspend(&completed, wake_by_address)) {
-					bool ready = true;
-					while (!completed) {
-						WaitOnAddress(&completed, &ready, sizeof(completed), INFINITE);
-					}
-				}
-			}
-			return std::exchange(promise, {})->client_await_resume();
-		}
+        struct cannot_await_lvalue_use_std_move
+        {};
+        cannot_await_lvalue_use_std_move operator co_await() & = delete;
 
-	protected:
-		promise_ptr<T> promise;
+        T get() &&
+        {
+            if (!_promise->client_await_ready())
+            {
+                check_type completed = false;
+                if (_promise->client_await_suspend(&completed, wake_by_address))
+                {
+                    auto ready = completed;
+                    while (!completed)
+                    {
+#if defined(_WIN32)
+                        WaitOnAddress(&completed, &ready, sizeof(completed), INFINITE);
+#elif defined(__linux__)
+                        syscall(SYS_futex, &completed, FUTEX_WAIT_PRIVATE, ready, nullptr, nullptr, 0);
+#endif
+                    }
+                }
+            }
+            return std::exchange(_promise, {})->client_await_resume();
+        }
 
-		static void __stdcall wake_by_address(void* completed)
-		{
-			*reinterpret_cast<bool*>(completed) = true;
-			WakeByAddressSingle(completed);
-		}
-	};
-}
+    protected:
+        promise_ptr<T> _promise;
+
+        static void wake_by_address(void* completed)
+        {
+            *reinterpret_cast<check_type*>(completed) = true;
+#if defined(_WIN32)
+            WakeByAddressSingle(completed);
+#elif defined(__linux__)
+            syscall(SYS_futex, &completed, FUTEX_WAKE_PRIVATE, 1, nullptr, nullptr, 0);
+#endif
+        }
+    };
+} // namespace ljh::__::co
