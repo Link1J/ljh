@@ -16,21 +16,12 @@ static constexpr struct change_these_options_to_select_what_will_be_printed
     constexpr static bool separate_year_month  = 1;
 } print;
 
-#if __cplusplus < 201100
-#error "C++11 or better is required"
-#endif
-
 #include <algorithm>
 #include <cstdio>
 #include <cstring>
 #include <utility>
 #include <vector>
-
-#ifdef __has_include
-#if __has_include(<version>)
 #include <version>
-#endif
-#endif
 
 // Expect a string that starts with 6-decimal-digits or with '_' (if unsupported)
 #define COMPILER_VALUE_INT(n)                                                                                                                                  \
@@ -521,6 +512,7 @@ inline void show_compiler_specific_info()
     for (auto co : compiler)
         if (std::strcmp(co.first, co.second))
             std::printf("%*s %s\n", -print.longest_macro_name, co.first, co.second);
+    std::puts("");
 }
 
 inline void print_compiler_feature(CompilerFeature const& x)

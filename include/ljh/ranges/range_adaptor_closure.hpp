@@ -27,7 +27,7 @@
 
 namespace ljh::ranges
 {
-#if __cpp_lib_ranges <= 202202L
+#if __cpp_lib_ranges < 202202L || defined(LJH_COMPILER_APPLE_CLANG)
     template<typename D>
         requires std::is_class_v<D> && std::same_as<D, std::remove_cv_t<D>>
     struct range_adaptor_closure;
@@ -45,7 +45,7 @@ namespace ljh::ranges
     template<typename L, typename R>
     concept can_compose = std::constructible_from<std::remove_cvref_t<L>, L> && std::constructible_from<std::remove_cvref_t<R>, R>;
 
-#if __cpp_lib_ranges <= 202202L
+#if __cpp_lib_ranges < 202202L
     template<typename Left, typename Right>
     struct pipeline : range_adaptor_closure<pipeline<Left, Right>>
     {
