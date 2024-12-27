@@ -102,8 +102,7 @@ target_link_libraries(tests_23 Catch2::Catch2WithMain ljh fmt::fmt)
 add_executable(tests_info
 	info.na.cpp
 )
-set_target_properties(tests_info PROPERTIES CXX_STANDARD 23 CXX_STANDARD_REQUIRED NO CXX_EXTENSIONS NO)
-target_link_libraries(tests_info Catch2::Catch2 ljh)
+set_target_properties(tests_info PROPERTIES CXX_STANDARD 26 CXX_STANDARD_REQUIRED NO CXX_EXTENSIONS NO)
 
 include(CTest)
 include(Catch)

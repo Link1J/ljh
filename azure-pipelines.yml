@@ -98,20 +98,34 @@ stages:
               workingDirectory: $(BuildConfiguration)
               cmakeArgs: "-DCMAKE_BUILD_TYPE=$(BuildConfiguration) $(Generator) .. -Dljh_BUILD_TESTS=ON"
           - task: CMake@1
-            displayName: Run Build Process
+            displayName: Build Info
+            condition: variables.PerformTests
+            inputs:
+              workingDirectory: $(BuildConfiguration)
+              cmakeArgs: "--build . --config $(BuildConfiguration) --target tests_info"
+          - pwsh: |
+              if ($IsWindows) {
+                ./$(BuildConfiguration)/tests_info.exe -r jUnit -s --out tests_info_data.xml
+              } else {
+                ./tests_info -r jUnit -s --out tests_info_data.xml
+              }
+            ignoreLASTEXITCODE: true
+            displayName: Print Info
+            workingDirectory: "$(BuildConfiguration)/tests"
+            condition: variables.PerformTests
+          - task: CMake@1
+            displayName: Build Everything
             inputs:
               workingDirectory: $(BuildConfiguration)
               cmakeArgs: "--build . --config $(BuildConfiguration)"
           - pwsh: |
               if ($IsWindows) {
-                ./$(BuildConfiguration)/tests_info.exe -r jUnit -s --out tests_info_data.xml
                 ./$(BuildConfiguration)/tests_11.exe -r jUnit -s --out tests_11_data.xml
                 ./$(BuildConfiguration)/tests_14.exe -r jUnit -s --out tests_14_data.xml
                 ./$(BuildConfiguration)/tests_17.exe -r jUnit -s --out tests_17_data.xml
                 ./$(BuildConfiguration)/tests_20.exe -r jUnit -s --out tests_20_data.xml
                 ./$(BuildConfiguration)/tests_23.exe -r jUnit -s --out tests_23_data.xml
               } else {
-                ./tests_info -r jUnit -s --out tests_info_data.xml
                 ./tests_11 -r jUnit -s --out tests_11_data.xml
                 ./tests_11 -r jUnit -s --out tests_14_data.xml
                 ./tests_17 -r jUnit -s --out tests_17_data.xml
