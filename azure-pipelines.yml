@@ -23,27 +23,15 @@ stages:
               BuildConfiguration: "RelWithDebInfo"
               Generator: ""
               PerformTests: true
-            MacOS_ARM_Debug:
-              OS: "MacOS"
-              imageName: "macos-latest"
-              BuildConfiguration: "Debug"
-              Generator: ""
-              PerformTests: true
-            MacOS_ARM_Release:
-              OS: "MacOS"
-              imageName: "macos-latest"
-              BuildConfiguration: "RelWithDebInfo"
-              Generator: ""
-              PerformTests: true
             MacOS_AMD64_Debug:
               OS: "MacOS"
-              imageName: "macos-latest-large"
+              imageName: "macos-latest"
               BuildConfiguration: "Debug"
               Generator: ""
               PerformTests: true
             MacOS_AMD64_Release:
               OS: "MacOS"
-              imageName: "macos-latest-large"
+              imageName: "macos-latest"
               BuildConfiguration: "RelWithDebInfo"
               Generator: ""
               PerformTests: true
@@ -86,6 +74,8 @@ stages:
 
         pool:
           vmImage: $(imageName)
+
+        condition: or(in(variables['agent.os'], 'Windows_NT', 'Linux'), and(in(variables['agent.os'], 'Darwin'), in(variables['agent.osarchitecture'], 'X64')))
 
         steps:
           - script: |
@@ -134,7 +124,6 @@ stages:
                 condition: variables.PerformTests
           - task: PublishTestResults@2
             displayName: Publish Test Results
-            condition: variables.PerformTests
             inputs:
               testResultsFormat: JUnit
               testResultsFiles: "**/tests_*.xml"
