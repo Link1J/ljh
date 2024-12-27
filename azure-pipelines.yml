@@ -99,7 +99,7 @@ stages:
               cmakeArgs: "-DCMAKE_BUILD_TYPE=$(BuildConfiguration) $(Generator) .. -Dljh_BUILD_TESTS=ON"
           - task: CMake@1
             displayName: Build Info
-            condition: variables.PerformTests
+            condition: and(succeeded(), $(variables.PerformTests))
             inputs:
               workingDirectory: $(BuildConfiguration)
               cmakeArgs: "--build . --config $(BuildConfiguration) --target tests_info"
@@ -112,7 +112,7 @@ stages:
             ignoreLASTEXITCODE: true
             displayName: Print Info
             workingDirectory: "$(BuildConfiguration)/tests"
-            condition: variables.PerformTests
+            condition: $(variables.PerformTests)
           - task: CMake@1
             displayName: Build Everything
             inputs:
@@ -135,9 +135,10 @@ stages:
             ignoreLASTEXITCODE: true
             displayName: Run Tests
             workingDirectory: "$(BuildConfiguration)/tests"
-            condition: variables.PerformTests
+            condition: and(succeeded(), $(variables.PerformTests))
           - task: PublishTestResults@2
             displayName: Publish Test Results
+            condition: always()
             inputs:
               testResultsFormat: JUnit
               testResultsFiles: "**/tests_*.xml"
