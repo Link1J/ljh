@@ -115,7 +115,7 @@ stages:
                 ignoreLASTEXITCODE: true
                 displayName: Run Tests
                 workingDirectory: "$(BuildConfiguration)/tests"
-                condition: $(PerformTests)
+                condition: variables.PerformTests
           - ${{ if in(variables['agent.os'], 'Linux', 'Darwin') }}:
               - pwsh: |
                   ./tests_info -r jUnit -s --out tests_info_data.xml
@@ -127,10 +127,10 @@ stages:
                 ignoreLASTEXITCODE: true
                 displayName: Run Tests
                 workingDirectory: "$(BuildConfiguration)/tests"
-                condition: $(PerformTests)
+                condition: variables.PerformTests
           - task: PublishTestResults@2
             displayName: Publish Test Results
-            condition: $(PerformTests)
+            condition: variables.PerformTests
             inputs:
               testResultsFormat: JUnit
               testResultsFiles: "**/tests_*.xml"
