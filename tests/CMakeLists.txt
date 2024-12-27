@@ -16,7 +16,7 @@ set(CATCH_BUILD_TESTING OFF)
 
 FetchContent_Declare(Catch2
 	GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-	GIT_TAG        v3.5.4
+	GIT_TAG        v3.7.1
 )
 FetchContent_Declare(fmt
 	GIT_REPOSITORY https://github.com/fmtlib/fmt.git
