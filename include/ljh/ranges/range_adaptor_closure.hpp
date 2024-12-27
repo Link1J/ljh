@@ -45,7 +45,7 @@ namespace ljh::ranges
     template<typename L, typename R>
     concept can_compose = std::constructible_from<std::remove_cvref_t<L>, L> && std::constructible_from<std::remove_cvref_t<R>, R>;
 
-#if __cpp_lib_ranges < 202202L
+#if __cpp_lib_ranges < 202202L || defined(LJH_COMPILER_APPLE_CLANG)
     template<typename Left, typename Right>
     struct pipeline : range_adaptor_closure<pipeline<Left, Right>>
     {
@@ -70,8 +70,8 @@ namespace ljh::ranges
         }
 
     private:
-        [[no_unique_address]] Left  l;
-        [[no_unique_address]] Right r;
+        LJH_NO_UNIQUE_ADDRESS Left  l;
+        LJH_NO_UNIQUE_ADDRESS Right r;
     };
 
     template<typename T1, typename T2>
