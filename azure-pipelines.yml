@@ -102,7 +102,7 @@ stages:
       ignoreLASTEXITCODE: true
       displayName: Run Tests (Windows)
       workingDirectory: '$(BuildConfiguration)/tests'
-      condition: and(eq(variables['agent.os'], 'Windows_NT'), not(eq($(imageName), "-A ARM64")))
+      condition: and(eq(variables['agent.os'], 'Windows_NT'), not(eq("$(imageName)", "-A ARM64")))
     - pwsh: | 
         ./tests_info -r jUnit -s --out tests_info_data.xml
         ./tests_11 -r jUnit -s --out tests_11_data.xml
