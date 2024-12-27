@@ -77,7 +77,7 @@ stages:
 
         variables:
           isWindows: $[in(variables['agent.os'], 'Windows_NT')]
-          performTests: $[variables['PerformTests'])]
+          performTests: $[variables['PerformTests']]
 
         steps:
           - script: |
