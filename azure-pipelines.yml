@@ -71,12 +71,21 @@ stages:
               BuildConfiguration: "RelWithDebInfo"
               Generator: "-A ARM64"
               performTests: false
+            Windows_ARM64EC_Debug:
+              OS: "Windows"
+              imageName: "windows-latest"
+              BuildConfiguration: "Debug"
+              Generator: "-A ARM64EC"
+              performTests: false
+            Windows_ARM64EC_Release:
+              OS: "Windows"
+              imageName: "windows-latest"
+              BuildConfiguration: "RelWithDebInfo"
+              Generator: "-A ARM64EC"
+              performTests: false
 
         pool:
           vmImage: $(imageName)
-
-        variables:
-          isWindows: $[in(variables['agent.os'], 'Windows_NT')]
 
         steps:
           - script: |
