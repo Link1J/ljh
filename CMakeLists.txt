@@ -20,9 +20,10 @@ else ()
 set(TARGET_ARCH ${CMAKE_SYSTEM_PROCESSOR})
 endif ()
 
-message("${TARGET_ARCH}")
-if (WIN32 AND TARGET_ARCH STREQUAL "ARM64")
-enable_language(ASM)
+if (TARGET_ARCH STREQUAL "ARM64" OR TARGET_ARCH STREQUAL "ARM64EC")
+set(IS_ARM64 ON)
+else ()
+set(IS_ARM64 OFF)
 endif ()
 
 option(ljh_BUILD_TESTS "Build the Self Tests" ${LJH_SUB_PROJECT})
@@ -71,7 +72,7 @@ if (WIN32)
 		wbemuuid
 		#windowsapp
 	)
-	if (TARGET_ARCH STREQUAL "ARM64")
+	if (IS_ARM64)
 		enable_language(ASM_MARMASM)
 		add_library(ljh_asm OBJECT
 			source/windows/checked_math/arm64.asm
@@ -105,7 +106,6 @@ elseif (UNIX)
 		Threads::Threads
 	)
 endif()
-
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 

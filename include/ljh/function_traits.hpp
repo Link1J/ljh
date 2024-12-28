@@ -60,7 +60,11 @@
 #define LJH_CALLING_CONVENTION_cdecl __cdecl
 #define LJH_CALLING_CONVENTION_stdcall __stdcall
 #define LJH_CALLING_CONVENTION_fastcall __fastcall
+#if defined(_M_ARM64EC)
+#define LJH_CALLING_CONVENTION_vectorcall __cdecl
+#else
 #define LJH_CALLING_CONVENTION_vectorcall __vectorcall
+#endif
 #define LJH_CALLING_CONVENTION_ms_abi __cdecl
 #define LJH_CALLING_CONVENTION_sysv_abi __cdecl
 #define LJH_CALLING_CONVENTION_regcall __cdecl
