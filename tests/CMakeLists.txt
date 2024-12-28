@@ -84,8 +84,9 @@ try_compile(SUPPORTS_explicit_this
 	CXX_STANDARD_REQUIRED YES
 	CXX_EXTENSIONS NO
 )
+
 add_executable(tests_23
-	info.na.cpp
+	empty.na.cpp
 )
 if (SUPPORTS_explicit_this)
 	target_sources(tests_23 PRIVATE
@@ -104,6 +105,7 @@ add_executable(tests_info
 )
 set_target_properties(tests_info PROPERTIES CXX_STANDARD 26 CXX_STANDARD_REQUIRED NO CXX_EXTENSIONS NO)
 
+if (TARGET_ARCH EQUAL CMAKE_HOST_SYSTEM_PROCESSOR)
 include(CTest)
 include(Catch)
 catch_discover_tests(tests_11)
@@ -111,3 +113,4 @@ catch_discover_tests(tests_14)
 catch_discover_tests(tests_17)
 catch_discover_tests(tests_20)
 catch_discover_tests(tests_23)
+endif ()
