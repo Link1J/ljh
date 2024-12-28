@@ -7,7 +7,12 @@
 #pragma once
 #include "promise.hpp"
 
-#ifdef __linux__
+#if defined(_WIN32)
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#include <Windows.h>
+#elif defined(__linux__)
 #include <linux/futex.h>
 #include <sys/syscall.h>
 #include <unistd.h>
