@@ -71,6 +71,13 @@ if (WIN32)
 		wbemuuid
 		#windowsapp
 	)
+	if (TARGET_ARCH STREQUAL "ARM64")
+		enable_language(ASM_MARMASM)
+		add_library(ljh_asm OBJECT
+			source/windows/checked_math/arm64.asm
+		)
+		target_sources(ljh PRIVATE $<TARGET_OBJECTS:ljh_asm>)
+	endif ()
 elseif (APPLE)
 	set(THREADS_PREFER_PTHREAD_FLAG ON)
 	find_package(Threads REQUIRED)
