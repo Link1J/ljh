@@ -125,3 +125,15 @@ TEMPLATE_TEST_CASE_SIG("size - assignment from other size", "[test_23][size]", (
         REQUIRE(v1.h == v.h);
     }
 }
+
+#include <ljh/checked_math.hpp>
+
+TEMPLATE_TEST_CASE("basic_size - add", "[test_23][size]", float, int, ljh::checked_int)
+{
+    ljh::basic_size v{TestType{3}, TestType{4}};
+    CHECK(v.w == 3);
+    CHECK(v.h == 4);
+    v += v;
+    CHECK(v.w == 6);
+    CHECK(v.h == 8);
+}

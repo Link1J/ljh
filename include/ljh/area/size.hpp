@@ -103,6 +103,7 @@ namespace std
     };
 
     template<typename T, typename C>
+        requires requires { typename std::formatter<T, C>; }
     struct formatter<ljh::basic_size<T>, C>
     {
         template<typename PC>
