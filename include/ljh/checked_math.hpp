@@ -81,6 +81,112 @@ namespace ljh::ckd
         return __builtin_mul_overflow(lhs, rhs, __builtin_addressof(res));
     }
 #elif CHECK_USE == CHECK_USE_X86INTRIN
+#if defined(_M_IX86)
+    bool __forceinline _add_overflow_i64(unsigned char, signed __int64 lhs, signed __int64 rhs, signed __int64* res) noexcept
+    {
+        __asm
+        {
+            mov     eax, DWORD PTR lhs[0]
+            mov     edx, DWORD PTR lhs[4]
+            add     eax, DWORD PTR rhs[0]
+            adc     edx, DWORD PTR rhs[4]
+            mov     ecx, DWORD PTR res
+            mov     DWORD PTR [ecx], eax
+            mov     DWORD PTR [ecx+4], edx
+            seto    al
+        }
+    }
+    bool __forceinline _addcarry_u64(unsigned char, unsigned __int64 lhs, unsigned __int64 rhs, unsigned __int64* res) noexcept
+    {
+        __asm
+        {
+            mov     eax, DWORD PTR lhs[0]
+            mov     edx, DWORD PTR lhs[4]
+            add     eax, DWORD PTR rhs[0]
+            adc     edx, DWORD PTR rhs[4]
+            mov     ecx, DWORD PTR res
+            mov     DWORD PTR [ecx], eax
+            mov     DWORD PTR [ecx+4], edx
+            setc    al
+        }
+    }
+    bool __forceinline _sub_overflow_i64(unsigned char, signed __int64 lhs, signed __int64 rhs, signed __int64* res) noexcept
+    {
+        __asm
+        {
+            mov     eax, DWORD PTR lhs[0]
+            mov     edx, DWORD PTR lhs[4]
+            sub     eax, DWORD PTR rhs[0]
+            sbb     edx, DWORD PTR rhs[4]
+            mov     ecx, DWORD PTR res
+            mov     DWORD PTR [ecx], eax
+            mov     DWORD PTR [ecx+4], edx
+            seto    al
+        }
+    }
+    bool __forceinline _subborrow_u64(unsigned char, unsigned __int64 lhs, unsigned __int64 rhs, unsigned __int64* res) noexcept
+    {
+        __asm
+        {
+            mov     ecx, DWORD PTR lhs[0]
+            mov     ebx, DWORD PTR lhs[4]
+            mov     eax, ecx
+            sub     eax, DWORD PTR rhs[0]
+            mov     edx, ebx
+            sbb     edx, DWORD PTR rhs[4]
+            cmp     ecx, eax
+            sbb     ebx, edx
+            mov     ecx, DWORD PTR res
+            mov     DWORD PTR [ecx], eax
+            mov     DWORD PTR [ecx+4], edx
+            setc    al
+        }
+    }
+    bool __forceinline _mul_full_overflow_i64(signed __int64 lhs, signed __int64 rhs, signed __int64* res, signed __int64*) noexcept
+    {
+        __asm
+        {
+            mov     eax, DWORD PTR lhs[0]
+            mov     edx, DWORD PTR rhs[0]
+            mov     ecx, DWORD PTR lhs[4]
+            mov     esi, DWORD PTR rhs[4]
+            imul    ecx, edx
+            seto    bl
+            imul    esi, eax
+            seto    bh
+            mul     edx
+            add     ecx, esi
+            add     edx, ecx
+            mov     ecx, DWORD PTR res
+            mov     DWORD PTR[ecx], eax
+            mov     DWORD PTR[ecx + 4], edx
+            or      bh, bl
+            mov     al, bh
+        }
+    }
+    bool __forceinline _mul_full_overflow_u64(unsigned __int64 lhs, unsigned __int64 rhs, unsigned __int64* res, unsigned __int64*) noexcept
+    {
+        __asm
+        {
+            mov     eax, DWORD PTR lhs[4]
+            mul     DWORD PTR rhs[0]
+            mov     ebx, eax
+            mov     ecx, edx
+            mov     eax, DWORD PTR lhs[0]
+            mul     DWORD PTR rhs[4]
+            add     ebx, eax
+            or      ecx, edx
+            setnz   cl
+            mov     eax, DWORD PTR lhs[0]
+            mul     DWORD PTR rhs[0]
+            add     edx, ebx
+            mov     ebx, DWORD PTR res
+            mov     DWORD PTR[ebx], eax
+            mov     DWORD PTR[ebx + 4], edx
+            mov     al, cl
+        }
+    }
+#endif
     template<typename T, typename U, typename V>
     inline bool add(T& res, U lhs, V rhs) noexcept
     {
@@ -128,14 +234,24 @@ namespace ljh::ckd
     {
         if constexpr (sizeof(T) == 1)
         {
-            std::conditional_t<std::is_signed_v<T>, signed short, unsigned short> hig = res;
-            bool                                                                  out = false;
-            if constexpr (sizeof(T) == 1 && std::is_signed_v<T>)
-                out = _mul_full_overflow_i8(lhs, rhs, __builtin_addressof(hig));
-            else if constexpr (sizeof(T) == 1 && std::is_unsigned_v<T>)
-                out = _mul_full_overflow_u8(lhs, rhs, __builtin_addressof(hig));
+#if defined(_M_IX86)
+            // Workaround for bad MSVC Codegen
+            // https://developercommunity.visualstudio.com/t/Bad-codegen-for-x86-_mul_full_overflow_i/10668881?sort=newest
+#define __cast reinterpret_cast<std::conditional_t<std::is_signed_v<T>, signed short, unsigned short>*>
+            using expanded_type = std::conditional_t<std::is_signed_v<T>, signed int, unsigned int>;
+#else
+#define __cast(...) __VA_ARGS__
+            using expanded_type = std::conditional_t<std::is_signed_v<T>, signed short, unsigned short>;
+#endif
+            expanded_type hig = res;
+            bool          out = false;
+            if constexpr (std::is_signed_v<T>)
+                out = _mul_full_overflow_i8(lhs, rhs, __cast(__builtin_addressof(hig)));
+            else if constexpr (std::is_unsigned_v<T>)
+                out = _mul_full_overflow_u8(lhs, rhs, __cast(__builtin_addressof(hig)));
             res = static_cast<T>(hig);
             return out;
+#undef __cast
         }
         else
         {
@@ -247,7 +363,6 @@ namespace ljh::ckd
         else if constexpr (std::same_as<T, unsigned __int64>)
             return _ljh_asm_mul_u64(__builtin_addressof(res), lhs, rhs);
     }
-
 #endif
 } // namespace ljh::ckd
 
