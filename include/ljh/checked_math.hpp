@@ -64,19 +64,19 @@ namespace ljh::ckd
 {
 #if CHECK_USE == CHECK_USE_BUILTIN
     template<typename T, typename U, typename V>
-    inline bool add(T& res, U lhs, V rhs) noexcept
+    [[nodiscard]] inline bool add(T& res, U lhs, V rhs) noexcept
     {
         return __builtin_add_overflow(lhs, rhs, __builtin_addressof(res));
     }
 
     template<typename T, typename U, typename V>
-    inline bool sub(T& res, U lhs, V rhs) noexcept
+    [[nodiscard]] inline bool sub(T& res, U lhs, V rhs) noexcept
     {
         return __builtin_sub_overflow(lhs, rhs, __builtin_addressof(res));
     }
 
     template<typename T, typename U, typename V>
-    inline bool mul(T& res, U lhs, V rhs) noexcept
+    [[nodiscard]] inline bool mul(T& res, U lhs, V rhs) noexcept
     {
         return __builtin_mul_overflow(lhs, rhs, __builtin_addressof(res));
     }
@@ -188,7 +188,7 @@ namespace ljh::ckd
     }
 #endif
     template<typename T, typename U, typename V>
-    inline bool add(T& res, U lhs, V rhs) noexcept
+    [[nodiscard]] inline bool add(T& res, U lhs, V rhs) noexcept
     {
         if constexpr (sizeof(T) == 1 && std::is_signed_v<T>)
             return _add_overflow_i8(0, lhs, rhs, reinterpret_cast<signed char*>(__builtin_addressof(res))) != 0;
@@ -209,7 +209,7 @@ namespace ljh::ckd
     }
 
     template<typename T, typename U, typename V>
-    inline bool sub(T& res, U lhs, V rhs) noexcept
+    [[nodiscard]] inline bool sub(T& res, U lhs, V rhs) noexcept
     {
         if constexpr (sizeof(T) == 1 && std::is_signed_v<T>)
             return _sub_overflow_i8(0, lhs, rhs, reinterpret_cast<signed char*>(__builtin_addressof(res)));
@@ -230,7 +230,7 @@ namespace ljh::ckd
     }
 
     template<typename T, typename U, typename V>
-    inline bool mul(T& res, U lhs, V rhs) noexcept
+    [[nodiscard]] inline bool mul(T& res, U lhs, V rhs) noexcept
     {
         if constexpr (sizeof(T) == 1)
         {
@@ -302,7 +302,7 @@ namespace ljh::ckd
     }
 
     template<typename T, typename U, typename V>
-    inline bool add(T& res, U lhs, V rhs) noexcept
+    [[nodiscard]] inline bool add(T& res, U lhs, V rhs) noexcept
     {
         if constexpr (sizeof(T) == 1 && std::is_signed_v<T>)
             return _ljh_asm_add_i8(reinterpret_cast<signed char*>(__builtin_addressof(res)), lhs, rhs);
@@ -323,7 +323,7 @@ namespace ljh::ckd
     }
 
     template<typename T, typename U, typename V>
-    inline bool sub(T& res, U lhs, V rhs) noexcept
+    [[nodiscard]] inline bool sub(T& res, U lhs, V rhs) noexcept
     {
         if constexpr (sizeof(T) == 1 && std::is_signed_v<T>)
             return _ljh_asm_sub_i8(reinterpret_cast<signed char*>(__builtin_addressof(res)), lhs, rhs);
@@ -344,7 +344,7 @@ namespace ljh::ckd
     }
 
     template<typename T, typename U, typename V>
-    inline bool mul(T& res, U lhs, V rhs) noexcept
+    [[nodiscard]] inline bool mul(T& res, U lhs, V rhs) noexcept
     {
         if constexpr (sizeof(T) == 1 && std::is_signed_v<T>)
             return _ljh_asm_mul_i8(reinterpret_cast<signed char*>(__builtin_addressof(res)), lhs, rhs);
@@ -372,12 +372,12 @@ namespace ljh
         requires(!std::same_as<T, bool>)
     struct checked
     {
-        [[nodiscard]] constexpr checked() noexcept                          = default;
-        [[nodiscard]] constexpr checked(checked const&) noexcept            = default;
-        [[nodiscard]] constexpr checked& operator=(checked const&) noexcept = default;
-        [[nodiscard]] constexpr checked(checked&&) noexcept                 = default;
-        [[nodiscard]] constexpr checked& operator=(checked&&) noexcept      = default;
-        constexpr ~checked() noexcept                                       = default;
+        [[nodiscard]] constexpr checked() noexcept               = default;
+        [[nodiscard]] constexpr checked(checked const&) noexcept = default;
+        constexpr checked& operator=(checked const&) noexcept    = default;
+        [[nodiscard]] constexpr checked(checked&&) noexcept      = default;
+        constexpr checked& operator=(checked&&) noexcept         = default;
+        constexpr ~checked() noexcept                            = default;
 
         [[nodiscard]] constexpr checked(T value) noexcept
             : _value(value)
