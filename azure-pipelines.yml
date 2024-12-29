@@ -11,77 +11,103 @@ stages:
 
         strategy:
           matrix:
-            Linux_Debug:
+            Linux GCC Debug:
               OS: "Linux"
               imageName: "ubuntu-latest"
               BuildConfiguration: "Debug"
               Generator: ""
+              ExtraArgs: ""
               performTests: true
-            Linux_Release:
+            Linux GCC Release:
               OS: "Linux"
               imageName: "ubuntu-latest"
               BuildConfiguration: "RelWithDebInfo"
               Generator: ""
+              ExtraArgs: ""
               performTests: true
-            MacOS_AMD64_Debug:
+            Linux Clang Debug:
+              OS: "Linux"
+              imageName: "ubuntu-latest"
+              BuildConfiguration: "Debug"
+              Generator: ""
+              ExtraArgs: "-DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++"
+              performTests: true
+            Linux Clang Release:
+              OS: "Linux"
+              imageName: "ubuntu-latest"
+              BuildConfiguration: "RelWithDebInfo"
+              Generator: ""
+              ExtraArgs: "-DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++"
+              performTests: true
+            MacOS AMD64 Debug:
               OS: "MacOS"
               imageName: "macos-latest"
               BuildConfiguration: "Debug"
               Generator: ""
+              ExtraArgs: ""
               performTests: true
-            MacOS_AMD64_Release:
+            MacOS AMD64 Release:
               OS: "MacOS"
               imageName: "macos-latest"
               BuildConfiguration: "RelWithDebInfo"
               Generator: ""
+              ExtraArgs: ""
               performTests: true
-            Windows_x86_Debug:
+            Windows x86 Debug:
               OS: "Windows"
               imageName: "windows-latest"
               BuildConfiguration: "Debug"
               Generator: "-A Win32"
+              ExtraArgs: ""
               performTests: true
-            Windows_x86_Release:
+            Windows x86 Release:
               OS: "Windows"
               imageName: "windows-latest"
               BuildConfiguration: "RelWithDebInfo"
               Generator: "-A Win32"
+              ExtraArgs: ""
               performTests: true
-            Windows_AMD64_Debug:
+            Windows AMD64 Debug:
               OS: "Windows"
               imageName: "windows-latest"
               BuildConfiguration: "Debug"
               Generator: "-A x64"
+              ExtraArgs: ""
               performTests: true
-            Windows_AMD64_Release:
+            Windows AMD64 Release:
               OS: "Windows"
               imageName: "windows-latest"
               BuildConfiguration: "RelWithDebInfo"
               Generator: "-A x64"
+              ExtraArgs: ""
               performTests: true
-            Windows_ARM64_Debug:
+            Windows ARM64 Debug:
               OS: "Windows"
               imageName: "windows-latest"
               BuildConfiguration: "Debug"
               Generator: "-A ARM64"
+              ExtraArgs: ""
               performTests: false
-            Windows_ARM64_Release:
+            Windows ARM64 Release:
               OS: "Windows"
               imageName: "windows-latest"
               BuildConfiguration: "RelWithDebInfo"
               Generator: "-A ARM64"
+              ExtraArgs: ""
               performTests: false
-            Windows_ARM64EC_Debug:
+            Windows ARM64EC Debug:
               OS: "Windows"
               imageName: "windows-latest"
               BuildConfiguration: "Debug"
               Generator: "-A ARM64EC"
+              ExtraArgs: ""
               performTests: false
-            Windows_ARM64EC_Release:
+            Windows ARM64EC Release:
               OS: "Windows"
               imageName: "windows-latest"
               BuildConfiguration: "RelWithDebInfo"
               Generator: "-A ARM64EC"
+              ExtraArgs: ""
               performTests: false
 
         pool:
@@ -105,7 +131,7 @@ stages:
             displayName: Generate CMake Cache
             inputs:
               workingDirectory: $(BuildConfiguration)
-              cmakeArgs: "-DCMAKE_BUILD_TYPE=$(BuildConfiguration) $(Generator) .. -Dljh_BUILD_TESTS=ON"
+              cmakeArgs: "-DCMAKE_BUILD_TYPE=$(BuildConfiguration) $(Generator) .. -Dljh_BUILD_TESTS=ON $(ExtraArgs)"
           - task: CMake@1
             displayName: Build Info
             condition: eq(variables.performTests, true)
