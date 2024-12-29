@@ -236,8 +236,10 @@ namespace ljh::smarc
         void best_dec_strong(this S& self, size_t count = 1) noexcept
         {
             if (self.count.dec_strong(count) == 0)
+            {
                 if constexpr (!std::is_const_v<S>)
                     delete std::addressof(self);
+            }
         }
 
         template<typename S>
