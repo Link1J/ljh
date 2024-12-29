@@ -114,7 +114,7 @@ TEST_CASE("checked_math - function - infinite precision", "[test_20][checked_mat
         REQUIRE_FALSE(ljh::ckd::add(c, a, b));
         REQUIRE(c == 0x80000001u);
     }
-    //! This one is currently broken, and not fixable. 
+    //! This one is currently broken, and not fixable.
     // SECTION("sub")
     // {
     //     int32_t  c;
@@ -339,3 +339,364 @@ TEMPLATE_PRODUCT_TEST_CASE("checked_math - type - dec", "[test_20][checked_math]
         }
     }
 }
+
+#if __has_include(<format>)
+TEMPLATE_TEST_CASE("checked_math - type - std::format", "[test_20][checked_math][c++_type]", char, signed char, unsigned char, short, signed short,
+                   unsigned short, int, signed int, unsigned int, long long, signed long long, unsigned long long)
+{
+    using namespace std::literals;
+    using T = TestType;
+    using C = ljh::checked<T>;
+
+    constexpr T t_min = std::numeric_limits<T>::min();
+    constexpr T t_max = std::numeric_limits<T>::max();
+    constexpr C c_min = std::numeric_limits<C>::min();
+    constexpr C c_max = std::numeric_limits<C>::max();
+
+    constexpr bool do_signed_checks = std::is_signed_v<T> && !std::is_same_v<T, char>;
+
+    REQUIRE(std::format("{:d}", T{0}) == "0");
+    REQUIRE(std::format("{:d}", T{1}) == "1");
+    REQUIRE(std::format("{:d}", T{16}) == "16");
+    REQUIRE(std::format("{:b}", T{0}) == "0");
+    REQUIRE(std::format("{:b}", T{1}) == "1");
+    REQUIRE(std::format("{:b}", T{16}) == "10000");
+    REQUIRE(std::format("{:c}", T{'A'}) == "A");
+    if constexpr (do_signed_checks)
+    {
+        REQUIRE(std::format("{:d}", T{-0}) == "0");
+        REQUIRE(std::format("{:d}", T{-1}) == "-1");
+        REQUIRE(std::format("{:d}", T{-16}) == "-16");
+        REQUIRE(std::format("{:b}", T{-0}) == "0");
+        REQUIRE(std::format("{:b}", T{-1}) == "-1");
+        REQUIRE(std::format("{:b}", T{-16}) == "-10000");
+    }
+
+    SECTION("Default")
+    {
+        if constexpr (std::is_same_v<T, char>)
+        {
+            CHECK(std::format("{}", C{0}) == "\x0"s);
+            CHECK(std::format("{}", C{1}) == "\x1");
+            CHECK(std::format("{}", C{16}) == "\x10");
+        }
+        else
+        {
+            CHECK(std::format("{}", C{0}) == "0");
+            CHECK(std::format("{}", C{1}) == "1");
+            CHECK(std::format("{}", C{16}) == "16");
+        }
+    }
+    SECTION("Binary")
+    {
+        SECTION("Lower Case")
+        {
+            SECTION("Without Prefix")
+            {
+                REQUIRE(std::format("{:b}", C{0}) == "0");
+                REQUIRE(std::format("{:b}", C{1}) == "1");
+                REQUIRE(std::format("{:b}", C{16}) == "10000");
+                if constexpr (do_signed_checks)
+                {
+                    REQUIRE(std::format("{:b}", C{-0}) == "0");
+                    REQUIRE(std::format("{:b}", C{-1}) == "-1");
+                    REQUIRE(std::format("{:b}", C{-16}) == "-10000");
+                }
+            }
+            SECTION("With Prefix")
+            {
+                REQUIRE(std::format("{:#b}", C{0}) == "0b0");
+                REQUIRE(std::format("{:#b}", C{1}) == "0b1");
+                REQUIRE(std::format("{:#b}", C{16}) == "0b10000");
+            }
+        }
+        SECTION("Upper Case")
+        {
+            SECTION("With Prefix")
+            {
+                REQUIRE(std::format("{:#B}", C{0}) == "0B0");
+                REQUIRE(std::format("{:#B}", C{1}) == "0B1");
+                REQUIRE(std::format("{:#B}", C{16}) == "0B10000");
+            }
+        }
+    }
+    SECTION("Character")
+    {
+        REQUIRE(std::format("{:c}", C{'A'}) == "A");
+    }
+    SECTION("Decimal")
+    {
+        SECTION("With Default Sign")
+        {
+            REQUIRE(std::format("{:d}", C{0}) == "0");
+            REQUIRE(std::format("{:d}", C{1}) == "1");
+            REQUIRE(std::format("{:d}", C{16}) == "16");
+            if constexpr (do_signed_checks)
+            {
+                REQUIRE(std::format("{:d}", C{-0}) == "0");
+                REQUIRE(std::format("{:d}", C{-1}) == "-1");
+                REQUIRE(std::format("{:d}", C{-16}) == "-16");
+            }
+        }
+        SECTION("With + Sign")
+        {
+            REQUIRE(std::format("{:+d}", C{0}) == "+0");
+            REQUIRE(std::format("{:+d}", C{1}) == "+1");
+            REQUIRE(std::format("{:+d}", C{16}) == "+16");
+            if constexpr (do_signed_checks)
+            {
+                REQUIRE(std::format("{:+d}", C{-0}) == "+0");
+                REQUIRE(std::format("{:+d}", C{-1}) == "-1");
+                REQUIRE(std::format("{:+d}", C{-16}) == "-16");
+            }
+        }
+        SECTION("With - Sign")
+        {
+            REQUIRE(std::format("{:-d}", C{0}) == "0");
+            REQUIRE(std::format("{:-d}", C{1}) == "1");
+            REQUIRE(std::format("{:-d}", C{16}) == "16");
+            if constexpr (do_signed_checks)
+            {
+                REQUIRE(std::format("{:-d}", C{-0}) == "0");
+                REQUIRE(std::format("{:-d}", C{-1}) == "-1");
+                REQUIRE(std::format("{:-d}", C{-16}) == "-16");
+            }
+        }
+        SECTION("With Space Sign")
+        {
+            REQUIRE(std::format("{: d}", C{0}) == " 0");
+            REQUIRE(std::format("{: d}", C{1}) == " 1");
+            REQUIRE(std::format("{: d}", C{16}) == " 16");
+            if constexpr (do_signed_checks)
+            {
+                REQUIRE(std::format("{: d}", C{-0}) == " 0");
+                REQUIRE(std::format("{: d}", C{-1}) == "-1");
+                REQUIRE(std::format("{: d}", C{-16}) == "-16");
+            }
+        }
+    }
+}
+
+TEMPLATE_TEST_CASE("checked_math - type - std::format - Matches Basic Type", "[test_20][checked_math][c++_type][!mayfail]", char, signed char, unsigned char,
+                   short, signed short, unsigned short, int, signed int, unsigned int, long long, signed long long, unsigned long long)
+{
+    using T = TestType;
+    using C = ljh::checked<T>;
+
+    constexpr T t_min = std::numeric_limits<T>::min();
+    constexpr T t_max = std::numeric_limits<T>::max();
+    constexpr C c_min = std::numeric_limits<C>::min();
+    constexpr C c_max = std::numeric_limits<C>::max();
+
+    SECTION("Default")
+    {
+        CHECK(std::format("{}", C{0}) == std::format("{}", T{0}));
+        CHECK(std::format("{}", C{1}) == std::format("{}", T{1}));
+        CHECK(std::format("{}", C{16}) == std::format("{}", T{16}));
+        CHECK(std::format("{}", c_min) == std::format("{}", t_min));
+        CHECK(std::format("{}", c_max) == std::format("{}", t_max));
+    }
+    SECTION("Binary")
+    {
+        SECTION("Lower Case")
+        {
+            SECTION("Without Prefix")
+            {
+                CHECK(std::format("{:b}", C{0}) == std::format("{:b}", T{0}));
+                CHECK(std::format("{:b}", C{1}) == std::format("{:b}", T{1}));
+                CHECK(std::format("{:b}", C{16}) == std::format("{:b}", T{16}));
+                CHECK(std::format("{:b}", c_min) == std::format("{:b}", t_min));
+                CHECK(std::format("{:b}", c_max) == std::format("{:b}", t_max));
+            }
+            SECTION("With Prefix")
+            {
+                CHECK(std::format("{:#b}", C{0}) == std::format("{:#b}", T{0}));
+                CHECK(std::format("{:#b}", C{1}) == std::format("{:#b}", T{1}));
+                CHECK(std::format("{:#b}", C{16}) == std::format("{:#b}", T{16}));
+                CHECK(std::format("{:#b}", c_min) == std::format("{:#b}", t_min));
+                CHECK(std::format("{:#b}", c_max) == std::format("{:#b}", t_max));
+
+                REQUIRE(std::format("{:#b}", C{0}) == "0b0");
+                REQUIRE(std::format("{:#b}", C{1}) == "0b1");
+                REQUIRE(std::format("{:#b}", C{16}) == "0b10000");
+            }
+        }
+        SECTION("Upper Case")
+        {
+            SECTION("Without Prefix")
+            {
+                CHECK(std::format("{:B}", C{0}) == std::format("{:B}", T{0}));
+                CHECK(std::format("{:B}", C{1}) == std::format("{:B}", T{1}));
+                CHECK(std::format("{:B}", C{16}) == std::format("{:B}", T{16}));
+                CHECK(std::format("{:B}", c_min) == std::format("{:B}", t_min));
+                CHECK(std::format("{:B}", c_max) == std::format("{:B}", t_max));
+
+                CHECK(std::format("{:B}", C{0}) == std::format("{:b}", C{0}));
+                CHECK(std::format("{:B}", C{1}) == std::format("{:b}", C{1}));
+                CHECK(std::format("{:B}", C{16}) == std::format("{:b}", C{16}));
+                CHECK(std::format("{:B}", c_min) == std::format("{:b}", c_min));
+                CHECK(std::format("{:B}", c_max) == std::format("{:b}", c_max));
+            }
+            SECTION("With Prefix")
+            {
+                CHECK(std::format("{:#B}", C{0}) == std::format("{:#B}", T{0}));
+                CHECK(std::format("{:#B}", C{1}) == std::format("{:#B}", T{1}));
+                CHECK(std::format("{:#B}", C{16}) == std::format("{:#B}", T{16}));
+                CHECK(std::format("{:#B}", c_min) == std::format("{:#B}", t_min));
+                CHECK(std::format("{:#B}", c_max) == std::format("{:#B}", t_max));
+
+                REQUIRE(std::format("{:#b}", C{0}) == "0B0");
+                REQUIRE(std::format("{:#b}", C{1}) == "0B1");
+                REQUIRE(std::format("{:#b}", C{16}) == "0B10000");
+            }
+        }
+    }
+    SECTION("Character")
+    {
+        CHECK(std::format("{:c}", C{0}) == std::format("{:c}", T{0}));
+        CHECK(std::format("{:c}", C{1}) == std::format("{:c}", T{1}));
+        CHECK(std::format("{:c}", C{16}) == std::format("{:c}", T{16}));
+        CHECK(std::format("{:c}", C{' '}) == std::format("{:c}", T{' '}));
+        CHECK(std::format("{:c}", C{'A'}) == std::format("{:c}", T{'A'}));
+        CHECK(std::format("{:c}", C{'\t'}) == std::format("{:c}", T{'\t'}));
+        CHECK(std::format("{:c}", C{'\b'}) == std::format("{:c}", T{'\b'}));
+
+        REQUIRE("A" == std::format("{:c}", C{'A'}));
+    }
+    SECTION("Decimal")
+    {
+        SECTION("With Default Sign")
+        {
+            CHECK(std::format("{:d}", C{0}) == std::format("{:d}", T{0}));
+            CHECK(std::format("{:d}", C{1}) == std::format("{:d}", T{1}));
+            CHECK(std::format("{:d}", C{16}) == std::format("{:d}", T{16}));
+            CHECK(std::format("{:d}", c_min) == std::format("{:d}", t_min));
+            CHECK(std::format("{:d}", c_max) == std::format("{:d}", t_max));
+
+            REQUIRE(std::format("{:d}", C{0}) == "0");
+            REQUIRE(std::format("{:d}", C{1}) == "1");
+            REQUIRE(std::format("{:d}", C{16}) == "16");
+            if constexpr (std::is_signed_v<T>)
+            {
+                REQUIRE(std::format("{:d}", C{-0}) == "0");
+                REQUIRE(std::format("{:d}", C{-1}) == "-1");
+                REQUIRE(std::format("{:d}", C{-16}) == "-16");
+            }
+        }
+        SECTION("With + Sign")
+        {
+            CHECK(std::format("{:+d}", C{0}) == std::format("{:+d}", T{0}));
+            CHECK(std::format("{:+d}", C{1}) == std::format("{:+d}", T{1}));
+            CHECK(std::format("{:+d}", C{16}) == std::format("{:+d}", T{16}));
+            CHECK(std::format("{:+d}", c_min) == std::format("{:+d}", t_min));
+            CHECK(std::format("{:+d}", c_max) == std::format("{:+d}", t_max));
+
+            REQUIRE(std::format("{:+d}", C{0}) == "+0");
+            REQUIRE(std::format("{:+d}", C{1}) == "+1");
+            REQUIRE(std::format("{:+d}", C{16}) == "+16");
+            if constexpr (std::is_signed_v<T>)
+            {
+                REQUIRE(std::format("{:+d}", C{-0}) == "0");
+                REQUIRE(std::format("{:+d}", C{-1}) == "-1");
+                REQUIRE(std::format("{:+d}", C{-16}) == "-16");
+            }
+        }
+        SECTION("With - Sign")
+        {
+            CHECK(std::format("{:-d}", C{0}) == std::format("{:-d}", T{0}));
+            CHECK(std::format("{:-d}", C{1}) == std::format("{:-d}", T{1}));
+            CHECK(std::format("{:-d}", C{16}) == std::format("{:-d}", T{16}));
+            CHECK(std::format("{:-d}", c_min) == std::format("{:-d}", t_min));
+            CHECK(std::format("{:-d}", c_max) == std::format("{:-d}", t_max));
+
+            REQUIRE(std::format("{:-d}", C{0}) == "0");
+            REQUIRE(std::format("{:-d}", C{1}) == "1");
+            REQUIRE(std::format("{:-d}", C{16}) == "16");
+            if constexpr (std::is_signed_v<T>)
+            {
+                REQUIRE(std::format("{:-d}", C{-0}) == "0");
+                REQUIRE(std::format("{:-d}", C{-1}) == "-1");
+                REQUIRE(std::format("{:-d}", C{-16}) == "-16");
+            }
+        }
+        SECTION("With Space Sign")
+        {
+            CHECK(std::format("{: d}", C{0}) == std::format("{: d}", T{0}));
+            CHECK(std::format("{: d}", C{1}) == std::format("{: d}", T{1}));
+            CHECK(std::format("{: d}", C{16}) == std::format("{: d}", T{16}));
+            CHECK(std::format("{: d}", c_min) == std::format("{: d}", t_min));
+            CHECK(std::format("{: d}", c_max) == std::format("{: d}", t_max));
+
+            REQUIRE(std::format("{: d}", C{0}) == " 0");
+            REQUIRE(std::format("{: d}", C{1}) == " 1");
+            REQUIRE(std::format("{: d}", C{16}) == " 16");
+            if constexpr (std::is_signed_v<T>)
+            {
+                REQUIRE(std::format("{: d}", C{-0}) == " 0");
+                REQUIRE(std::format("{: d}", C{-1}) == "-1");
+                REQUIRE(std::format("{: d}", C{-16}) == "-16");
+            }
+        }
+    }
+    SECTION("Octal")
+    {
+        SECTION("Without Prefix")
+        {
+            CHECK(std::format("{:o}", C{0}) == std::format("{:o}", T{0}));
+            CHECK(std::format("{:o}", C{1}) == std::format("{:o}", T{1}));
+            CHECK(std::format("{:o}", C{16}) == std::format("{:o}", T{16}));
+            CHECK(std::format("{:o}", c_min) == std::format("{:o}", t_min));
+            CHECK(std::format("{:o}", c_max) == std::format("{:o}", t_max));
+        }
+        SECTION("With Prefix")
+        {
+            CHECK(std::format("{:#o}", C{0}) == std::format("{:#o}", T{0}));
+            CHECK(std::format("{:#o}", C{1}) == std::format("{:#o}", T{1}));
+            CHECK(std::format("{:#o}", C{16}) == std::format("{:#o}", T{16}));
+            CHECK(std::format("{:#o}", c_min) == std::format("{:#o}", t_min));
+            CHECK(std::format("{:#o}", c_max) == std::format("{:#o}", t_max));
+        }
+    }
+    SECTION("Hex")
+    {
+        SECTION("Lower Case")
+        {
+            SECTION("Without Prefix")
+            {
+                CHECK(std::format("{:x}", C{0}) == std::format("{:x}", T{0}));
+                CHECK(std::format("{:x}", C{1}) == std::format("{:x}", T{1}));
+                CHECK(std::format("{:x}", C{16}) == std::format("{:x}", T{16}));
+                CHECK(std::format("{:x}", c_min) == std::format("{:x}", t_min));
+                CHECK(std::format("{:x}", c_max) == std::format("{:x}", t_max));
+            }
+            SECTION("With Prefix")
+            {
+                CHECK(std::format("{:#x}", C{0}) == std::format("{:#x}", T{0}));
+                CHECK(std::format("{:#x}", C{1}) == std::format("{:#x}", T{1}));
+                CHECK(std::format("{:#x}", C{16}) == std::format("{:#x}", T{16}));
+                CHECK(std::format("{:#x}", c_min) == std::format("{:#x}", t_min));
+                CHECK(std::format("{:#x}", c_max) == std::format("{:#x}", t_max));
+            }
+        }
+        SECTION("Upper Case")
+        {
+            SECTION("Without Prefix")
+            {
+                CHECK(std::format("{:X}", C{0}) == std::format("{:X}", T{0}));
+                CHECK(std::format("{:X}", C{1}) == std::format("{:X}", T{1}));
+                CHECK(std::format("{:X}", C{16}) == std::format("{:X}", T{16}));
+                CHECK(std::format("{:X}", c_min) == std::format("{:X}", t_min));
+                CHECK(std::format("{:X}", c_max) == std::format("{:X}", t_max));
+            }
+            SECTION("With Prefix")
+            {
+                CHECK(std::format("{:#X}", C{0}) == std::format("{:#X}", T{0}));
+                CHECK(std::format("{:#X}", C{1}) == std::format("{:#X}", T{1}));
+                CHECK(std::format("{:#X}", C{16}) == std::format("{:#X}", T{16}));
+                CHECK(std::format("{:#X}", c_min) == std::format("{:#X}", t_min));
+                CHECK(std::format("{:#X}", c_max) == std::format("{:#X}", t_max));
+            }
+        }
+    }
+}
+#endif

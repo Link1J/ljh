@@ -24,6 +24,10 @@
 #include <compare>
 #include <limits>
 
+#if __has_include(<format>)
+#include <format>
+#endif
+
 #if defined(LJH_COMPILER_MSVC)
 #include <intrin.h>
 #endif
@@ -396,6 +400,11 @@ namespace ljh
             static_assert(std::is_nothrow_move_assignable_v<checked> == std::is_nothrow_move_assignable_v<T>);
         }
 
+        explicit operator T() const noexcept
+        {
+            return _value;
+        }
+
         [[nodiscard]] friend constexpr bool operator==(checked lhs, checked rhs) noexcept  = default;
         [[nodiscard]] friend constexpr auto operator<=>(checked lhs, checked rhs) noexcept = default;
 
@@ -482,74 +491,90 @@ namespace ljh
     using checked_unsigned_long_long = checked<unsigned long long>;
 } // namespace ljh
 
-template<typename T>
-struct std::numeric_limits<ljh::checked<T>>
+namespace std
 {
-public:
-    [[nodiscard]] static constexpr ljh::checked<T>(min)() noexcept
+    template<typename T>
+    struct numeric_limits<ljh::checked<T>>
     {
-        return std::numeric_limits<T>::min();
-    }
+    public:
+        [[nodiscard]] static constexpr ljh::checked<T>(min)() noexcept
+        {
+            return std::numeric_limits<T>::min();
+        }
 
-    [[nodiscard]] static constexpr ljh::checked<T>(max)() noexcept
+        [[nodiscard]] static constexpr ljh::checked<T>(max)() noexcept
+        {
+            return std::numeric_limits<T>::max();
+        }
+
+        [[nodiscard]] static constexpr ljh::checked<T> lowest() noexcept
+        {
+            return (min)();
+        }
+
+        [[nodiscard]] static constexpr ljh::checked<T> epsilon() noexcept
+        {
+            return std::numeric_limits<T>::epsilon();
+        }
+
+        [[nodiscard]] static constexpr ljh::checked<T> round_error() noexcept
+        {
+            return std::numeric_limits<T>::round_error();
+        }
+
+        [[nodiscard]] static constexpr ljh::checked<T> denorm_min() noexcept
+        {
+            return std::numeric_limits<T>::denorm_min();
+        }
+
+        [[nodiscard]] static constexpr ljh::checked<T> infinity() noexcept
+        {
+            return std::numeric_limits<T>::infinity();
+        }
+
+        [[nodiscard]] static constexpr ljh::checked<T> quiet_NaN() noexcept
+        {
+            return std::numeric_limits<T>::quiet_NaN();
+        }
+
+        [[nodiscard]] static constexpr ljh::checked<T> signaling_NaN() noexcept
+        {
+            return std::numeric_limits<T>::signaling_NaN();
+        }
+
+        static constexpr bool                   is_specialized    = true;
+        static constexpr bool                   has_infinity      = std::numeric_limits<T>::has_infinity;
+        static constexpr bool                   has_quiet_NaN     = std::numeric_limits<T>::has_quiet_NaN;
+        static constexpr bool                   has_signaling_NaN = std::numeric_limits<T>::has_signaling_NaN;
+        static constexpr bool                   is_bounded        = std::numeric_limits<T>::is_bounded;
+        static constexpr bool                   is_exact          = std::numeric_limits<T>::is_exact;
+        static constexpr bool                   is_iec559         = std::numeric_limits<T>::is_iec559;
+        static constexpr bool                   is_integer        = std::numeric_limits<T>::is_integer;
+        static constexpr bool                   is_modulo         = std::numeric_limits<T>::is_modulo;
+        static constexpr bool                   is_signed         = std::numeric_limits<T>::is_signed;
+        static constexpr bool                   tinyness_before   = std::numeric_limits<T>::tinyness_before;
+        static constexpr bool                   traps             = std::numeric_limits<T>::traps;
+        static constexpr std::float_round_style round_style       = std::numeric_limits<T>::round_style;
+        static constexpr int                    digits            = std::numeric_limits<T>::digits;
+        static constexpr int                    digits10          = std::numeric_limits<T>::digits10;
+        static constexpr int                    max_digits10      = std::numeric_limits<T>::max_digits10;
+        static constexpr int                    max_exponent      = std::numeric_limits<T>::max_exponent;
+        static constexpr int                    max_exponent10    = std::numeric_limits<T>::max_exponent10;
+        static constexpr int                    min_exponent      = std::numeric_limits<T>::min_exponent;
+        static constexpr int                    min_exponent10    = std::numeric_limits<T>::min_exponent10;
+        static constexpr int                    radix             = std::numeric_limits<T>::radix;
+    };
+
+#if __has_include(<format>)
+    template<typename T, typename C>
+        requires requires { typename std::formatter<T, C>; }
+    struct formatter<ljh::checked<T>, C> : std::formatter<T, C>
     {
-        return std::numeric_limits<T>::max();
-    }
-
-    [[nodiscard]] static constexpr ljh::checked<T> lowest() noexcept
-    {
-        return (min)();
-    }
-
-    [[nodiscard]] static constexpr ljh::checked<T> epsilon() noexcept
-    {
-        return std::numeric_limits<T>::epsilon();
-    }
-
-    [[nodiscard]] static constexpr ljh::checked<T> round_error() noexcept
-    {
-        return std::numeric_limits<T>::round_error();
-    }
-
-    [[nodiscard]] static constexpr ljh::checked<T> denorm_min() noexcept
-    {
-        return std::numeric_limits<T>::denorm_min();
-    }
-
-    [[nodiscard]] static constexpr ljh::checked<T> infinity() noexcept
-    {
-        return std::numeric_limits<T>::infinity();
-    }
-
-    [[nodiscard]] static constexpr ljh::checked<T> quiet_NaN() noexcept
-    {
-        return std::numeric_limits<T>::quiet_NaN();
-    }
-
-    [[nodiscard]] static constexpr ljh::checked<T> signaling_NaN() noexcept
-    {
-        return std::numeric_limits<T>::signaling_NaN();
-    }
-
-    static constexpr bool                   is_specialized    = true;
-    static constexpr bool                   has_infinity      = std::numeric_limits<T>::has_infinity;
-    static constexpr bool                   has_quiet_NaN     = std::numeric_limits<T>::has_quiet_NaN;
-    static constexpr bool                   has_signaling_NaN = std::numeric_limits<T>::has_signaling_NaN;
-    static constexpr bool                   is_bounded        = std::numeric_limits<T>::is_bounded;
-    static constexpr bool                   is_exact          = std::numeric_limits<T>::is_exact;
-    static constexpr bool                   is_iec559         = std::numeric_limits<T>::is_iec559;
-    static constexpr bool                   is_integer        = std::numeric_limits<T>::is_integer;
-    static constexpr bool                   is_modulo         = std::numeric_limits<T>::is_modulo;
-    static constexpr bool                   is_signed         = std::numeric_limits<T>::is_signed;
-    static constexpr bool                   tinyness_before   = std::numeric_limits<T>::tinyness_before;
-    static constexpr bool                   traps             = std::numeric_limits<T>::traps;
-    static constexpr std::float_round_style round_style       = std::numeric_limits<T>::round_style;
-    static constexpr int                    digits            = std::numeric_limits<T>::digits;
-    static constexpr int                    digits10          = std::numeric_limits<T>::digits10;
-    static constexpr int                    max_digits10      = std::numeric_limits<T>::max_digits10;
-    static constexpr int                    max_exponent      = std::numeric_limits<T>::max_exponent;
-    static constexpr int                    max_exponent10    = std::numeric_limits<T>::max_exponent10;
-    static constexpr int                    min_exponent      = std::numeric_limits<T>::min_exponent;
-    static constexpr int                    min_exponent10    = std::numeric_limits<T>::min_exponent10;
-    static constexpr int                    radix             = std::numeric_limits<T>::radix;
-};
+        template<typename FC>
+        FC::iterator format(ljh::checked<T> const& value, FC& ctx) const
+        {
+            return std::formatter<T, C>::format(static_cast<T>(value), ctx);
+        }
+    };
+#endif
+} // namespace std
