@@ -26,10 +26,12 @@ FetchContent_MakeAvailable(Catch2 fmt)
 FetchContent_GetProperties(Catch2 SOURCE_DIR CATCH2_SOURCE)
 set(CMAKE_MODULE_PATH ${CATCH2_SOURCE}/extras ${CMAKE_MODULE_PATH})
 
-if (MSVC)
+if (WIN32)
 	add_compile_options(
 		/D_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
-		/Zc:twoPhase- /await:strict /utf-8 /permissive- /Zc:inline /Zc:__cplusplus /Zc:__STDC__ /bigobj /Y-
+		/Zc:twoPhase- /utf-8 /permissive- /Zc:inline /Zc:__cplusplus /bigobj /Y-
+		$<$<CXX_COMPILER_ID:MSVC>:/await:strict> $<$<CXX_COMPILER_ID:MSVC>:/Zc:__STDC__>
+		$<$<CXX_COMPILER_ID:Clang>:-Wno-microsoft-cast>
 	)
 endif()
 

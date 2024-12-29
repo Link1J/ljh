@@ -66,7 +66,8 @@ if (WIN32)
 	target_compile_options(ljh PRIVATE
 		/D_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
 		/Zc:twoPhase-
-		/await:strict
+		$<$<CXX_COMPILER_ID:MSVC>:/await:strict>
+		$<$<CXX_COMPILER_ID:Clang>:-Wno-delayed-template-parsing-in-cxx20>
 	)
 	target_link_libraries(ljh PRIVATE
 		wbemuuid
