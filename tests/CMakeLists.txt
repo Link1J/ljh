@@ -106,13 +106,3 @@ add_executable(tests_info
 )
 set_target_properties(tests_info PROPERTIES CXX_STANDARD 23 CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)
 target_compile_features(tests_info PUBLIC cxx_constexpr)
-
-if (TARGET_ARCH EQUAL CMAKE_HOST_SYSTEM_PROCESSOR)
-include(CTest)
-include(Catch)
-catch_discover_tests(tests_11)
-catch_discover_tests(tests_14)
-catch_discover_tests(tests_17)
-catch_discover_tests(tests_20)
-catch_discover_tests(tests_23)
-endif ()
