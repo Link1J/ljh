@@ -177,7 +177,7 @@ ljh::generator<int> no_fail(auto&& start)
     co_yield start + 3;
 }
 
-ljh::generator<int> fails_main(auto&& start)
+ljh::generator<int> fails_main(auto start)
 {
     auto nested = no_fail(start);
     for (auto it = std::begin(nested); it != std::end(nested); it++)
@@ -223,7 +223,7 @@ struct unknown : std::invalid_argument
     {}
 };
 
-ljh::generator<int> fails_main2(auto&& start)
+ljh::generator<int> fails_main2(auto start)
 {
     auto nested = no_fail(start);
     for (auto it = std::begin(nested); it != std::end(nested); it++)
