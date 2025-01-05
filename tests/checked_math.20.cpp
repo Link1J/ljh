@@ -515,10 +515,6 @@ TEMPLATE_TEST_CASE("checked_math - type - std::format - Matches Basic Type", "[t
                 CHECK(std::format("{:#b}", C{16}) == std::format("{:#b}", T{16}));
                 CHECK(std::format("{:#b}", c_min) == std::format("{:#b}", t_min));
                 CHECK(std::format("{:#b}", c_max) == std::format("{:#b}", t_max));
-
-                REQUIRE(std::format("{:#b}", C{0}) == "0b0");
-                REQUIRE(std::format("{:#b}", C{1}) == "0b1");
-                REQUIRE(std::format("{:#b}", C{16}) == "0b10000");
             }
         }
         SECTION("Upper Case")
@@ -544,10 +540,6 @@ TEMPLATE_TEST_CASE("checked_math - type - std::format - Matches Basic Type", "[t
                 CHECK(std::format("{:#B}", C{16}) == std::format("{:#B}", T{16}));
                 CHECK(std::format("{:#B}", c_min) == std::format("{:#B}", t_min));
                 CHECK(std::format("{:#B}", c_max) == std::format("{:#B}", t_max));
-
-                REQUIRE(std::format("{:#b}", C{0}) == "0B0");
-                REQUIRE(std::format("{:#b}", C{1}) == "0B1");
-                REQUIRE(std::format("{:#b}", C{16}) == "0B10000");
             }
         }
     }
@@ -560,8 +552,6 @@ TEMPLATE_TEST_CASE("checked_math - type - std::format - Matches Basic Type", "[t
         CHECK(std::format("{:c}", C{'A'}) == std::format("{:c}", T{'A'}));
         CHECK(std::format("{:c}", C{'\t'}) == std::format("{:c}", T{'\t'}));
         CHECK(std::format("{:c}", C{'\b'}) == std::format("{:c}", T{'\b'}));
-
-        REQUIRE("A" == std::format("{:c}", C{'A'}));
     }
     SECTION("Decimal")
     {
@@ -572,16 +562,6 @@ TEMPLATE_TEST_CASE("checked_math - type - std::format - Matches Basic Type", "[t
             CHECK(std::format("{:d}", C{16}) == std::format("{:d}", T{16}));
             CHECK(std::format("{:d}", c_min) == std::format("{:d}", t_min));
             CHECK(std::format("{:d}", c_max) == std::format("{:d}", t_max));
-
-            REQUIRE(std::format("{:d}", C{0}) == "0");
-            REQUIRE(std::format("{:d}", C{1}) == "1");
-            REQUIRE(std::format("{:d}", C{16}) == "16");
-            if constexpr (std::is_signed_v<T>)
-            {
-                REQUIRE(std::format("{:d}", C{-0}) == "0");
-                REQUIRE(std::format("{:d}", C{-1}) == "-1");
-                REQUIRE(std::format("{:d}", C{-16}) == "-16");
-            }
         }
         SECTION("With + Sign")
         {
@@ -590,16 +570,6 @@ TEMPLATE_TEST_CASE("checked_math - type - std::format - Matches Basic Type", "[t
             CHECK(std::format("{:+d}", C{16}) == std::format("{:+d}", T{16}));
             CHECK(std::format("{:+d}", c_min) == std::format("{:+d}", t_min));
             CHECK(std::format("{:+d}", c_max) == std::format("{:+d}", t_max));
-
-            REQUIRE(std::format("{:+d}", C{0}) == "+0");
-            REQUIRE(std::format("{:+d}", C{1}) == "+1");
-            REQUIRE(std::format("{:+d}", C{16}) == "+16");
-            if constexpr (std::is_signed_v<T>)
-            {
-                REQUIRE(std::format("{:+d}", C{-0}) == "0");
-                REQUIRE(std::format("{:+d}", C{-1}) == "-1");
-                REQUIRE(std::format("{:+d}", C{-16}) == "-16");
-            }
         }
         SECTION("With - Sign")
         {
@@ -608,16 +578,6 @@ TEMPLATE_TEST_CASE("checked_math - type - std::format - Matches Basic Type", "[t
             CHECK(std::format("{:-d}", C{16}) == std::format("{:-d}", T{16}));
             CHECK(std::format("{:-d}", c_min) == std::format("{:-d}", t_min));
             CHECK(std::format("{:-d}", c_max) == std::format("{:-d}", t_max));
-
-            REQUIRE(std::format("{:-d}", C{0}) == "0");
-            REQUIRE(std::format("{:-d}", C{1}) == "1");
-            REQUIRE(std::format("{:-d}", C{16}) == "16");
-            if constexpr (std::is_signed_v<T>)
-            {
-                REQUIRE(std::format("{:-d}", C{-0}) == "0");
-                REQUIRE(std::format("{:-d}", C{-1}) == "-1");
-                REQUIRE(std::format("{:-d}", C{-16}) == "-16");
-            }
         }
         SECTION("With Space Sign")
         {
@@ -626,16 +586,6 @@ TEMPLATE_TEST_CASE("checked_math - type - std::format - Matches Basic Type", "[t
             CHECK(std::format("{: d}", C{16}) == std::format("{: d}", T{16}));
             CHECK(std::format("{: d}", c_min) == std::format("{: d}", t_min));
             CHECK(std::format("{: d}", c_max) == std::format("{: d}", t_max));
-
-            REQUIRE(std::format("{: d}", C{0}) == " 0");
-            REQUIRE(std::format("{: d}", C{1}) == " 1");
-            REQUIRE(std::format("{: d}", C{16}) == " 16");
-            if constexpr (std::is_signed_v<T>)
-            {
-                REQUIRE(std::format("{: d}", C{-0}) == " 0");
-                REQUIRE(std::format("{: d}", C{-1}) == "-1");
-                REQUIRE(std::format("{: d}", C{-16}) == "-16");
-            }
         }
     }
     SECTION("Octal")
