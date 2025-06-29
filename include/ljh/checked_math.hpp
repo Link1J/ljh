@@ -10,7 +10,6 @@
 // Requires C++20
 //
 // ABOUT
-//     custom char_traits
 //
 // USAGE
 //
