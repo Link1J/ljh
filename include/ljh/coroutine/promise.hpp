@@ -12,6 +12,7 @@
 #include <exception>
 #include <memory>
 #include <bit>
+#include <cassert>
 
 namespace ljh::__::co
 {
@@ -75,24 +76,33 @@ namespace ljh::__::co
         {
             switch (status)
             {
-            case result_status::value: return result.wrapper.get_value();
-            case result_status::error: std::rethrow_exception(std::exchange(result.error, {}));
+            case result_status::value: 
+                return result.wrapper.get_value();
+            case result_status::error: 
+                std::rethrow_exception(std::exchange(result.error, {}));
+                break;
             default:
+                assert(false);
+                std::terminate();
+                break;
             }
-            assert(false);
-            std::terminate();
         }
 
         ~promise_result_holder()
         {
             switch (status)
             {
-            case result_status::value: result.wrapper.~promise_value(); break;
+            case result_status::value: 
+                result.wrapper.~promise_value(); 
+                break;
             case result_status::error:
                 if (result.error)
                     std::rethrow_exception(result.error);
                 result.error.~exception_ptr();
+                break;
             default:
+                // Do nothing
+                break;
             }
         }
     };
