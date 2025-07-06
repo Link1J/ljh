@@ -77,6 +77,7 @@ namespace ljh::__::co
             {
             case result_status::value: return result.wrapper.get_value();
             case result_status::error: std::rethrow_exception(std::exchange(result.error, {}));
+            default:
             }
             assert(false);
             std::terminate();
@@ -91,6 +92,7 @@ namespace ljh::__::co
                 if (result.error)
                     std::rethrow_exception(result.error);
                 result.error.~exception_ptr();
+            default:
             }
         }
     };

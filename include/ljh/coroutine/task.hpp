@@ -41,19 +41,19 @@ namespace ljh::co
         task(__::co::promise<T>* initial)
             : base(initial)
         {
-            this->promise->start();
+            this->_promise->start();
         }
 
         void swap(task& other)
         {
-            std::swap(this->promise, other.promise);
+            std::swap(this->_promise, other.promise);
         }
 
         using base::operator co_await;
 
         auto operator co_await() &&
         {
-            return __::co::promise_awaiter<T>{std::move(this->promise)};
+            return __::co::promise_awaiter<T>{std::move(this->_promise)};
         }
     };
 

@@ -46,7 +46,7 @@ namespace ljh
 
 		static constexpr int compare(const typename base::char_type* s1, const typename base::char_type* s2, size_t count) noexcept
 		{
-			for (int i = 0; i < count; i++)
+			for (size_t i = 0; i < count; i++)
 			{
 				if (to_upper(s1[i]) < to_upper(s2[i])) return -1;
 				if (to_upper(s1[i]) > to_upper(s2[i])) return  1;
@@ -74,7 +74,6 @@ namespace ljh
 
 	using case_insensitive_string_view    = basic_case_insensitive_string_view<char    >;
 	using wcase_insensitive_string_view   = basic_case_insensitive_string_view<wchar_t >;
-#if __cpp_lib_string_view >= 201606L
 #if __cpp_char8_t >= 201811L
 	using u8case_insensitive_string_view  = basic_case_insensitive_string_view<char8_t >;
 #endif

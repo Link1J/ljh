@@ -187,7 +187,7 @@ namespace ljh
 	}
 
 	template<typename C, std::size_t S1, std::size_t S2>
-	[[nodiscard]] constexpr std::enable_if_t<S1 != S2, bool> operator==(const compile_time_string<C, S1>& s1, const compile_time_string<C, S2>& s2)
+	[[nodiscard]] constexpr std::enable_if_t<S1 != S2, bool> operator==(const compile_time_string<C, S1>&, const compile_time_string<C, S2>&)
 	{
 		return false;
 	}
@@ -202,7 +202,7 @@ namespace ljh
 	}
 
 	template<typename C, std::size_t S1, std::size_t S2>
-	[[nodiscard]] constexpr std::enable_if_t<S1 != S2 - 1, bool> operator==(const compile_time_string<C, S1>& s1, const C (&s2)[S2])
+	[[nodiscard]] constexpr std::enable_if_t<S1 != S2 - 1, bool> operator==(const compile_time_string<C, S1>&, const C (&)[S2])
 	{
 		return false;
 	}
