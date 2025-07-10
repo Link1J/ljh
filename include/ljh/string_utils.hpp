@@ -26,6 +26,7 @@
 #include <algorithm>
 #include <locale>
 #include <codecvt>
+#include <cwchar>
 
 #if __cpp_lib_string_view >= 201606L
 #include <string_view>
@@ -120,15 +121,43 @@ namespace ljh
 		return output;
 	}
 
+#if __cpp_lib_string_view >= 201606L 
+	inline std::wstring convert_string(std::string_view str)
+	{
+		auto op = [state = std::mbstate_t(), from = str.data()](wchar_t* buf, size_t len) mutable noexcept { return std::mbsrtowcs(buf, &from, len, &state); };
+		std::wstring output;
+#if __cpp_lib_string_resize_and_overwrite >= 202110L
+		output.resize_and_overwrite(op(nullptr, 0), op);
+#else
+		output.resize(op(nullptr, 0));
+		output.resize(op(output.data(), output.size()));
+#endif
+		return output;
+	}
+
+	inline std::string convert_string(std::wstring_view wstr)
+	{
+		auto op = [state = std::mbstate_t(), from = wstr.data()](char* buf, size_t len) mutable noexcept { return std::wcsrtombs(buf, &from, len, &state); };
+		std::string output;
+#if __cpp_lib_string_resize_and_overwrite >= 202110L
+		output.resize_and_overwrite(op(nullptr, 0), op);
+#else
+		output.resize(op(nullptr, 0));
+		output.resize(op(output.data(), output.size()));
+#endif
+		return output;
+    }
+#else
 	inline std::wstring convert_string(const std::string& str)
 	{
 		return std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t>{}.from_bytes(str);
 	}
-	
-	inline std::string convert_string(const std::wstring& wstr)
+
+	inline std::string convert_string(std::wstring const& wstr)
 	{
 		return std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t>{}.to_bytes(wstr);
 	}
+#endif
 
 #if __cpp_lib_string_view >= 201606L
 	template<class C, class T = std::char_traits<C>>
