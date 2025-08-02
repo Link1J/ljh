@@ -20,6 +20,7 @@
 #include "cpp_version.hpp"
 #include "int_types.hpp"
 #include "type_traits.hpp"
+#include <climits>
 #if LJH_CPP_VERSION > LJH_CPP17_VERSION
 #    if __has_include(<compare>)
 #        include <compare>

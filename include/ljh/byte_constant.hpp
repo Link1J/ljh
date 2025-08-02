@@ -19,6 +19,7 @@
 #pragma once
 #include "cpp_version.hpp"
 #include <string>
+#include <cstdint>
 
 namespace ljh
 {
@@ -39,9 +40,9 @@ namespace ljh
 		template<__::udl_string String>
 		constexpr auto operator""_bytes()
 		{
-			return []<size_t... I>(std::index_sequence<I...>)
+			return []<std::size_t... I>(std::index_sequence<I...>)
 			{
-				return std::array{uint8_t(String.value[I])...};
+				return std::array{std::uint8_t(String.value[I])...};
 			}
 			(std::make_index_sequence<std::char_traits<char>::length(String.value)>{});
 		}
