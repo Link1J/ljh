@@ -36,51 +36,56 @@ namespace ljh::bitmask_operators
 	using enable_t = typename std::enable_if_t<enable<T>::value, T>;
 }
 
-template<typename T> 
-constexpr ljh::bitmask_operators::enable_t<T> operator|(T lhs, T rhs) 
+namespace ljh::bitmask_operators::ops
 {
-	static_assert(ljh::is_scoped_enum<T>::value, "Type is not a scoped enum.");
-	return static_cast<T>(ljh::underlying_cast(lhs) | ljh::underlying_cast(rhs)); 
+	template<typename T> 
+	constexpr ljh::bitmask_operators::enable_t<T> operator|(T lhs, T rhs) 
+	{
+		static_assert(ljh::is_scoped_enum<T>::value, "Type is not a scoped enum.");
+		return static_cast<T>(ljh::underlying_cast(lhs) | ljh::underlying_cast(rhs)); 
+	}
+
+	template<typename T> 
+	constexpr ljh::bitmask_operators::enable_t<T> operator&(T lhs, T rhs) 
+	{
+		static_assert(ljh::is_scoped_enum<T>::value, "Type is not a scoped enum.");
+		return static_cast<T>(ljh::underlying_cast(lhs) & ljh::underlying_cast(rhs)); 
+	}
+
+	template<typename T> 
+	constexpr ljh::bitmask_operators::enable_t<T> operator^(T lhs, T rhs) 
+	{
+		static_assert(ljh::is_scoped_enum<T>::value, "Type is not a scoped enum.");
+		return static_cast<T>(ljh::underlying_cast(lhs) ^ ljh::underlying_cast(rhs)); 
+	}
+
+	template<typename T> 
+	constexpr ljh::bitmask_operators::enable_t<T> operator~(T rhs) 
+	{
+		static_assert(ljh::is_scoped_enum<T>::value, "Type is not a scoped enum.");
+		return static_cast<T>(~ljh::underlying_cast(rhs)); 
+	}
+
+	template<typename T> 
+	constexpr ljh::bitmask_operators::enable_t<T>& operator|=(T& lhs, T rhs) 
+	{
+		lhs = lhs | rhs; 
+		return lhs;
+	}
+
+	template<typename T> 
+	constexpr ljh::bitmask_operators::enable_t<T>& operator&=(T& lhs, T rhs) 
+	{
+		lhs = lhs & rhs; 
+		return lhs;
+	}
+
+	template<typename T> 
+	constexpr ljh::bitmask_operators::enable_t<T>& operator^=(T& lhs, T rhs) 
+	{
+		lhs = lhs ^ rhs; 
+		return lhs;
+	}
 }
 
-template<typename T> 
-constexpr ljh::bitmask_operators::enable_t<T> operator&(T lhs, T rhs) 
-{
-	static_assert(ljh::is_scoped_enum<T>::value, "Type is not a scoped enum.");
-	return static_cast<T>(ljh::underlying_cast(lhs) & ljh::underlying_cast(rhs)); 
-}
-
-template<typename T> 
-constexpr ljh::bitmask_operators::enable_t<T> operator^(T lhs, T rhs) 
-{
-	static_assert(ljh::is_scoped_enum<T>::value, "Type is not a scoped enum.");
-	return static_cast<T>(ljh::underlying_cast(lhs) ^ ljh::underlying_cast(rhs)); 
-}
-
-template<typename T> 
-constexpr ljh::bitmask_operators::enable_t<T> operator~(T rhs) 
-{
-	static_assert(ljh::is_scoped_enum<T>::value, "Type is not a scoped enum.");
-	return static_cast<T>(~ljh::underlying_cast(rhs)); 
-}
-
-template<typename T> 
-constexpr ljh::bitmask_operators::enable_t<T>& operator|=(T& lhs, T rhs) 
-{
-	lhs = lhs | rhs; 
-	return lhs;
-}
-
-template<typename T> 
-constexpr ljh::bitmask_operators::enable_t<T>& operator&=(T& lhs, T rhs) 
-{
-	lhs = lhs & rhs; 
-	return lhs;
-}
-
-template<typename T> 
-constexpr ljh::bitmask_operators::enable_t<T>& operator^=(T& lhs, T rhs) 
-{
-	lhs = lhs ^ rhs; 
-	return lhs;
-}
+using namespace ljh::bitmask_operators::ops;

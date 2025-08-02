@@ -26,8 +26,29 @@ else ()
 set(IS_ARM64 OFF)
 endif ()
 
+try_compile(AWAIT_NOT_NEEDED
+	SOURCES "${PROJECT_SOURCE_DIR}/tests/cmake.cppwinrt_await.cpp"
+	CXX_STANDARD 20
+	CXX_STANDARD_REQUIRED YES
+	CXX_EXTENSIONS NO
+)
+
+block(SCOPE_FOR VARIABLES PROPAGATE MODULES_ARE_SUPPORTED)
+	set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
+	try_compile(MODULES_ARE_SUPPORTED
+		SOURCES_TYPE CXX_MODULE
+		SOURCES "${PROJECT_SOURCE_DIR}/tests/cmake.modules_support.ixx"
+		CXX_STANDARD 20
+		CXX_STANDARD_REQUIRED YES
+		CXX_EXTENSIONS NO
+	)
+endblock()
+
 option(ljh_BUILD_TESTS "Build the Self Tests" ${LJH_SUB_PROJECT})
 option(ljh_INSTALL "Install" ${LJH_SUB_PROJECT})
+option(ljh_BUILD_MODULES "Build LJH Modules" ${MODULES_ARE_SUPPORTED})
+
+message("-- ljh build modules: ${ljh_BUILD_MODULES}")
 
 add_library(ljh STATIC
 	source/system_directories.cpp
@@ -47,13 +68,20 @@ target_include_directories(ljh
 		$<INSTALL_INTERFACE:include>
 )
 
-try_compile(AWAIT_NOT_NEEDED
-	"${PROJECT_BINARY_DIR}/_build_tests"
-	"${PROJECT_SOURCE_DIR}/tests/cmake.cppwinrt_await.cpp"
-	CXX_STANDARD 20
-	CXX_STANDARD_REQUIRED YES
-	CXX_EXTENSIONS NO
-)
+if (ljh_BUILD_MODULES)
+	set_target_properties(ljh PROPERTIES
+		CXX_STANDARD 23
+		CXX_SCAN_FOR_MODULES ON
+	)
+	target_sources(ljh PUBLIC FILE_SET CXX_MODULES FILES
+		modules/main.ixx
+		modules/smarc.ixx
+		modules/string.ixx
+		modules/coroutine.ixx
+		modules/math.ixx
+	)
+endif ()
+
 
 if (WIN32)
 	target_sources(ljh PRIVATE
@@ -65,7 +93,7 @@ if (WIN32)
 	)
 	target_compile_options(ljh PRIVATE
 		/D_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
-		/Zc:twoPhase-
+		/D_CRT_SECURE_NO_WARNINGS
 		$<$<CXX_COMPILER_ID:MSVC>:/await:strict>
 		$<$<CXX_COMPILER_ID:Clang>:-Wno-delayed-template-parsing-in-cxx20>
 	)
@@ -116,11 +144,12 @@ endif()
 
 if (ljh_INSTALL)
 	install(TARGETS ljh EXPORT ljh
-		LIBRARY       DESTINATION lib
-		ARCHIVE       DESTINATION lib
-		RUNTIME       DESTINATION bin
-		PUBLIC_HEADER DESTINATION include
-		BUNDLE        DESTINATION bin
+		LIBRARY              DESTINATION lib
+		ARCHIVE              DESTINATION lib
+		RUNTIME              DESTINATION bin
+		PUBLIC_HEADER        DESTINATION include
+		BUNDLE               DESTINATION bin
+		FILE_SET CXX_MODULES DESTINATION lib/cmake/ljh/src
 	)
 	install(EXPORT ljh NAMESPACE ljh:: DESTINATION lib/cmake/ljh FILE ljh-config.cmake)
 	install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/ DESTINATION include)

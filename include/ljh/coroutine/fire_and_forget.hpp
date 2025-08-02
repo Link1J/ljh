@@ -8,6 +8,8 @@
 #include "coroutine_headers.hpp"
 #include "../type_traits.hpp"
 
+#include <exception>
+
 namespace ljh::co
 {
     struct fire_and_forget

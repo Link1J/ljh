@@ -29,7 +29,8 @@ set(CMAKE_MODULE_PATH ${CATCH2_SOURCE}/extras ${CMAKE_MODULE_PATH})
 if (WIN32)
 	add_compile_options(
 		/D_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
-		/Zc:twoPhase- /utf-8 /permissive- /Zc:inline /Zc:__cplusplus /bigobj /Y-
+		/D_CRT_SECURE_NO_WARNINGS
+		/utf-8 /permissive- /Zc:inline /Zc:__cplusplus /bigobj /Y-
 		$<$<CXX_COMPILER_ID:MSVC>:/await:strict> $<$<CXX_COMPILER_ID:MSVC>:/Zc:__STDC__>
 		$<$<CXX_COMPILER_ID:Clang>:-Wno-microsoft-cast>
 	)
@@ -77,12 +78,19 @@ add_executable(tests_20
 	coroutine.20.cpp
 	checked_math.20.cpp
 )
+if (ljh_BUILD_MODULES)
+	target_sources(tests_20 PRIVATE
+		module.20.cpp
+	)
+	set_target_properties(tests_20 PROPERTIES
+		CXX_SCAN_FOR_MODULES ON
+	)
+endif()
 set_target_properties(tests_20 PROPERTIES CXX_STANDARD 20 CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)
 target_link_libraries(tests_20 Catch2::Catch2WithMain ljh fmt::fmt)
 
 try_compile(SUPPORTS_explicit_this
-	"${PROJECT_BINARY_DIR}/_build_tests"
-	"${PROJECT_SOURCE_DIR}/cmake.__cpp_explicit_this_parameter.cpp"
+	SOURCES "${PROJECT_SOURCE_DIR}/cmake.__cpp_explicit_this_parameter.cpp"
 	CXX_STANDARD 23
 	CXX_STANDARD_REQUIRED YES
 	CXX_EXTENSIONS NO
@@ -99,6 +107,14 @@ if (SUPPORTS_explicit_this)
 		size.23.cpp
 		point.23.cpp
 	)
+	if (ljh_BUILD_MODULES)
+		target_sources(tests_23 PRIVATE
+			module.23.cpp
+		)
+		set_target_properties(tests_23 PROPERTIES
+			CXX_SCAN_FOR_MODULES ON
+		)
+	endif()
 endif()
 set_target_properties(tests_23 PROPERTIES CXX_STANDARD 23 CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)
 target_link_libraries(tests_23 Catch2::Catch2WithMain ljh fmt::fmt)

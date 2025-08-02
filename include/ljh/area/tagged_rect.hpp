@@ -16,6 +16,8 @@
 // Version History
 //     1.0 Inital Version
 
+#pragma once
+
 #include "rect.hpp"
 
 namespace ljh
