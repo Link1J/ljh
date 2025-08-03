@@ -25,7 +25,7 @@
 #include <utility>
 #include <algorithm>
 #include <format>
-#include <initializer_list>
+#include <cassert>
 
 namespace ljh
 {

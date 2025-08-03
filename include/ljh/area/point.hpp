@@ -18,6 +18,7 @@
 
 #pragma once
 #include <cstddef>
+#include <cassert>
 #include <format>
 
 #if __has_include(<glm/fwd.hpp>)
