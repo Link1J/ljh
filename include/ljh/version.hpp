@@ -93,67 +93,67 @@ namespace ljh
 			: version(std::basic_string_view{text})
 		{}
 
-		version(value_type major = 0, value_type minor = 0, value_type build = 0, value_type revision = 0)
+		constexpr version(value_type major = 0, value_type minor = 0, value_type build = 0, value_type revision = 0)
 			: _major(major), _minor(minor), _build(build), _revision(revision)
 		{
 		}
 
-		version(limit::max_t, value_type major = max_value, value_type minor = max_value, value_type build = max_value, value_type revision = max_value)
+		constexpr version(limit::max_t, value_type major = max_value, value_type minor = max_value, value_type build = max_value, value_type revision = max_value)
 			: _major(major), _minor(minor), _build(build), _revision(revision)
 		{
 		}
 
-		version(limit::min_t, value_type major = min_value, value_type minor = min_value, value_type build = min_value, value_type revision = min_value)
+		constexpr version(limit::min_t, value_type major = min_value, value_type minor = min_value, value_type build = min_value, value_type revision = min_value)
 			: _major(major), _minor(minor), _build(build), _revision(revision)
 		{
 		}
 
 #ifdef LJH_HAS_CPP20_COMPARISON
-		std::strong_ordering operator<=>(const version& rhs) const 
+		constexpr std::strong_ordering operator<=>(const version& rhs) const 
 		{
 			if (auto cmp = _major <=> rhs._major; cmp != std::strong_ordering::equal) { return cmp; }
 			if (auto cmp = _minor <=> rhs._minor; cmp != std::strong_ordering::equal) { return cmp; }
 			if (auto cmp = _build <=> rhs._build; cmp != std::strong_ordering::equal) { return cmp; }
 			return _revision <=> rhs._revision;
 		}
-		bool operator==(const version&) const = default;
+		constexpr bool operator==(const version&) const = default;
 #else
-		bool operator==(const version& rhs) const
+		constexpr bool operator==(const version& rhs) const
 		{
 			if (_major != rhs._major) { return false; }
 			if (_minor != rhs._minor) { return false; }
 			if (_build != rhs._build) { return false; }
 			return _revision == rhs._revision;
 		}
-		bool operator<(const version& rhs) const
+		constexpr bool operator<(const version& rhs) const
 		{
 			if (_major < rhs._major) { return true; }
 			if (_minor < rhs._minor) { return true; }
 			if (_build < rhs._build) { return true; }
 			return _revision < rhs._revision;
 		}
-		bool operator!=(const version& rhs) const
+		constexpr bool operator!=(const version& rhs) const
 		{
 			return !(*this == rhs);
 		}
-		bool operator>(const version& rhs) const
+		constexpr bool operator>(const version& rhs) const
 		{
 			return rhs < *this;
 		}
-		bool operator>=(const version& rhs) const
+		constexpr bool operator>=(const version& rhs) const
 		{
 			return !(*this < rhs);
 		}
-		bool operator<=(const version& rhs) const
+		constexpr bool operator<=(const version& rhs) const
 		{
 			return !(rhs < *this);
 		}
 #endif
 
-		auto major   () const { return _major   ; };
-		auto minor   () const { return _minor   ; };
-		auto build   () const { return _build   ; };
-		auto revision() const { return _revision; };
+		constexpr auto major   () const { return _major   ; };
+		constexpr auto minor   () const { return _minor   ; };
+		constexpr auto build   () const { return _build   ; };
+		constexpr auto revision() const { return _revision; };
 
 		operator std::string() const
 		{
