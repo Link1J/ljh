@@ -90,43 +90,43 @@ namespace ljh
     {
         namespace cdecl_
         {
-            using type   = void(LJH_CALLING_CONVENTION_cdecl*)();
-            int const id = 0;
+            using type          = void(LJH_CALLING_CONVENTION_cdecl*)();
+            inline int const id = 0;
         } // namespace cdecl_
         namespace stdcall_
         {
-            using type   = void(LJH_CALLING_CONVENTION_stdcall*)();
-            int const id = 1;
+            using type          = void(LJH_CALLING_CONVENTION_stdcall*)();
+            inline int const id = 1;
         } // namespace stdcall_
         namespace fastcall_
         {
-            using type   = void(LJH_CALLING_CONVENTION_fastcall*)();
-            int const id = 2;
+            using type          = void(LJH_CALLING_CONVENTION_fastcall*)();
+            inline int const id = 2;
         } // namespace fastcall_
         namespace vectorcall_
         {
-            using type   = void(LJH_CALLING_CONVENTION_vectorcall*)();
-            int const id = 3;
+            using type          = void(LJH_CALLING_CONVENTION_vectorcall*)();
+            inline int const id = 3;
         } // namespace vectorcall_
         namespace ms_abi_
         {
-            using type   = void(LJH_CALLING_CONVENTION_ms_abi*)();
-            int const id = 4;
+            using type          = void(LJH_CALLING_CONVENTION_ms_abi*)();
+            inline int const id = 4;
         } // namespace ms_abi_
         namespace sysv_abi_
         {
-            using type   = void(LJH_CALLING_CONVENTION_sysv_abi*)();
-            int const id = 5;
+            using type          = void(LJH_CALLING_CONVENTION_sysv_abi*)();
+            inline int const id = 5;
         } // namespace sysv_abi_
         namespace regcall_
         {
-            using type   = void(LJH_CALLING_CONVENTION_regcall*)();
-            int const id = 6;
+            using type          = void(LJH_CALLING_CONVENTION_regcall*)();
+            inline int const id = 6;
         } // namespace regcall_
         namespace thiscall_
         {
-            using type   = void(LJH_CALLING_CONVENTION_thiscall*)();
-            int const id = 7;
+            using type          = void(LJH_CALLING_CONVENTION_thiscall*)();
+            inline int const id = 7;
         } // namespace thiscall_
     }; // namespace calling_conventions
 
