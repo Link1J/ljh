@@ -16,16 +16,19 @@
 // Version History
 //     1.0 Inital Version
 
+#pragma once
+
+#include "cpp_version.hpp"
 #include <string>
 #include <thread>
 
 namespace ljh::thread_name
 {
-	void set_for_current(std::string const& name);
-	void set(std::thread::native_handle_type id, std::string const& name);
+    LJH_MODULE_OS_EXPORT void set_for_current(std::string const& name);
+    LJH_MODULE_OS_EXPORT void set(std::thread::native_handle_type id, std::string const& name);
 
-	inline void set(std::thread /*const*/& thread, std::string const& name)
-	{
-		set(thread.native_handle(), name);
-	}
-}
+    LJH_MODULE_OS_EXPORT inline void set(std::thread /*const*/& thread, std::string const& name)
+    {
+        set(thread.native_handle(), name);
+    }
+} // namespace ljh::thread_name

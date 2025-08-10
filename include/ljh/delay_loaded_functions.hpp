@@ -31,19 +31,20 @@
 
 namespace ljh::delay_load
 {
-	namespace _os
-	{
+    namespace _os
+    {
 #if defined(LJH_TARGET_Windows)
-		using LPCSTR  = const char*;
-		using HMODULE = void*      ;
-		using FARPROC = void(*)()  ;
-		using BOOL    = int        ;
-		extern "C" {
-			_os::HMODULE __stdcall LJH_OS_LoadLibraryA    (_os::LPCSTR lpLibFileName                   );
-			_os::FARPROC __stdcall LJH_OS_GetProcAddress  (_os::HMODULE hModule, _os::LPCSTR lpProcName);
-			_os::BOOL    __stdcall LJH_OS_FreeLibrary     (_os::HMODULE hLibModule                     );
-			_os::HMODULE __stdcall LJH_OS_GetModuleHandleA(_os::LPCSTR lpModuleName                    );
-		};
+        using LPCSTR  = const char*;
+        using HMODULE = void*;
+        using FARPROC = void (*)();
+        using BOOL    = int;
+        extern "C"
+        {
+            _os::HMODULE __stdcall LJH_OS_LoadLibraryA(_os::LPCSTR lpLibFileName);
+            _os::FARPROC __stdcall LJH_OS_GetProcAddress(_os::HMODULE hModule, _os::LPCSTR lpProcName);
+            _os::BOOL __stdcall LJH_OS_FreeLibrary(_os::HMODULE hLibModule);
+            _os::HMODULE __stdcall LJH_OS_GetModuleHandleA(_os::LPCSTR lpModuleName);
+        };
 #if defined(_M_IX86)
 #pragma comment(linker, "/alternatename:_LJH_OS_LoadLibraryA@4=_LoadLibraryA@4")
 #pragma comment(linker, "/alternatename:_LJH_OS_GetProcAddress@8=_GetProcAddress@8")
@@ -60,112 +61,113 @@ namespace ljh::delay_load
 #define CLOSE_LIB(dll) ljh::delay_load::_os::LJH_OS_FreeLibrary(dll)
 #define LOADED_LIB(name) ljh::delay_load::_os::LJH_OS_GetModuleHandleA(name)
 #else
-		extern "C" {
-			void* dlopen (const char*, int  );
-			void* dlsym  (void*, const char*);
-			int   dlclose(void*             );
-		};
+        extern "C"
+        {
+            void* dlopen(char const*, int);
+            void* dlsym(void*, char const*);
+            int   dlclose(void*);
+        };
 #define LOAD_LIB(name) ljh::delay_load::_os::dlopen(name, 1)
 #define GET_FUNC(dll, name) ljh::delay_load::_os::dlsym(dll, name)
 #define CLOSE_LIB(dll) ljh::delay_load::_os::dlclose(dll)
-#define LOADED_LIB(name) ljh::delay_load::_os::dlopen(name, 4|1)
+#define LOADED_LIB(name) ljh::delay_load::_os::dlopen(name, 4 | 1)
 #endif
-	}
+    } // namespace _os
 
-	template<compile_time_string dll_name, compile_time_string function_name, function_type type>
-	struct function;
+    LJH_MODULE_OS_EXPORT template<compile_time_string dll_name, compile_time_string function_name, function_type type>
+    struct function;
 
-	template<compile_time_string name>
-	class library
-	{
-		template<compile_time_string dll_name, compile_time_string function_name, function_type type>
-		friend struct function;
+    LJH_MODULE_OS_EXPORT template<compile_time_string name>
+    class library
+    {
+        template<compile_time_string dll_name, compile_time_string function_name, function_type type>
+        friend struct function;
 #if defined(LJH_TARGET_Windows)
-		template<compile_time_string dll_name, uint16_t ordinal_number, function_type type>
-		friend struct ordinal;
+        template<compile_time_string dll_name, uint16_t ordinal_number, function_type type>
+        friend struct ordinal;
 #endif
 
-		inline static void* dll = nullptr;
-		
-		static void* function(std::string_view func_name) noexcept
-		{
-			if (dll == nullptr)
-				dll = LOADED_LIB(name.data());
-			if (dll == nullptr)
-				dll = LOAD_LIB(name.data());
-			return (void*)(GET_FUNC(dll, func_name.data()));
-		}
-		
-#if defined(LJH_TARGET_Windows)
-		static void* function(uint16_t func_name) noexcept
-		{
-			if (dll == nullptr)
-				dll = LOADED_LIB(name.data());
-			if (dll == nullptr)
-				dll = LOAD_LIB(name.data());
-			return (void*)(GET_FUNC(dll, (_os::LPCSTR)func_name));
-		}
-#endif
+        inline static void* dll = nullptr;
 
-	public:
-		static void unload() noexcept
-		{
-			while (LOADED_LIB(name.data()))
-				CLOSE_LIB(dll);
-			dll = nullptr;
-		}
-	};
-
-	template<compile_time_string dll_name, compile_time_string function_name, function_type type>
-	struct function
-	{
-		using dll = library<dll_name>;
-		using traits = function_traits<type>;
-
-		template<typename... argument_types>
-		std::enable_if_t<std::is_invocable_v<type, argument_types...>, typename traits::return_type>
-		operator()(argument_types... args) noexcept(traits::is::no_exceptions)
-		{
-			return ((typename traits::as::function_pointer)(dll::function(function_name)))(args...);
-		}
-
-		bool is_loadable() const noexcept
-		{
-			return dll::function(function_name) != nullptr;
-		}
-
-		operator bool() const noexcept
-		{
-			return is_loadable();
-		}
-	};
+        static void* function(std::string_view func_name) noexcept
+        {
+            if (dll == nullptr)
+                dll = LOADED_LIB(name.data());
+            if (dll == nullptr)
+                dll = LOAD_LIB(name.data());
+            return (void*)(GET_FUNC(dll, func_name.data()));
+        }
 
 #if defined(LJH_TARGET_Windows)
-	template<compile_time_string dll_name, uint16_t ordinal_number, function_type type>
-	struct ordinal
-	{
-		using dll = library<dll_name>;
-		using traits = function_traits<type>;
-
-		template<typename... argument_types>
-		std::enable_if_t<std::is_invocable_v<type, argument_types...>, typename traits::return_type>
-		operator()(argument_types... args) noexcept(traits::is::no_exceptions)
-		{
-			return ((traits::as::function_pointer)(dll::function(ordinal_number)))(args...);
-		}
-
-		bool is_loadable() const noexcept
-		{
-			return dll::function(ordinal_number) != nullptr;
-		}
-
-		operator bool() const noexcept
-		{
-			return is_loadable();
-		}
-	};
+        static void* function(uint16_t func_name) noexcept
+        {
+            if (dll == nullptr)
+                dll = LOADED_LIB(name.data());
+            if (dll == nullptr)
+                dll = LOAD_LIB(name.data());
+            return (void*)(GET_FUNC(dll, (_os::LPCSTR)func_name));
+        }
 #endif
-}
+
+    public:
+        static void unload() noexcept
+        {
+            while (LOADED_LIB(name.data()))
+                CLOSE_LIB(dll);
+            dll = nullptr;
+        }
+    };
+
+    template<compile_time_string dll_name, compile_time_string function_name, function_type type>
+    struct function
+    {
+        using dll    = library<dll_name>;
+        using traits = function_traits<type>;
+
+        template<typename... argument_types>
+        std::enable_if_t<std::is_invocable_v<type, argument_types...>, typename traits::return_type> operator()(argument_types... args) noexcept(
+            traits::is::no_exceptions)
+        {
+            return ((typename traits::as::function_pointer)(dll::function(function_name)))(args...);
+        }
+
+        bool is_loadable() const noexcept
+        {
+            return dll::function(function_name) != nullptr;
+        }
+
+        operator bool() const noexcept
+        {
+            return is_loadable();
+        }
+    };
+
+#if defined(LJH_TARGET_Windows)
+    LJH_MODULE_OS_EXPORT template<compile_time_string dll_name, uint16_t ordinal_number, function_type type>
+    struct ordinal
+    {
+        using dll    = library<dll_name>;
+        using traits = function_traits<type>;
+
+        template<typename... argument_types>
+        std::enable_if_t<std::is_invocable_v<type, argument_types...>, typename traits::return_type> operator()(argument_types... args) noexcept(
+            traits::is::no_exceptions)
+        {
+            return ((traits::as::function_pointer)(dll::function(ordinal_number)))(args...);
+        }
+
+        bool is_loadable() const noexcept
+        {
+            return dll::function(ordinal_number) != nullptr;
+        }
+
+        operator bool() const noexcept
+        {
+            return is_loadable();
+        }
+    };
+#endif
+} // namespace ljh::delay_load
 
 #undef LOAD_LIB
 #undef GET_FUNC

@@ -83,6 +83,9 @@
 #ifndef LJH_MODULE_SMARC_EXPORT
 #define LJH_MODULE_SMARC_EXPORT
 #endif
+#ifndef LJH_MODULE_OS_EXPORT
+#define LJH_MODULE_OS_EXPORT
+#endif
 
 #if LJH_CPP_VERSION > LJH_CPP17_VERSION
 #if __has_include(<version>)

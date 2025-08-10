@@ -25,47 +25,47 @@
 
 namespace ljh
 {
-	namespace __
-	{
-		void* create_mutex(char const* name);
-		void release_mutex(void* object);
-		void lock_mutex(void* object);
-		bool try_lock_mutex(void* object);
-		void unlock_mutex(void* object);
-	}
+    namespace __
+    {
+        void* create_mutex(char const* name);
+        void  release_mutex(void* object);
+        void  lock_mutex(void* object);
+        bool  try_lock_mutex(void* object);
+        void  unlock_mutex(void* object);
+    } // namespace __
 
-	template <ljh::compile_time_string name> 
-	struct named_mutex
-	{
-		static_assert(std::is_same_v<typename decltype(name)::char_type, char>, "`name` must be a string of type char");
+    LJH_MODULE_OS_EXPORT template<ljh::compile_time_string name>
+    struct named_mutex
+    {
+        static_assert(std::is_same_v<typename decltype(name)::char_type, char>, "`name` must be a string of type char");
 
-		named_mutex() noexcept
-		{
-			__object = __::create_mutex(name.data());
-		}
+        named_mutex() noexcept
+        {
+            __object = __::create_mutex(name.data());
+        }
 
-		~named_mutex() noexcept
-		{
-			__::unlock_mutex(__object);
-			__::release_mutex(__object);
-		}
+        ~named_mutex() noexcept
+        {
+            __::unlock_mutex(__object);
+            __::release_mutex(__object);
+        }
 
-		void lock() const noexcept
-		{
-			__::lock_mutex(__object);
-		}
+        void lock() const noexcept
+        {
+            __::lock_mutex(__object);
+        }
 
-		void unlock() const noexcept
-		{
-			__::unlock_mutex(__object);
-		}
+        void unlock() const noexcept
+        {
+            __::unlock_mutex(__object);
+        }
 
-		[[nodiscard]] bool try_lock() const noexcept
-		{
-			return __::try_lock_mutex(__object);
-		}
+        [[nodiscard]] bool try_lock() const noexcept
+        {
+            return __::try_lock_mutex(__object);
+        }
 
-	private:
-		void* __object;
-	};
+    private:
+        void* __object;
+    };
 } // namespace ljh

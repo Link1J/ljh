@@ -79,6 +79,7 @@ if (ljh_BUILD_MODULES)
 		modules/string.ixx
 		modules/coroutine.ixx
 		modules/math.ixx
+		modules/os.ixx
 	)
 endif ()
 
