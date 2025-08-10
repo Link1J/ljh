@@ -15,7 +15,7 @@
 
 namespace ljh
 {
-	template<typename R, typename S>
+	LJH_MODULE_COROUTINE_EXPORT template<typename R, typename S>
 	struct channel
 	{
 		using _value     = std::remove_cvref_t<R>;

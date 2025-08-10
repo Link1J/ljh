@@ -22,7 +22,7 @@
 
 namespace ljh
 {
-    template<typename T, typename N, std::size_t E = (std::size_t)N::END>
+    LJH_MODULE_MAIN_EXPORT template<typename T, typename N, std::size_t E = (std::size_t)N::END>
     struct enum_array
     {
         std::array<T, E> items{};

@@ -37,7 +37,7 @@
 
 namespace ljh
 {
-    template<typename Char, std::size_t Size>
+    LJH_MODULE_STRING_EXPORT template<typename Char, std::size_t Size>
     struct compile_time_string
     {
         using char_type = Char;
@@ -152,14 +152,14 @@ namespace ljh
     compile_time_string(compile_time_string<Char, Size> const&) -> compile_time_string<Char, Size>;
 #endif
 
-    template<typename Char, int Size>
+    LJH_MODULE_STRING_EXPORT template<typename Char, int Size>
     constexpr auto compile_time_string_literal(const Char (&lit)[Size]) -> compile_time_string<Char, Size - 1>
     {
         return compile_time_string<Char, Size - 1>(lit);
     }
 
 #if LJH_CPP_VERSION >= LJH_CPP20_VERSION && __cpp_nontype_template_args >= 201911L
-    inline namespace compile_time_string_literals
+    LJH_MODULE_STRING_EXPORT inline namespace compile_time_string_literals
     {
         template<compile_time_string text>
         [[nodiscard]] constexpr auto operator""_cts()
@@ -174,7 +174,7 @@ namespace ljh
     } // namespace compile_time_string_literals
 #endif
 
-    template<typename C, std::size_t S1, std::size_t S2>
+    LJH_MODULE_STRING_EXPORT template<typename C, std::size_t S1, std::size_t S2>
     [[nodiscard]] constexpr compile_time_string<C, S1 + S2> operator+(const compile_time_string<C, S1>& s1, const compile_time_string<C, S2>& s2)
     {
         compile_time_string<C, S1 + S2> new_string;
@@ -186,7 +186,7 @@ namespace ljh
         return new_string;
     }
 
-    template<typename C, std::size_t S1, std::size_t S2>
+    LJH_MODULE_STRING_EXPORT template<typename C, std::size_t S1, std::size_t S2>
     [[nodiscard]] constexpr compile_time_string<C, S1 + S2 - 1> operator+(compile_time_string<C, S1> const& s1, C const (&s2)[S2])
     {
         compile_time_string<C, S1 + S2 - 1> new_string;
@@ -198,13 +198,13 @@ namespace ljh
         return new_string;
     }
 
-    template<typename C, std::size_t S1, std::size_t S2>
+    LJH_MODULE_STRING_EXPORT template<typename C, std::size_t S1, std::size_t S2>
     [[nodiscard]] constexpr std::enable_if_t<S1 != S2, bool> operator==(compile_time_string<C, S1> const&, compile_time_string<C, S2> const&)
     {
         return false;
     }
 
-    template<typename C, std::size_t S1>
+    LJH_MODULE_STRING_EXPORT template<typename C, std::size_t S1>
     [[nodiscard]] constexpr bool operator==(compile_time_string<C, S1> const& s1, compile_time_string<C, S1> const& s2)
     {
         for (int a = 0; a < S1; a++)
@@ -213,13 +213,13 @@ namespace ljh
         return true;
     }
 
-    template<typename C, std::size_t S1, std::size_t S2>
+    LJH_MODULE_STRING_EXPORT template<typename C, std::size_t S1, std::size_t S2>
     [[nodiscard]] constexpr std::enable_if_t<S1 != S2 - 1, bool> operator==(compile_time_string<C, S1> const&, C const (&)[S2])
     {
         return false;
     }
 
-    template<typename C, std::size_t S1, std::size_t S2>
+    LJH_MODULE_STRING_EXPORT template<typename C, std::size_t S1, std::size_t S2>
     [[nodiscard]] constexpr std::enable_if_t<S1 == S2 - 1, bool> operator==(compile_time_string<C, S1> const& s1, C const (&s2)[S2])
     {
         for (int a = 0; a < S1; a++)

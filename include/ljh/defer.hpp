@@ -95,7 +95,7 @@ namespace ljh
 
 namespace ljh
 {
-    template<typename T>
+    LJH_MODULE_MAIN_EXPORT template<typename T>
     struct scope_exit : __::defer_base<scope_exit<T>, T>
     {
         using _base = __::defer_base<scope_exit<T>, T>;
@@ -110,7 +110,7 @@ namespace ljh
         }
     };
 
-    template<typename T>
+    LJH_MODULE_MAIN_EXPORT template<typename T>
     struct scope_fail : __::defer_base<scope_fail<T>, T>
     {
         using _base = __::defer_base<scope_fail<T>, T>;
@@ -125,7 +125,7 @@ namespace ljh
         }
     };
 
-    template<typename T>
+    LJH_MODULE_MAIN_EXPORT template<typename T>
     struct scope_success : __::defer_base<scope_success<T>, T>
     {
         using _base = __::defer_base<scope_success<T>, T>;
@@ -140,7 +140,7 @@ namespace ljh
         }
     };
 
-    template<typename T>
+    LJH_MODULE_MAIN_EXPORT template<typename T>
     struct condition_scope_exit : __::condition_defer_base<condition_scope_exit<T>, T>
     {
         using _base = __::condition_defer_base<condition_scope_exit, T>;
@@ -155,7 +155,7 @@ namespace ljh
         }
     };
 
-    template<typename T>
+    LJH_MODULE_MAIN_EXPORT template<typename T>
     struct condition_scope_fail : __::condition_defer_base<condition_scope_fail<T>, T>
     {
         using _base = __::condition_defer_base<condition_scope_fail, T>;
@@ -170,7 +170,7 @@ namespace ljh
         }
     };
 
-    template<typename T>
+    LJH_MODULE_MAIN_EXPORT template<typename T>
     struct condition_scope_success : __::condition_defer_base<condition_scope_success<T>, T>
     {
         using _base = __::condition_defer_base<condition_scope_success, T>;
@@ -185,37 +185,37 @@ namespace ljh
         }
     };
 
-    template<typename T>
+    LJH_MODULE_MAIN_EXPORT template<typename T>
     scope_exit<T> make_scope_exit(T&& f) noexcept(scope_exit<T>::_nothrow_constructible)
     {
         return scope_exit<T>{std::forward<T>(f)};
     }
 
-    template<typename T>
+    LJH_MODULE_MAIN_EXPORT template<typename T>
     scope_fail<T> make_scope_fail(T&& f) noexcept(scope_fail<T>::_nothrow_constructible)
     {
         return scope_fail<T>{std::forward<T>(f)};
     }
 
-    template<typename T>
+    LJH_MODULE_MAIN_EXPORT template<typename T>
     scope_success<T> make_scope_success(T&& f) noexcept(scope_success<T>::_nothrow_constructible)
     {
         return scope_success<T>{std::forward<T>(f)};
     }
 
-    template<typename T>
+    LJH_MODULE_MAIN_EXPORT template<typename T>
     condition_scope_exit<T> make_condition_scope_exit(bool default_state, T&& f) noexcept(condition_scope_exit<T>::_nothrow_constructible)
     {
         return condition_scope_exit<T>{default_state, std::forward<T>(f)};
     }
 
-    template<typename T>
+    LJH_MODULE_MAIN_EXPORT template<typename T>
     condition_scope_fail<T> make_condition_scope_fail(bool default_state, T&& f) noexcept(condition_scope_fail<T>::_nothrow_constructible)
     {
         return condition_scope_fail<T>{default_state, std::forward<T>(f)};
     }
 
-    template<typename T>
+    LJH_MODULE_MAIN_EXPORT template<typename T>
     condition_scope_success<T> make_condition_scope_success(bool default_state, T&& f) noexcept(condition_scope_success<T>::_nothrow_constructible)
     {
         return condition_scope_success<T>{default_state, std::forward<T>(f)};

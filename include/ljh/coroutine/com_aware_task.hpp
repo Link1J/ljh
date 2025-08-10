@@ -71,7 +71,7 @@ namespace ljh::__::co
 
 namespace ljh::co
 {
-    template<typename T>
+    LJH_MODULE_COROUTINE_EXPORT template<typename T>
     struct com_aware_task : __::co::task_base<T>
     {
         using base       = __::co::task_base<T>;

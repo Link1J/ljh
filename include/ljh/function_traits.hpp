@@ -140,7 +140,7 @@ namespace ljh
         using argument_type = typename std::tuple_element<N, argument_types>::type;
     };
 
-    template<typename F, int = 0>
+    LJH_MODULE_MAIN_EXPORT template<typename F, int = 0>
     struct function_traits;
 
 #define TRAIT_INTERALS(FUNCTION, CC, Noexcept, ArgList)                                                                                                        \

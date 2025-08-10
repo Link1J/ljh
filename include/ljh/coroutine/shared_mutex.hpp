@@ -112,7 +112,7 @@ namespace ljh::co
         }
     };
 
-    struct shared_mutex : sync_object<shared_mutex_state>
+    LJH_MODULE_COROUTINE_EXPORT struct shared_mutex : sync_object<shared_mutex_state>
     {
         void operator co_await() = delete;
 

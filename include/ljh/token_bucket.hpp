@@ -29,7 +29,7 @@
 namespace ljh
 {
 #if __cpp_impl_coroutine >= 201902L && __cpp_lib_coroutine >= 201902L
-    class token_bucket;
+    LJH_MODULE_COROUTINE_EXPORT class token_bucket;
     struct token_bucket_state;
 
     template<>

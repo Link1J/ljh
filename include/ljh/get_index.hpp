@@ -6,10 +6,10 @@
 
 // get_index.hpp - v1.0
 // SPDX-License-Identifier: BSL-1.0
-// 
+//
 // Requires C++
 // Requires cpp_version.hpp
-// 
+//
 // ABOUT
 //     Get index of element
 //
@@ -25,15 +25,15 @@
 
 namespace ljh
 {
-	template<typename It, typename T>
-	LJH_CPP20_CONSTEXPR auto get_index(It _First, const It _Last, const T& _Val)
-	{
-		return std::distance(_First, std::find(_First, _Last, _Val));
-	}
+    LJH_MODULE_MAIN_EXPORT template<typename It, typename T>
+    LJH_CPP20_CONSTEXPR auto get_index(It _First, It const _Last, T const& _Val)
+    {
+        return std::distance(_First, std::find(_First, _Last, _Val));
+    }
 
-	template<typename It, typename Pr>
-	LJH_CPP20_CONSTEXPR auto get_index_if(It _First, const It _Last, Pr _Pre)
-	{
-		return std::distance(_First, std::find_if(_First, _Last, _Pre));
-	}
-}
+    LJH_MODULE_MAIN_EXPORT template<typename It, typename Pr>
+    LJH_CPP20_CONSTEXPR auto get_index_if(It _First, It const _Last, Pr _Pre)
+    {
+        return std::distance(_First, std::find_if(_First, _Last, _Pre));
+    }
+} // namespace ljh

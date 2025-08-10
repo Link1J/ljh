@@ -29,7 +29,7 @@
 
 namespace ljh
 {
-    template<typename T>
+    LJH_MODULE_MATH_EXPORT template<typename T>
     struct basic_rect
     {
         using value_type  = T;

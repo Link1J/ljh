@@ -18,19 +18,20 @@
 //     1.0 Inital Version
 
 #pragma once
+#include "../cpp_version.hpp"
 
 namespace ljh::smarc
 {
-    template<typename T>
+    LJH_MODULE_SMARC_EXPORT template<typename T>
     struct node;
 
-    template<typename T>
+    LJH_MODULE_SMARC_EXPORT template<typename T>
     struct ref;
 
-    template<typename T>
+    LJH_MODULE_SMARC_EXPORT template<typename T>
     struct ptr;
 
-    template<typename T>
+    LJH_MODULE_SMARC_EXPORT template<typename T>
     struct list;
 
     namespace __

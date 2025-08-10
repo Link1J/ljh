@@ -125,24 +125,24 @@ namespace _ljh
 
 namespace ljh
 {
-    using in_place_t = std::in_place_t;
-    inline constexpr in_place_t in_place{};
+    LJH_MODULE_MAIN_EXPORT using in_place_t = std::in_place_t;
+    LJH_MODULE_MAIN_EXPORT inline constexpr in_place_t in_place{};
 
-    template<typename T, typename E>
+    LJH_MODULE_MAIN_EXPORT template<typename T, typename E>
     struct expected;
 
-    template<typename E>
+    LJH_MODULE_MAIN_EXPORT template<typename E>
     struct unexpected;
     template<typename E>
     unexpected(E) -> unexpected<E>;
 
-    struct unexpect_t
+    LJH_MODULE_MAIN_EXPORT struct unexpect_t
     {
         explicit unexpect_t() = default;
     };
-    inline constexpr unexpect_t unexpect{};
+    LJH_MODULE_MAIN_EXPORT inline constexpr unexpect_t unexpect{};
 
-    template<typename E>
+    LJH_MODULE_MAIN_EXPORT template<typename E>
     struct bad_expected_access;
 
     template<>
@@ -883,7 +883,7 @@ namespace ljh
     {
     public:
         explicit bad_expected_access(E val)
-            : val(val){};
+            : val(val) {};
 
         virtual char const* what() const noexcept override
         {
@@ -911,7 +911,7 @@ namespace ljh
         E val;
     };
 
-    template<typename T1, typename E1, typename T2, typename E2>
+    LJH_MODULE_MAIN_EXPORT template<typename T1, typename E1, typename T2, typename E2>
     constexpr bool operator==(expected<T1, E1> const& lhs, expected<T2, E2> const& rhs)
     {
         if (lhs.storage.has_val != rhs.storage.has_val)
@@ -923,13 +923,13 @@ namespace ljh
         else
             return lhs.storage.unex == rhs.storage.unex;
     }
-    template<typename T1, typename E1, typename T2, typename E2>
+    LJH_MODULE_MAIN_EXPORT template<typename T1, typename E1, typename T2, typename E2>
     constexpr bool operator!=(expected<T1, E1> const& lhs, expected<T2, E2> const& rhs)
     {
         return !(lhs == rhs);
     }
 
-    template<typename T1, typename E1, typename T2>
+    LJH_MODULE_MAIN_EXPORT template<typename T1, typename E1, typename T2>
     constexpr bool operator==(expected<T1, E1> const& lhs, const T2& rhs)
     {
         if (!lhs.storage.has_val)
@@ -938,23 +938,23 @@ namespace ljh
         }
         return lhs.storage.val == rhs;
     }
-    template<typename T1, typename E1, typename T2>
+    LJH_MODULE_MAIN_EXPORT template<typename T1, typename E1, typename T2>
     constexpr bool operator==(const T2& lhs, expected<T1, E1> const& rhs)
     {
         return rhs == lhs;
     }
-    template<typename T1, typename E1, typename T2>
+    LJH_MODULE_MAIN_EXPORT template<typename T1, typename E1, typename T2>
     constexpr bool operator!=(expected<T1, E1> const& lhs, const T2& rhs)
     {
         return !(lhs == rhs);
     }
-    template<typename T1, typename E1, typename T2>
+    LJH_MODULE_MAIN_EXPORT template<typename T1, typename E1, typename T2>
     constexpr bool operator!=(const T2& lhs, expected<T1, E1> const& rhs)
     {
         return !(lhs == rhs);
     }
 
-    template<typename T1, typename E1, typename E2>
+    LJH_MODULE_MAIN_EXPORT template<typename T1, typename E1, typename E2>
     constexpr bool operator==(expected<T1, E1> const& lhs, unexpected<E2> const& rhs)
     {
         if (lhs.storage.has_val)
@@ -963,23 +963,23 @@ namespace ljh
         }
         return lhs.storage.val == rhs.val;
     }
-    template<typename T1, typename E1, typename E2>
+    LJH_MODULE_MAIN_EXPORT template<typename T1, typename E1, typename E2>
     constexpr bool operator==(unexpected<E2> const& lhs, expected<T1, E1> const& rhs)
     {
         return rhs == lhs;
     }
-    template<typename T1, typename E1, typename E2>
+    LJH_MODULE_MAIN_EXPORT template<typename T1, typename E1, typename E2>
     constexpr bool operator!=(expected<T1, E1> const& lhs, unexpected<E2> const& rhs)
     {
         return !(lhs == rhs);
     }
-    template<typename T1, typename E1, typename E2>
+    LJH_MODULE_MAIN_EXPORT template<typename T1, typename E1, typename E2>
     constexpr bool operator!=(unexpected<E2> const& lhs, expected<T1, E1> const& rhs)
     {
         return !(lhs == rhs);
     }
 
-    template<typename T1, typename E1>
+    LJH_MODULE_MAIN_EXPORT template<typename T1, typename E1>
     std::enable_if_t<!((std::is_void_v<T1> || std::is_move_constructible_v<T1>) && std::is_swappable_v<T1> && std::is_move_constructible_v<E1> &&
                        std::is_swappable_v<E1>),
                      void>
@@ -988,19 +988,19 @@ namespace ljh
         x.swap(y);
     }
 
-    template<typename E1, typename E2>
+    LJH_MODULE_MAIN_EXPORT template<typename E1, typename E2>
     constexpr bool operator==(unexpected<E1> const& lhs, unexpected<E2> const& rhs)
     {
         return lhs.val == rhs.val;
     }
 
-    template<typename E1, typename E2>
+    LJH_MODULE_MAIN_EXPORT template<typename E1, typename E2>
     constexpr bool operator!=(unexpected<E1> const& lhs, unexpected<E2> const& rhs)
     {
         return !(lhs == rhs);
     }
 
-    template<typename E1>
+    LJH_MODULE_MAIN_EXPORT template<typename E1>
     std::enable_if_t<std::is_swappable_v<E1>, void> swap(unexpected<E1>& x, unexpected<E1>& y) noexcept(noexcept(x.swap(y)))
     {
         x.swap(y);

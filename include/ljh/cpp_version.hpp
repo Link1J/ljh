@@ -68,6 +68,22 @@
 #define LJH_MSVC_VERSION _MSC_VER
 #endif
 
+#ifndef LJH_MODULE_COROUTINE_EXPORT
+#define LJH_MODULE_COROUTINE_EXPORT
+#endif
+#ifndef LJH_MODULE_STRING_EXPORT
+#define LJH_MODULE_STRING_EXPORT
+#endif
+#ifndef LJH_MODULE_MAIN_EXPORT
+#define LJH_MODULE_MAIN_EXPORT
+#endif
+#ifndef LJH_MODULE_MATH_EXPORT
+#define LJH_MODULE_MATH_EXPORT
+#endif
+#ifndef LJH_MODULE_SMARC_EXPORT
+#define LJH_MODULE_SMARC_EXPORT
+#endif
+
 #if LJH_CPP_VERSION > LJH_CPP17_VERSION
 #if __has_include(<version>)
 #include <version>

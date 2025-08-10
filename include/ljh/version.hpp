@@ -6,10 +6,10 @@
 
 // version.hpp - v1.0
 // SPDX-License-Identifier: BSL-1.0
-// 
+//
 // Requires C++17
 // Requires type_traits.hpp and char_convertions.hpp and cpp_version.hpp
-// 
+//
 // ABOUT
 //
 // USAGE
@@ -27,9 +27,9 @@
 #include <string>
 #include <string_view>
 #if LJH_CPP_VERSION > LJH_CPP17_VERSION
-#    if __has_include(<compare>)
-#        include <compare>
-#    endif
+#if __has_include(<compare>)
+#include <compare>
+#endif
 #endif
 
 #undef min
@@ -37,140 +37,178 @@
 
 namespace ljh
 {
-	namespace limit
-	{
-		struct limiting {};
-		struct max_t    : limiting {}; inline constexpr max_t    max   {};
-		struct min_t    : limiting {}; inline constexpr min_t    min   {};
-		struct equal_t  : limiting {}; inline constexpr equal_t  equal {};
-		struct always_t : limiting {}; inline constexpr always_t always{};
-		struct never_t  : limiting {}; inline constexpr never_t  never {};
-	}
+    LJH_MODULE_MAIN_EXPORT namespace limit
+    {
+        struct limiting
+        {};
+        struct max_t : limiting
+        {};
+        inline constexpr max_t max{};
+        struct min_t : limiting
+        {};
+        inline constexpr min_t min{};
+        struct equal_t : limiting
+        {};
+        inline constexpr equal_t equal{};
+        struct always_t : limiting
+        {};
+        inline constexpr always_t always{};
+        struct never_t : limiting
+        {};
+        inline constexpr never_t never{};
+    }
 
-	struct version
-	{
-		using value_type = unsigned int;
-		static constexpr value_type min_value = std::numeric_limits<value_type>::min();
-		static constexpr value_type max_value = std::numeric_limits<value_type>::max();
+    LJH_MODULE_MAIN_EXPORT struct version
+    {
+        using value_type                      = unsigned int;
+        static constexpr value_type min_value = std::numeric_limits<value_type>::min();
+        static constexpr value_type max_value = std::numeric_limits<value_type>::max();
 
-		template<class _char, class _traits = std::char_traits<_char>>
-		version(std::basic_string_view<_char, _traits> text)
-		{
-			constexpr auto npos = std::basic_string_view<_char, _traits>::npos;
+        template<class _char, class _traits = std::char_traits<_char>>
+        version(std::basic_string_view<_char, _traits> text)
+        {
+            constexpr auto npos = std::basic_string_view<_char, _traits>::npos;
+            // clang-format off
+            auto dot_pos = text.find('.');
+            auto sub = text.substr(0, dot_pos);
+            from_string(_major, sub);
+            if (dot_pos == npos) return;
+            text = text.substr(dot_pos + 1);
 
-			auto dot_pos = text.find('.');
-			auto sub = text.substr(0, dot_pos);
-			from_string(_major, sub);
-			if (dot_pos == npos) return;
-			text = text.substr(dot_pos + 1);
+            dot_pos = text.find('.');
+            sub = text.substr(0, dot_pos);
+            from_string(_minor, sub);
+            if (dot_pos == npos) return;
+            text = text.substr(dot_pos + 1);
 
-			dot_pos = text.find('.');
-			sub = text.substr(0, dot_pos);
-			from_string(_minor, sub);
-			if (dot_pos == npos) return;
-			text = text.substr(dot_pos + 1);
+            dot_pos = text.find('.');
+            sub = text.substr(0, dot_pos);
+            from_string(_build, sub);
+            if (dot_pos == npos) return;
+            text = text.substr(dot_pos + 1);
 
-			dot_pos = text.find('.');
-			sub = text.substr(0, dot_pos);
-			from_string(_build, sub);
-			if (dot_pos == npos) return;
-			text = text.substr(dot_pos + 1);
+            dot_pos = text.find('.');
+            sub = text.substr(0, dot_pos);
+            from_string(_revision, sub);
+            if (dot_pos == npos) return;
+            text = text.substr(dot_pos + 1);
+            // clang-format on
+        }
 
-			dot_pos = text.find('.');
-			sub = text.substr(0, dot_pos);
-			from_string(_revision, sub);
-			if (dot_pos == npos) return;
-			text = text.substr(dot_pos + 1);
-		}
+        template<class _char, class _traits = std::char_traits<_char>, class _alloc = std::allocator<_char>>
+        version(std::basic_string<_char, _traits, _alloc> text)
+            : version(std::basic_string_view<_char, _traits>{text.data(), text.size()})
+        {}
 
-		template<class _char, class _traits = std::char_traits<_char>, class _alloc = std::allocator<_char>>
-		version(std::basic_string<_char, _traits, _alloc> text)
-			: version(std::basic_string_view<_char, _traits>{text.data(),text.size()})
-		{}
+        template<typename _char, typename = typename std::enable_if_t<is_char_type_v<_char>>>
+        version(_char const* text)
+            : version(std::basic_string_view{text})
+        {}
 
-		template<typename _char, typename = typename std::enable_if_t<is_char_type_v<_char>>>
-		version(_char const * text)
-			: version(std::basic_string_view{text})
-		{}
+        constexpr version(value_type major = 0, value_type minor = 0, value_type build = 0, value_type revision = 0)
+            : _major(major)
+            , _minor(minor)
+            , _build(build)
+            , _revision(revision)
+        {}
 
-		constexpr version(value_type major = 0, value_type minor = 0, value_type build = 0, value_type revision = 0)
-			: _major(major), _minor(minor), _build(build), _revision(revision)
-		{
-		}
+        constexpr version(limit::max_t, value_type major = max_value, value_type minor = max_value, value_type build = max_value,
+                          value_type revision = max_value)
+            : _major(major)
+            , _minor(minor)
+            , _build(build)
+            , _revision(revision)
+        {}
 
-		constexpr version(limit::max_t, value_type major = max_value, value_type minor = max_value, value_type build = max_value, value_type revision = max_value)
-			: _major(major), _minor(minor), _build(build), _revision(revision)
-		{
-		}
-
-		constexpr version(limit::min_t, value_type major = min_value, value_type minor = min_value, value_type build = min_value, value_type revision = min_value)
-			: _major(major), _minor(minor), _build(build), _revision(revision)
-		{
-		}
+        constexpr version(limit::min_t, value_type major = min_value, value_type minor = min_value, value_type build = min_value,
+                          value_type revision = min_value)
+            : _major(major)
+            , _minor(minor)
+            , _build(build)
+            , _revision(revision)
+        {}
 
 #ifdef LJH_HAS_CPP20_COMPARISON
-		constexpr std::strong_ordering operator<=>(const version& rhs) const 
-		{
-			if (auto cmp = _major <=> rhs._major; cmp != std::strong_ordering::equal) { return cmp; }
-			if (auto cmp = _minor <=> rhs._minor; cmp != std::strong_ordering::equal) { return cmp; }
-			if (auto cmp = _build <=> rhs._build; cmp != std::strong_ordering::equal) { return cmp; }
-			return _revision <=> rhs._revision;
-		}
-		constexpr bool operator==(const version&) const = default;
+        constexpr std::strong_ordering operator<=>(const version& rhs) const
+        {
+            // clang-format off
+            if (auto cmp = _major <=> rhs._major; cmp != std::strong_ordering::equal) { return cmp; }
+            if (auto cmp = _minor <=> rhs._minor; cmp != std::strong_ordering::equal) { return cmp; }
+            if (auto cmp = _build <=> rhs._build; cmp != std::strong_ordering::equal) { return cmp; }
+            return _revision <=> rhs._revision;
+            // clang-format on
+        }
+        constexpr bool operator==(version const&) const = default;
 #else
-		constexpr bool operator==(const version& rhs) const
-		{
-			if (_major != rhs._major) { return false; }
-			if (_minor != rhs._minor) { return false; }
-			if (_build != rhs._build) { return false; }
-			return _revision == rhs._revision;
-		}
-		constexpr bool operator<(const version& rhs) const
-		{
-			if (_major < rhs._major) { return true; }
-			if (_minor < rhs._minor) { return true; }
-			if (_build < rhs._build) { return true; }
-			return _revision < rhs._revision;
-		}
-		constexpr bool operator!=(const version& rhs) const
-		{
-			return !(*this == rhs);
-		}
-		constexpr bool operator>(const version& rhs) const
-		{
-			return rhs < *this;
-		}
-		constexpr bool operator>=(const version& rhs) const
-		{
-			return !(*this < rhs);
-		}
-		constexpr bool operator<=(const version& rhs) const
-		{
-			return !(rhs < *this);
-		}
+        constexpr bool operator==(const version& rhs) const
+        {
+            // clang-format off
+            if (_major != rhs._major) { return false; }
+            if (_minor != rhs._minor) { return false; }
+            if (_build != rhs._build) { return false; }
+            return _revision == rhs._revision;
+            // clang-format on
+        }
+        constexpr bool operator<(version const& rhs) const
+        {
+            // clang-format off
+            if (_major < rhs._major) { return true; }
+            if (_minor < rhs._minor) { return true; }
+            if (_build < rhs._build) { return true; }
+            return _revision < rhs._revision;
+            // clang-format on
+        }
+        constexpr bool operator!=(version const& rhs) const
+        {
+            return !(*this == rhs);
+        }
+        constexpr bool operator>(version const& rhs) const
+        {
+            return rhs < *this;
+        }
+        constexpr bool operator>=(version const& rhs) const
+        {
+            return !(*this < rhs);
+        }
+        constexpr bool operator<=(version const& rhs) const
+        {
+            return !(rhs < *this);
+        }
 #endif
 
-		constexpr auto major   () const { return _major   ; };
-		constexpr auto minor   () const { return _minor   ; };
-		constexpr auto build   () const { return _build   ; };
-		constexpr auto revision() const { return _revision; };
+        constexpr auto major() const
+        {
+            return _major;
+        };
+        constexpr auto minor() const
+        {
+            return _minor;
+        };
+        constexpr auto build() const
+        {
+            return _build;
+        };
+        constexpr auto revision() const
+        {
+            return _revision;
+        };
 
-		operator std::string() const
-		{
-			return std::to_string(major())+'.'+std::to_string(minor())+'.'+std::to_string(build())+'.'+std::to_string(revision());
-		}
+        operator std::string() const
+        {
+            return std::to_string(major()) + '.' + std::to_string(minor()) + '.' + std::to_string(build()) + '.' + std::to_string(revision());
+        }
 
-	private:
-		value_type _major    = 0;
-		value_type _minor    = 0;
-		value_type _build    = 0;
-		value_type _revision = 0;
-	};
-}
+    private:
+        value_type _major    = 0;
+        value_type _minor    = 0;
+        value_type _build    = 0;
+        value_type _revision = 0;
+    };
+} // namespace ljh
 
-template<typename T>
-std::basic_ostream<T, std::char_traits<T>>& operator<<(std::basic_ostream<T, std::char_traits<T>>& os, const ljh::version& version)
+LJH_MODULE_MAIN_EXPORT template<typename T>
+std::basic_ostream<T, std::char_traits<T>>& operator<<(std::basic_ostream<T, std::char_traits<T>>& os, ljh::version const& version)
 {
-	os << static_cast<std::string>(version);
-	return os;
+    os << static_cast<std::string>(version);
+    return os;
 }

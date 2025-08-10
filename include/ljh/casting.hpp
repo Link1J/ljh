@@ -6,9 +6,9 @@
 
 // casting.hpp - v1.2
 // SPDX-License-Identifier: BSL-1.0
-// 
+//
 // Requires C++11
-// 
+//
 // ABOUT
 //     Casting functions
 //
@@ -21,31 +21,32 @@
 
 #pragma once
 
+#include "cpp_version.hpp"
 #include <type_traits>
 
 namespace ljh
 {
-	template<typename T> 
-	constexpr typename std::underlying_type<T>::type underlying_cast(T a) 
-	{
-		return static_cast<typename std::underlying_type<T>::type>(a); 
-	};
+    LJH_MODULE_MAIN_EXPORT template<typename T>
+    constexpr typename std::underlying_type<T>::type underlying_cast(T a)
+    {
+        return static_cast<typename std::underlying_type<T>::type>(a);
+    };
 
-	template<typename out, typename in>
-	out* pointer_cast(in* value)
-	{
-		return (out*)(value);
-	}
+    LJH_MODULE_MAIN_EXPORT template<typename out, typename in>
+    out* pointer_cast(in* value)
+    {
+        return (out*)(value);
+    }
 
-	template<typename out, typename in>
-	out reinterpret(in&& value)
-	{
-		return *pointer_cast<out>(&value);
-	}
+    LJH_MODULE_MAIN_EXPORT template<typename out, typename in>
+    out reinterpret(in&& value)
+    {
+        return *pointer_cast<out>(&value);
+    }
 
-	template<typename out, typename in>
-	out& dereference_as(in* value)
-	{
-		return *pointer_cast<out>(value);
-	}
-}
+    LJH_MODULE_MAIN_EXPORT template<typename out, typename in>
+    out& dereference_as(in* value)
+    {
+        return *pointer_cast<out>(value);
+    }
+} // namespace ljh

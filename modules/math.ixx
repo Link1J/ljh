@@ -5,6 +5,11 @@
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 module;
+#define LJH_MODULE_MATH 1
+#define LJH_MODULE_MATH_EXPORT export
+export module ljh.math;
+extern "C++"
+{
 #include "ljh/area/point.hpp"
 #include "ljh/area/rect.hpp"
 #include "ljh/area/region.hpp"
@@ -13,40 +18,4 @@ module;
 #include "ljh/checked_math.hpp"
 #include "ljh/color.hpp"
 #include "ljh/fixed_point.hpp"
-export module ljh.math;
-export namespace ljh {
-	namespace ckd {
-		using ljh::ckd::add;
-		using ljh::ckd::sub;
-		using ljh::ckd::mul;
-	}
-	using ljh::checked;
-	using ljh::checked_char;
-	using ljh::checked_signed_char;
-	using ljh::checked_unsigned_char;
-	using ljh::checked_short;
-	using ljh::checked_signed_short;
-	using ljh::checked_unsigned_short;
-	using ljh::checked_int;
-	using ljh::checked_signed_int;
-	using ljh::checked_unsigned_int;
-	using ljh::checked_long_long;
-	using ljh::checked_signed_long_long;
-	using ljh::checked_unsigned_long_long;
-	using ljh::fixed_point;
-	using ljh::basic_point;
-	using ljh::basic_size;
-	using ljh::basic_rect;
-	using ljh::basic_tagged_rect;
-	using ljh::basic_region;
-	using ljh::point;
-	using ljh::size;
-	using ljh::rect;
-	using ljh::region;
-	using ljh::tagged_region;
-	using ljh::ipoint;
-	using ljh::isize;
-	using ljh::irect;
-	using ljh::iregion;
-	using ljh::tagged_iregion;
 }

@@ -17,6 +17,7 @@
 //     1.0 Inital Version
 
 #pragma once
+#include "../cpp_version.hpp"
 #include <cstddef>
 #include <format>
 
@@ -26,7 +27,7 @@
 
 namespace ljh
 {
-    template<typename T>
+    LJH_MODULE_MATH_EXPORT template<typename T>
     struct basic_size
     {
         using value_type  = T;
@@ -86,8 +87,8 @@ namespace ljh
         constexpr decltype(auto) get(this S&& self) noexcept;
     };
 
-    using size  = basic_size<float>;
-    using isize = basic_size<int>;
+    LJH_MODULE_MATH_EXPORT using size  = basic_size<float>;
+    LJH_MODULE_MATH_EXPORT using isize = basic_size<int>;
 } // namespace ljh
 
 namespace std

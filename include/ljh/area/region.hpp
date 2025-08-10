@@ -35,7 +35,7 @@ namespace ljh::__
 
 namespace ljh
 {
-    template<typename T, typename V = void>
+    LJH_MODULE_MATH_EXPORT template<typename T, typename V = void>
     struct basic_region
     {
     private:
@@ -96,12 +96,12 @@ namespace ljh
         container list;
     };
 
-    using region  = basic_region<float>;
-    using iregion = basic_region<int>;
+    LJH_MODULE_MATH_EXPORT using region  = basic_region<float>;
+    LJH_MODULE_MATH_EXPORT using iregion = basic_region<int>;
 
-    template<typename V>
+    LJH_MODULE_MATH_EXPORT template<typename V>
     using tagged_region = basic_region<float, V>;
-    template<typename V>
+    LJH_MODULE_MATH_EXPORT template<typename V>
     using tagged_iregion = basic_region<int, V>;
 
     template<typename T, typename V>

@@ -15,7 +15,7 @@
 
 namespace ljh::co
 {
-    template<typename TResult>
+    LJH_MODULE_COROUTINE_EXPORT template<typename TResult>
     struct winrt_task : winrt::Windows::Foundation::IInspectable,
                         winrt::impl::consume_t<winrt_task<TResult>>,
                         winrt::impl::require<winrt_task<TResult>, winrt::Windows::Foundation::IAsyncInfo>

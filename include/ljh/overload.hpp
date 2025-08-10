@@ -22,7 +22,7 @@
 
 namespace ljh
 {
-	template<typename... T>
+	LJH_MODULE_MAIN_EXPORT template<typename... T>
 	struct overload : T...
 	{
 		using T::operator()...;

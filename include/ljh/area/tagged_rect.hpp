@@ -22,7 +22,7 @@
 
 namespace ljh
 {
-    template<typename T, typename V>
+    LJH_MODULE_MATH_EXPORT template<typename T, typename V>
     struct basic_tagged_rect : public basic_rect<T>
     {
         using base       = basic_rect<T>;

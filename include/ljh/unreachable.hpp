@@ -24,14 +24,14 @@
 
 namespace ljh
 {
-	LJH_NORETURN inline void unreachable()
-	{
+    LJH_MODULE_MAIN_EXPORT LJH_NORETURN inline void unreachable()
+    {
 #if defined(LJH_COMPILER_CLANG)
-		__builtin_unreachable();
+        __builtin_unreachable();
 #elif defined(LJH_COMPILER_GCC)
-		__builtin_unreachable();
+        __builtin_unreachable();
 #elif defined(LJH_COMPILER_MSVC)
-		__assume(false);
+        __assume(false);
 #endif
-	}
-}
+    }
+} // namespace ljh

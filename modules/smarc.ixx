@@ -5,16 +5,15 @@
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 module;
-#include "ljh/smarc/control_block.hpp"
+#define LJH_MODULE_SMARC 1
+#define LJH_MODULE_SMARC_EXPORT export
+export module ljh.smarc;
+extern "C++"
+{
 #include "ljh/smarc/fwd.hpp"
+#include "ljh/smarc/control_block.hpp"
 #include "ljh/smarc/list.hpp"
 #include "ljh/smarc/node.hpp"
 #include "ljh/smarc/ptr.hpp"
 #include "ljh/smarc/ref.hpp"
-export module ljh.smarc;
-export namespace ljh::smarc {
-	using ljh::smarc::node;
-	using ljh::smarc::ref;
-	using ljh::smarc::ptr;
-	using ljh::smarc::list;
 }

@@ -17,6 +17,7 @@
 //     1.0 Inital Version
 
 #pragma once
+#include "../cpp_version.hpp"
 #include <cstddef>
 #include <cassert>
 #include <format>
@@ -27,10 +28,10 @@
 
 namespace ljh
 {
-    template<typename T>
+    LJH_MODULE_MATH_EXPORT template<typename T>
     struct basic_size;
 
-    template<typename T>
+    LJH_MODULE_MATH_EXPORT template<typename T>
     struct basic_point
     {
         using value_type  = T;
@@ -93,8 +94,8 @@ namespace ljh
         constexpr decltype(auto) get(this S&& self) noexcept;
     };
 
-    using point  = basic_point<float>;
-    using ipoint = basic_point<int>;
+    LJH_MODULE_MATH_EXPORT using point  = basic_point<float>;
+    LJH_MODULE_MATH_EXPORT using ipoint = basic_point<int>;
 } // namespace ljh
 
 namespace std

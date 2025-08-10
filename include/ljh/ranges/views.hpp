@@ -22,21 +22,21 @@
 
 namespace ljh
 {
-    template<typename T>
+    LJH_MODULE_MAIN_EXPORT template<typename T>
     inline constexpr auto constructor = []() consteval {
         return []<typename... Args>(Args&&... args)
             requires std::constructible_from<T, Args...>
         { return T(std::forward<Args>(args)...); };
     }();
-}
+} // namespace ljh
 
 #if __has_include(<ranges>) && __cpp_lib_ranges
 namespace ljh::ranges::views
 {
-    template<typename T>
+    LJH_MODULE_MAIN_EXPORT template<typename T>
     inline constexpr auto transform_into = std::ranges::views::transform(constructor<T>);
 
-    inline constexpr adaptor transform_tuple = []<std::ranges::viewable_range R, typename F>(R&& r, F&& pred) {
+    LJH_MODULE_MAIN_EXPORT inline constexpr adaptor transform_tuple = []<std::ranges::viewable_range R, typename F>(R&& r, F&& pred) {
         return std::ranges::views::transform(std::forward<R>(r),
                                              [pred = std::forward<F>(pred)]<typename T>(T&& t) { return std::apply(pred, std::forward<T>(t)); });
     };
@@ -88,11 +88,11 @@ namespace ljh::ranges::views
         };
     } // namespace __zip
 
-    inline constexpr auto zip = __zip::fn{};
+    LJH_MODULE_MAIN_EXPORT inline constexpr auto zip = __zip::fn{};
 #endif
 
 #if __cpp_lib_ranges_fold >= 202207L
-    inline constexpr adaptor fold_left = []<std::ranges::input_range R, typename T, typename F>(R&& r, T i, F f) {
+    LJH_MODULE_MAIN_EXPORT inline constexpr adaptor fold_left = []<std::ranges::input_range R, typename T, typename F>(R&& r, T i, F f) {
         return std::ranges::fold_left(std::forward<R>(r), i, f);
     };
 #endif

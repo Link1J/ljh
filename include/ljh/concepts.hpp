@@ -30,40 +30,40 @@
 
 namespace ljh
 {
-    template<typename T, typename... Args>
+    LJH_MODULE_MAIN_EXPORT template<typename T, typename... Args>
     concept one_of = (... || std::same_as<T, Args>);
 
-    template<typename T>
+    LJH_MODULE_MAIN_EXPORT template<typename T>
     concept char_type = one_of<T, char, signed char, unsigned char, wchar_t,
 #if __cpp_char8_t >= 201811L
                                char8_t,
 #endif
                                char16_t, char32_t>;
 
-    template<typename T>
+    LJH_MODULE_MAIN_EXPORT template<typename T>
     concept scoped_enum = is_scoped_enum_v<T>;
 
-    template<typename T>
+    LJH_MODULE_MAIN_EXPORT template<typename T>
     concept function_type = std::is_function_v<T>;
 
-    template<typename L, typename R, typename T>
+    LJH_MODULE_MAIN_EXPORT template<typename L, typename R, typename T>
     concept either_same_as = std::same_as<L, T> || std::same_as<R, T>;
 
-    template<typename T, template<typename...> typename U>
+    LJH_MODULE_MAIN_EXPORT template<typename T, template<typename...> typename U>
     concept instance = ljh::is_instance_v<T, U>;
 
-    template<typename T, std::size_t N>
+    LJH_MODULE_MAIN_EXPORT template<typename T, std::size_t N>
     concept has_tuple_element = requires(T t) {
         typename std::tuple_element_t<N, std::remove_const_t<T>>;
         { get<N>(t) } -> std::convertible_to<std::tuple_element_t<N, T> const&>;
     };
 
-    template<typename T>
+    LJH_MODULE_MAIN_EXPORT template<typename T>
     concept tuple_like = !std::is_reference_v<T> && requires(T t) {
         typename std::tuple_size<T>::type;
         requires std::derived_from<std::tuple_size<T>, std::integral_constant<std::size_t, std::tuple_size_v<T>>>;
     } && []<std::size_t... N>(std::index_sequence<N...>) { return (has_tuple_element<T, N> && ...); }(std::make_index_sequence<std::tuple_size_v<T>>());
 
-    template<typename T>
+    LJH_MODULE_MAIN_EXPORT template<typename T>
     concept pair_like = tuple_like<T> && std::tuple_size_v<std::remove_cvref_t<T>> == 2;
 } // namespace ljh

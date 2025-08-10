@@ -28,21 +28,21 @@
 namespace ljh::ranges
 {
 #if __cpp_lib_ranges < 202202L || defined(LJH_COMPILER_APPLE_CLANG)
-    template<typename D>
+    LJH_MODULE_MAIN_EXPORT template<typename D>
         requires std::is_class_v<D> && std::same_as<D, std::remove_cv_t<D>>
     struct range_adaptor_closure;
 #else
-    template<typename D>
+    LJH_MODULE_MAIN_EXPORT template<typename D>
     using range_adaptor_closure = std::ranges::range_adaptor_closure<D>;
 #endif
 
-    template<typename t>
+    LJH_MODULE_MAIN_EXPORT template<typename t>
     concept is_range_adaptor_closure = std::derived_from<std::remove_cvref_t<t>, range_adaptor_closure<std::remove_cvref_t<t>>>;
 
-    template<typename L, typename R>
-    concept can_pipe = requires(L&& l, R&& r) { static_cast<R&&>(r)(static_cast<L&&>(l)); };
+    LJH_MODULE_MAIN_EXPORT template<typename L, typename R>
+    concept can_pipe = requires(L&& l, R&& r) { static_cast<R &&>(r)(static_cast<L &&>(l)); };
 
-    template<typename L, typename R>
+    LJH_MODULE_MAIN_EXPORT template<typename L, typename R>
     concept can_compose = std::constructible_from<std::remove_cvref_t<L>, L> && std::constructible_from<std::remove_cvref_t<R>, R>;
 
 #if __cpp_lib_ranges < 202202L || defined(LJH_COMPILER_APPLE_CLANG)
@@ -98,7 +98,7 @@ namespace ljh::ranges
     };
 #endif
 
-    template<typename F>
+    LJH_MODULE_MAIN_EXPORT template<typename F>
     class closure : public range_adaptor_closure<closure<F>>
     {
         F f;
@@ -116,7 +116,7 @@ namespace ljh::ranges
         }
     };
 
-    template<typename F>
+    LJH_MODULE_MAIN_EXPORT template<typename F>
     class adaptor
     {
         F f;

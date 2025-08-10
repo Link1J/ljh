@@ -35,7 +35,7 @@ namespace ljh::ranges::actions
 		}
 	}
 
-	template<size_t Length>
+	LJH_MODULE_MAIN_EXPORT template<size_t Length>
 	inline constexpr closure to_array = []<std::ranges::viewable_range R>(R&& r) { return __::to_array<Length>(r); };
 }
 #endif

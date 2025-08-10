@@ -12,10 +12,10 @@
 
 namespace ljh::co
 {
-    struct fire_and_forget
+    LJH_MODULE_COROUTINE_EXPORT struct fire_and_forget
     {};
 
-    template<typename T>
+    LJH_MODULE_COROUTINE_EXPORT template<typename T>
     fire_and_forget no_await(T t)
     {
         if constexpr (std::is_invocable_v<T>)
@@ -25,7 +25,7 @@ namespace ljh::co
     }
 } // namespace ljh::co
 
-template<typename... Args>
+LJH_MODULE_COROUTINE_EXPORT template<typename... Args>
 struct std::coroutine_traits<ljh::co::fire_and_forget, Args...>
 {
     struct promise_type

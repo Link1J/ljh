@@ -9,7 +9,7 @@
 
 namespace ljh::co
 {
-    template<typename TLambda>
+    LJH_MODULE_COROUTINE_EXPORT template<typename TLambda>
     auto invoke_lambda(TLambda lambda) -> decltype(lambda())
     {
         co_return co_await lambda();

@@ -66,19 +66,19 @@
 namespace ljh::ckd
 {
 #if CHECK_USE == CHECK_USE_BUILTIN
-    template<typename T, typename U, typename V>
+    LJH_MODULE_MATH_EXPORT template<typename T, typename U, typename V>
     [[nodiscard]] inline bool add(T& res, U lhs, V rhs) noexcept
     {
         return __builtin_add_overflow(lhs, rhs, __builtin_addressof(res));
     }
 
-    template<typename T, typename U, typename V>
+    LJH_MODULE_MATH_EXPORT template<typename T, typename U, typename V>
     [[nodiscard]] inline bool sub(T& res, U lhs, V rhs) noexcept
     {
         return __builtin_sub_overflow(lhs, rhs, __builtin_addressof(res));
     }
 
-    template<typename T, typename U, typename V>
+    LJH_MODULE_MATH_EXPORT template<typename T, typename U, typename V>
     [[nodiscard]] inline bool mul(T& res, U lhs, V rhs) noexcept
     {
         return __builtin_mul_overflow(lhs, rhs, __builtin_addressof(res));
@@ -190,7 +190,7 @@ namespace ljh::ckd
         }
     }
 #endif
-    template<typename T, typename U, typename V>
+    LJH_MODULE_MATH_EXPORT template<typename T, typename U, typename V>
     [[nodiscard]] inline bool add(T& res, U lhs, V rhs) noexcept
     {
         if constexpr (sizeof(T) == 1 && std::is_signed_v<T>)
@@ -211,7 +211,7 @@ namespace ljh::ckd
             return _addcarry_u64(0, lhs, rhs, __builtin_addressof(res));
     }
 
-    template<typename T, typename U, typename V>
+    LJH_MODULE_MATH_EXPORT template<typename T, typename U, typename V>
     [[nodiscard]] inline bool sub(T& res, U lhs, V rhs) noexcept
     {
         if constexpr (sizeof(T) == 1 && std::is_signed_v<T>)
@@ -232,7 +232,7 @@ namespace ljh::ckd
             return _subborrow_u64(0, lhs, rhs, __builtin_addressof(res));
     }
 
-    template<typename T, typename U, typename V>
+    LJH_MODULE_MATH_EXPORT template<typename T, typename U, typename V>
     [[nodiscard]] inline bool mul(T& res, U lhs, V rhs) noexcept
     {
         if constexpr (sizeof(T) == 1)
@@ -304,7 +304,7 @@ namespace ljh::ckd
         bool _ljh_asm_mul_u64(unsigned __int64*, unsigned __int64, unsigned __int64) noexcept;
     }
 
-    template<typename T, typename U, typename V>
+    LJH_MODULE_MATH_EXPORT template<typename T, typename U, typename V>
     [[nodiscard]] inline bool add(T& res, U lhs, V rhs) noexcept
     {
         if constexpr (sizeof(T) == 1 && std::is_signed_v<T>)
@@ -325,7 +325,7 @@ namespace ljh::ckd
             return _ljh_asm_add_u64(__builtin_addressof(res), lhs, rhs);
     }
 
-    template<typename T, typename U, typename V>
+    LJH_MODULE_MATH_EXPORT template<typename T, typename U, typename V>
     [[nodiscard]] inline bool sub(T& res, U lhs, V rhs) noexcept
     {
         if constexpr (sizeof(T) == 1 && std::is_signed_v<T>)
@@ -346,7 +346,7 @@ namespace ljh::ckd
             return _ljh_asm_sub_u64(__builtin_addressof(res), lhs, rhs);
     }
 
-    template<typename T, typename U, typename V>
+    LJH_MODULE_MATH_EXPORT template<typename T, typename U, typename V>
     [[nodiscard]] inline bool mul(T& res, U lhs, V rhs) noexcept
     {
         if constexpr (sizeof(T) == 1 && std::is_signed_v<T>)
@@ -371,7 +371,7 @@ namespace ljh::ckd
 
 namespace ljh
 {
-    template<std::integral T>
+    LJH_MODULE_MATH_EXPORT template<std::integral T>
         requires(!std::same_as<T, bool>)
     struct checked
     {
@@ -476,18 +476,18 @@ namespace ljh
         T _value;
     };
 
-    using checked_char               = checked<char>;
-    using checked_signed_char        = checked<signed char>;
-    using checked_unsigned_char      = checked<unsigned char>;
-    using checked_short              = checked<short>;
-    using checked_signed_short       = checked<signed short>;
-    using checked_unsigned_short     = checked<unsigned short>;
-    using checked_int                = checked<int>;
-    using checked_signed_int         = checked<signed int>;
-    using checked_unsigned_int       = checked<unsigned int>;
-    using checked_long_long          = checked<long long>;
-    using checked_signed_long_long   = checked<signed long long>;
-    using checked_unsigned_long_long = checked<unsigned long long>;
+    LJH_MODULE_MATH_EXPORT using checked_char               = checked<char>;
+    LJH_MODULE_MATH_EXPORT using checked_signed_char        = checked<signed char>;
+    LJH_MODULE_MATH_EXPORT using checked_unsigned_char      = checked<unsigned char>;
+    LJH_MODULE_MATH_EXPORT using checked_short              = checked<short>;
+    LJH_MODULE_MATH_EXPORT using checked_signed_short       = checked<signed short>;
+    LJH_MODULE_MATH_EXPORT using checked_unsigned_short     = checked<unsigned short>;
+    LJH_MODULE_MATH_EXPORT using checked_int                = checked<int>;
+    LJH_MODULE_MATH_EXPORT using checked_signed_int         = checked<signed int>;
+    LJH_MODULE_MATH_EXPORT using checked_unsigned_int       = checked<unsigned int>;
+    LJH_MODULE_MATH_EXPORT using checked_long_long          = checked<long long>;
+    LJH_MODULE_MATH_EXPORT using checked_signed_long_long   = checked<signed long long>;
+    LJH_MODULE_MATH_EXPORT using checked_unsigned_long_long = checked<unsigned long long>;
 } // namespace ljh
 
 namespace std

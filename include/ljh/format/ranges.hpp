@@ -17,13 +17,13 @@
 //     1.0 Inital Version
 
 #pragma once
-
+#include "../cpp_version.hpp"
 #include <format>
 #include <ranges>
 
 namespace ljh::fmt
 {
-    template<typename It, typename Sent, typename Sep>
+    LJH_MODULE_MAIN_EXPORT template<typename It, typename Sent, typename Sep>
     struct join_view
     {
         It   _begin;
@@ -58,7 +58,7 @@ namespace ljh::fmt
     }
 } // namespace ljh::fmt
 
-template<typename It, typename Sent, typename Sep>
+LJH_MODULE_MAIN_EXPORT template<typename It, typename Sent, typename Sep>
 struct std::formatter<ljh::fmt::join_view<It, Sent, Sep>, char>
 {
     using value_type = std::iter_value_t<It>;
