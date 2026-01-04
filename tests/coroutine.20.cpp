@@ -7,3 +7,14 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include <ljh/coroutine.hpp>
+
+// Build test for ljh::co::promise
+ljh::co::task<bool> test_promise()
+{
+    co_return true;
+}
+
+TEST_CASE("coroutine compile test", "[coroutine]")
+{
+    REQUIRE(test_promise().get());
+}

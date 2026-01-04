@@ -5,6 +5,7 @@
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #pragma once
+#include "../os_build_info.hpp"
 #include "task_base.hpp"
 
 #if !defined(LJH_TARGET_Windows)

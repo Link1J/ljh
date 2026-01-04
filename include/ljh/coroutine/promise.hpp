@@ -76,11 +76,8 @@ namespace ljh::__::co
         {
             switch (status)
             {
-            case result_status::value: 
-                return result.wrapper.get_value();
-            case result_status::error: 
-                std::rethrow_exception(std::exchange(result.error, {}));
-                break;
+            case result_status::value: return result.wrapper.get_value();
+            case result_status::error: std::rethrow_exception(std::exchange(result.error, {})); break;
             default:
                 assert(false);
                 std::terminate();
@@ -92,9 +89,7 @@ namespace ljh::__::co
         {
             switch (status)
             {
-            case result_status::value: 
-                result.wrapper.~promise_value(); 
-                break;
+            case result_status::value: result.wrapper.~promise_value(); break;
             case result_status::error:
                 if (result.error)
                     std::rethrow_exception(result.error);
@@ -209,6 +204,10 @@ namespace ljh::__::co
             return static_cast<U&&>(awaitable);
         }
 
+// There is a bug in Clang that makes final_suspend fail to compile.
+// So we are defining a modified versions of ljh's
+// Bug Report: https://github.com/llvm/llvm-project/issues/64621
+#if !defined(LJH_COMPILER_CLANG) // vvv no workaround vvv
         auto final_suspend() noexcept
         {
             struct awaiter : std::suspend_always
@@ -225,6 +224,24 @@ namespace ljh::__::co
             };
             return awaiter{{}, *this};
         }
+#else  // ^^^ no workaround / workaround vvv
+        struct final_suspend_awaiter : std::suspend_never
+        {
+            promise_base& self;
+            void          await_suspend(std::coroutine_handle<>) const noexcept
+            {
+                auto waiting = self.m_waiting.exchange(reinterpret_cast<void*>(completed_ptr), std::memory_order_acq_rel);
+                if (waiting == reinterpret_cast<void*>(abandoned_ptr))
+                    self.destroy();
+                if (waiting != running_ptr)
+                    self.resume_waiting_coroutine(waiting);
+            }
+        };
+        auto final_suspend() noexcept
+        {
+            return final_suspend_awaiter{{}, *this};
+        }
+#endif // ^^^ workaround ^^^
 
         template<bool COLD = false>
         bool client_await_ready()

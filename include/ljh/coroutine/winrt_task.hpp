@@ -5,6 +5,7 @@
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #pragma once
+#include "../os_build_info.hpp"
 #include "coroutine_headers.hpp"
 
 #if !defined(LJH_TARGET_Windows)
@@ -73,7 +74,7 @@ namespace ljh::__::co
 
         auto operator()(ljh::co::winrt_task<TResult> const& asyncInfo, winrt::Windows::Foundation::AsyncStatus const& asyncStatus) const
         {
-            check_hresult(
+            winrt::check_hresult(
                 (*(winrt::impl::abi_t<winrt_task_completed_handler<TResult>>**)this)->Invoke(*(void**)(&asyncInfo), static_cast<int32_t>(asyncStatus)));
         }
     };
@@ -108,7 +109,7 @@ namespace ljh::__::co
         auto GetResults() const
         {
             TResult winrt_impl_result{winrt::impl::empty_value<TResult>()};
-            winrt::check_hresult(shim<ljh::co::winrt_task<TResult>>()->GetResults(put_abi(winrt_impl_result)));
+            winrt::check_hresult(shim<ljh::co::winrt_task<TResult>>()->GetResults(winrt::put_abi(winrt_impl_result)));
             return winrt_impl_result;
         }
 
@@ -193,7 +194,7 @@ struct winrt::impl::produce<D, ljh::co::winrt_task<TResult>> : winrt::impl::prod
     {
         clear_abi(winrt_impl_result);
         typename D::abi_guard guard(this->shim());
-        *winrt_impl_result = detach_from<ljh::__::co::winrt_task_completed_handler<TResult>>(this->shim().Completed());
+        *winrt_impl_result = winrt::impl::detach_from<ljh::__::co::winrt_task_completed_handler<TResult>>(this->shim().Completed());
         return 0;
     }
     catch (...)
@@ -206,7 +207,7 @@ struct winrt::impl::produce<D, ljh::co::winrt_task<TResult>> : winrt::impl::prod
     {
         clear_abi(winrt_impl_result);
         typename D::abi_guard guard(this->shim());
-        *winrt_impl_result = detach_from<TResult>(this->shim().GetResults());
+        *winrt_impl_result = winrt::impl::detach_from<TResult>(this->shim().GetResults());
         return 0;
     }
     catch (...)

@@ -34,6 +34,7 @@ if (WIN32)
 		$<$<CXX_COMPILER_ID:MSVC>:/await:strict> $<$<CXX_COMPILER_ID:MSVC>:/Zc:__STDC__>
 		$<$<CXX_COMPILER_ID:Clang>:-Wno-microsoft-cast>
 	)
+	add_link_options(Synchronization.lib)
 endif()
 
 add_executable(tests_11
