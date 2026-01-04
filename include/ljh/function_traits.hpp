@@ -90,43 +90,43 @@ namespace ljh
     {
         namespace cdecl_
         {
-            using type          = void(LJH_CALLING_CONVENTION_cdecl*)();
-            inline int const id = 0;
+            using type                                  = void(LJH_CALLING_CONVENTION_cdecl*)();
+            LJH_CPP17_INLINE_VAR constexpr int const id = 0;
         } // namespace cdecl_
         namespace stdcall_
         {
-            using type          = void(LJH_CALLING_CONVENTION_stdcall*)();
-            inline int const id = 1;
+            using type                                  = void(LJH_CALLING_CONVENTION_stdcall*)();
+            LJH_CPP17_INLINE_VAR constexpr int const id = 1;
         } // namespace stdcall_
         namespace fastcall_
         {
-            using type          = void(LJH_CALLING_CONVENTION_fastcall*)();
-            inline int const id = 2;
+            using type                                  = void(LJH_CALLING_CONVENTION_fastcall*)();
+            LJH_CPP17_INLINE_VAR constexpr int const id = 2;
         } // namespace fastcall_
         namespace vectorcall_
         {
-            using type          = void(LJH_CALLING_CONVENTION_vectorcall*)();
-            inline int const id = 3;
+            using type                                  = void(LJH_CALLING_CONVENTION_vectorcall*)();
+            LJH_CPP17_INLINE_VAR constexpr int const id = 3;
         } // namespace vectorcall_
         namespace ms_abi_
         {
-            using type          = void(LJH_CALLING_CONVENTION_ms_abi*)();
-            inline int const id = 4;
+            using type                                  = void(LJH_CALLING_CONVENTION_ms_abi*)();
+            LJH_CPP17_INLINE_VAR constexpr int const id = 4;
         } // namespace ms_abi_
         namespace sysv_abi_
         {
-            using type          = void(LJH_CALLING_CONVENTION_sysv_abi*)();
-            inline int const id = 5;
+            using type                                  = void(LJH_CALLING_CONVENTION_sysv_abi*)();
+            LJH_CPP17_INLINE_VAR constexpr int const id = 5;
         } // namespace sysv_abi_
         namespace regcall_
         {
-            using type          = void(LJH_CALLING_CONVENTION_regcall*)();
-            inline int const id = 6;
+            using type                                  = void(LJH_CALLING_CONVENTION_regcall*)();
+            LJH_CPP17_INLINE_VAR constexpr int const id = 6;
         } // namespace regcall_
         namespace thiscall_
         {
-            using type          = void(LJH_CALLING_CONVENTION_thiscall*)();
-            inline int const id = 7;
+            using type                                  = void(LJH_CALLING_CONVENTION_thiscall*)();
+            LJH_CPP17_INLINE_VAR constexpr int const id = 7;
         } // namespace thiscall_
     }; // namespace calling_conventions
 
@@ -273,7 +273,7 @@ namespace ljh
     concept matches_return_type = std::same_as<T, typename ljh::function_traits<decltype(F)>::return_type>;
 #elif LJH_CPP_VERSION > LJH_CPP17_VERSION
     template<typename T, auto F>
-    inline constexpr bool matches_return_type = std::is_same_v<T, typename ljh::function_traits<decltype(F)>::return_type>;
+    constexpr bool matches_return_type = std::is_same_v<T, typename ljh::function_traits<decltype(F)>::return_type>;
 #endif
 } // namespace ljh
 
