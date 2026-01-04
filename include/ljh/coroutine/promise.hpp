@@ -264,7 +264,7 @@ namespace ljh::__::co
             if constexpr (!COLD)
             {
                 m_resumer = resumer;
-                assert(reinterpret_cast<uintptr_t>(waiting) > reinterpret_cast<uintptr_t>(cold_ptr));
+                assert(waiting > reinterpret_cast<void*>(cold_ptr));
                 return m_waiting.exchange(waiting, std::memory_order_acq_rel) == running_ptr;
             }
             else

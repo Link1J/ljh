@@ -27,14 +27,14 @@ stages:
               performTests: true
             Linux Clang Debug:
               OS: "Linux"
-              imageName: "ubuntu-24.04"
+              imageName: "ubuntu-latest"
               BuildConfiguration: "Debug"
               Generator: ""
               ExtraArgs: "-DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++"
               performTests: true
             Linux Clang Release:
               OS: "Linux"
-              imageName: "ubuntu-24.04"
+              imageName: "ubuntu-latest"
               BuildConfiguration: "RelWithDebInfo"
               Generator: ""
               ExtraArgs: "-DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++"
